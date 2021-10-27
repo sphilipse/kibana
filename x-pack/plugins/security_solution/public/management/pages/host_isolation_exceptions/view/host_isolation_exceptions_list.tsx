@@ -8,7 +8,7 @@
 import { ExceptionListItemSchema } from '@kbn/securitysolution-io-ts-list-types';
 import { i18n } from '@kbn/i18n';
 import React, { Dispatch, useCallback, useEffect } from 'react';
-import { EuiButton, EuiSpacer } from '@elastic/eui';
+import { EuiButton } from '@elastic/eui';
 import { FormattedMessage } from '@kbn/i18n/react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -127,7 +127,7 @@ export const HostIsolationExceptionsList = () => {
       title={
         <FormattedMessage
           id="xpack.securitySolution.hostIsolationExceptions.list.pageTitle"
-          defaultMessage="Host Isolation Exceptions"
+          defaultMessage="Host isolation exceptions"
         />
       }
       actions={
@@ -141,28 +141,32 @@ export const HostIsolationExceptionsList = () => {
           >
             <FormattedMessage
               id="xpack.securitySolution.hostIsolationExceptions.list.addButton"
-              defaultMessage="Add Host Isolation Exception"
+              defaultMessage="Add Host isolation exception"
             />
           </EuiButton>
         ) : (
           []
         )
       }
+      hideHeader={isLoading || listItems.length === 0}
     >
       {showFlyout && <HostIsolationExceptionsFormFlyout />}
 
-      <SearchExceptions
-        defaultValue={location.filter}
-        onSearch={handleOnSearch}
-        placeholder={i18n.translate(
-          'xpack.securitySolution.hostIsolationExceptions.search.placeholder',
-          {
-            defaultMessage: 'Search on the fields below: name, description, ip',
-          }
-        )}
-      />
-      <EuiSpacer size="l" />
       {itemToDelete ? <HostIsolationExceptionDeleteModal /> : null}
+
+      {!isLoading && listItems.length ? (
+        <SearchExceptions
+          defaultValue={location.filter}
+          onSearch={handleOnSearch}
+          placeholder={i18n.translate(
+            'xpack.securitySolution.hostIsolationExceptions.search.placeholder',
+            {
+              defaultMessage: 'Search on the fields below: name, description, ip',
+            }
+          )}
+        />
+      ) : null}
+
       <PaginatedContent<ExceptionListItemSchema, typeof ArtifactEntryCard>
         items={listItems}
         ItemComponent={ArtifactEntryCard}
