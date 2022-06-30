@@ -30,7 +30,7 @@ export const ConfigurationConnector: React.FC = () => {
   const { data: indexData } = useValues(FetchIndexApiLogic);
   const { makeRequest, apiReset } = useActions(GenerateConnectorApiKeyApiLogic);
   const { data: apiKeyData } = useValues(GenerateConnectorApiKeyApiLogic);
-  const { indexSlug: indexName } = useParams<{ indexSlug: string }>();
+  const { indexName } = useParams<{ indexName: string }>();
   const indexId = indexData?.connector?.id ?? '';
 
   useEffect(() => {

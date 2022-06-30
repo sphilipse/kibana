@@ -10,10 +10,10 @@
  * These merely serve as placeholders for static data for now.
  */
 export interface SearchIndex {
-  name: string;
-  indexSlug: string;
-  source_type: string;
-  elasticsearch_index_name: string;
-  search_engines: string;
   document_count: number;
+  elasticsearch_index_name: string;
+  indexName: string;
+  name: string;
+  search_engines: string;
+  source_type: string;
 }

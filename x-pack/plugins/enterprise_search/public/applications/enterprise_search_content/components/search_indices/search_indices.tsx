@@ -55,8 +55,8 @@ export const SearchIndices: React.FC = () => {
   // @ts-ignore
   window.contentActions = {
     initPage,
-    searchIndicesLoadSuccess,
     searchEnginesLoadSuccess,
+    searchIndicesLoadSuccess,
   };
 
   // TODO: Replace with a real list of indices
@@ -66,16 +66,16 @@ export const SearchIndices: React.FC = () => {
       name: i18n.translate('xpack.enterpriseSearch.content.searchIndices.name.columnTitle', {
         defaultMessage: 'Search index name',
       }),
-      sortable: true,
-      truncateText: true,
-      render: (name: string, { indexSlug }: SearchIndex) => (
+      render: (name: string, { indexName }: SearchIndex) => (
         <EuiLinkTo
           data-test-subj="search-index-link"
-          to={generatePath(SEARCH_INDEX_PATH, { indexSlug })}
+          to={generatePath(SEARCH_INDEX_PATH, { indexName })}
         >
           {name}
         </EuiLinkTo>
       ),
+      sortable: true,
+      truncateText: true,
     },
     {
       field: 'source_type',
@@ -107,29 +107,29 @@ export const SearchIndices: React.FC = () => {
       truncateText: true,
     },
     {
+      align: 'right' as HorizontalAlignment,
       field: 'document_count',
       name: i18n.translate('xpack.enterpriseSearch.content.searchIndices.docsCount.columnTitle', {
         defaultMessage: 'Documents',
       }),
       sortable: true,
       truncateText: true,
-      align: 'right' as HorizontalAlignment,
     },
     {
-      name: i18n.translate('xpack.enterpriseSearch.content.searchIndices.actions.columnTitle', {
-        defaultMessage: 'Actions',
-      }),
       actions: [
         {
-          render: ({ indexSlug }: SearchIndex) => (
+          render: ({ indexName }: SearchIndex) => (
             <EuiButtonIconTo
               iconType="eye"
               data-test-subj="view-search-index-button"
-              to={generatePath(SEARCH_INDEX_PATH, { indexSlug })}
+              to={generatePath(SEARCH_INDEX_PATH, { indexName })}
             />
           ),
         },
       ],
+      name: i18n.translate('xpack.enterpriseSearch.content.searchIndices.actions.columnTitle', {
+        defaultMessage: 'Actions',
+      }),
     },
   ];
 
