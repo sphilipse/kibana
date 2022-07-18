@@ -147,7 +147,7 @@ describe('fetchIndices lib function', () => {
     mockClient.asCurrentUser.indices.get.mockImplementationOnce(() => aliasedIndexResponse);
     mockClient.asCurrentUser.indices.stats.mockImplementationOnce(() => aliasedStatsResponse);
     await expect(
-      fetchIndices(mockClient as unknown as IScopedClusterClient, 'search-*', false)
+      fetchIndices(mockClient as unknown as IScopedClusterClient, 'search-*', false, /^search-*/)
     ).resolves.toEqual([
       {
         health: 'green',

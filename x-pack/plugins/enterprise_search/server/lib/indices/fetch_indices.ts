@@ -95,6 +95,5 @@ export const fetchIndices = async (
 
   // The previous step could have added indices that don't match the index pattern, so filter those out again
   // We wildcard RegExp the pattern unless user provides a more specific regex
-  const testRegEx = indexRegExp ? indexRegExp : new RegExp(indexPattern);
-  return resultIndices.filter(({ name }) => name.match(testRegEx));
+  return indexRegExp ? resultIndices.filter(({ name }) => name.match(indexRegExp)) : resultIndices;
 };
