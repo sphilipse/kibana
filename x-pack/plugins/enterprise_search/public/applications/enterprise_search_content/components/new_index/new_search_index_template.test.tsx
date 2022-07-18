@@ -18,14 +18,14 @@ import {
 
 describe('NewSearchIndexTemplate', () => {
   const mockProps: NewSearchIndexTemplateProps = {
-    title: 'Index using the API',
     onSubmit: jest.fn(),
+    title: 'Index using the API',
     type: 'api',
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    setMockValues({ name: 'my-name', rawName: 'MY$_RAW_$NAME', language: 'Universal' });
+    setMockValues({ language: 'Universal', name: 'my-name', rawName: 'MY$_RAW_$NAME' });
     setMockActions({ makeRequest: jest.fn() });
   });
 

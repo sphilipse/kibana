@@ -46,14 +46,6 @@ export const MethodCrawler: React.FC = () => {
       <EuiSteps
         steps={[
           {
-            title: i18n.translate(
-              'xpack.enterpriseSearch.content.newIndex.steps.createIndex.title',
-              {
-                defaultMessage: 'Create an Elasticsearch index',
-              }
-            ),
-
-            titleSize: 'xs',
             children: (
               <EuiText size="s">
                 <p>
@@ -68,15 +60,16 @@ export const MethodCrawler: React.FC = () => {
               </EuiText>
             ),
             status: 'incomplete',
-          },
-          {
             title: i18n.translate(
-              'xpack.enterpriseSearch.content.newIndex.steps.configureIngestion.title',
+              'xpack.enterpriseSearch.content.newIndex.steps.createIndex.title',
               {
-                defaultMessage: 'Configure ingestion settings',
+                defaultMessage: 'Create an Elasticsearch index',
               }
             ),
+
             titleSize: 'xs',
+          },
+          {
             children: (
               <EuiText size="s">
                 <p>
@@ -91,15 +84,15 @@ export const MethodCrawler: React.FC = () => {
               </EuiText>
             ),
             status: 'incomplete',
-          },
-          {
             title: i18n.translate(
-              'xpack.enterpriseSearch.content.newIndex.steps.buildSearchExperience.title',
+              'xpack.enterpriseSearch.content.newIndex.steps.configureIngestion.title',
               {
-                defaultMessage: 'Build a search experience',
+                defaultMessage: 'Configure ingestion settings',
               }
             ),
             titleSize: 'xs',
+          },
+          {
             children: (
               <EuiText size="s">
                 <p>
@@ -114,6 +107,13 @@ export const MethodCrawler: React.FC = () => {
               </EuiText>
             ),
             status: 'incomplete',
+            title: i18n.translate(
+              'xpack.enterpriseSearch.content.newIndex.steps.buildSearchExperience.title',
+              {
+                defaultMessage: 'Build a search experience',
+              }
+            ),
+            titleSize: 'xs',
           },
         ]}
       />

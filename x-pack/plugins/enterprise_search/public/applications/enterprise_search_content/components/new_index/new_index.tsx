@@ -38,11 +38,6 @@ import { MethodJson } from './method_json';
 
 const METHOD_BUTTON_GROUP_OPTIONS: ButtonGroupOption[] = [
   {
-    id: 'crawler',
-    icon: 'globe',
-    label: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.crawler.label', {
-      defaultMessage: 'Use the web crawler',
-    }),
     description: i18n.translate(
       'xpack.enterpriseSearch.content.newIndex.buttonGroup.crawler.description',
       {
@@ -52,13 +47,13 @@ const METHOD_BUTTON_GROUP_OPTIONS: ButtonGroupOption[] = [
     footer: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.crawler.footer', {
       defaultMessage: 'No development required',
     }),
+    icon: 'globe',
+    id: 'crawler',
+    label: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.crawler.label', {
+      defaultMessage: 'Use the web crawler',
+    }),
   },
   {
-    id: 'api',
-    icon: 'visVega',
-    label: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.api.label', {
-      defaultMessage: 'Use the API',
-    }),
     description: i18n.translate(
       'xpack.enterpriseSearch.content.newIndex.buttonGroup.api.description',
       {
@@ -68,13 +63,18 @@ const METHOD_BUTTON_GROUP_OPTIONS: ButtonGroupOption[] = [
     footer: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.api.footer', {
       defaultMessage: 'Some development required',
     }),
+    icon: 'visVega',
+    id: 'api',
+    label: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.api.label', {
+      defaultMessage: 'Use the API',
+    }),
   },
   {
-    id: 'connector',
-    icon: 'package',
-    label: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.connector.label', {
-      defaultMessage: 'Build a connector',
-    }),
+    badge: (
+      <EuiBadge iconType="beaker">
+        <EuiText size="xs">Technical Preview</EuiText>
+      </EuiBadge>
+    ),
     description: i18n.translate(
       'xpack.enterpriseSearch.content.newIndex.buttonGroup.connector.description',
       {
@@ -85,11 +85,11 @@ const METHOD_BUTTON_GROUP_OPTIONS: ButtonGroupOption[] = [
     footer: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.connector.footer', {
       defaultMessage: 'Development required',
     }),
-    badge: (
-      <EuiBadge iconType="beaker">
-        <EuiText size="xs">Technical Preview</EuiText>
-      </EuiBadge>
-    ),
+    icon: 'package',
+    id: 'connector',
+    label: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.connector.label', {
+      defaultMessage: 'Build a connector',
+    }),
   },
 ];
 
