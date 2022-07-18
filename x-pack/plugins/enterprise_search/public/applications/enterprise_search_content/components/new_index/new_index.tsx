@@ -46,7 +46,7 @@ const METHOD_BUTTON_GROUP_OPTIONS: ButtonGroupOption[] = [
     description: i18n.translate(
       'xpack.enterpriseSearch.content.newIndex.buttonGroup.crawler.description',
       {
-        defaultMessage: 'Index content from your websites',
+        defaultMessage: 'Discover, extract, index, and sync of all your website content',
       }
     ),
     footer: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.crawler.footer', {
@@ -62,7 +62,7 @@ const METHOD_BUTTON_GROUP_OPTIONS: ButtonGroupOption[] = [
     description: i18n.translate(
       'xpack.enterpriseSearch.content.newIndex.buttonGroup.api.description',
       {
-        defaultMessage: 'Use a variety of client libraries to add documents to your search index',
+        defaultMessage: 'Add documents programmatically by connecting with the API',
       }
     ),
     footer: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.api.footer', {
@@ -73,12 +73,13 @@ const METHOD_BUTTON_GROUP_OPTIONS: ButtonGroupOption[] = [
     id: 'connector',
     icon: 'package',
     label: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.connector.label', {
-      defaultMessage: 'Build a connector package',
+      defaultMessage: 'Build a connector',
     }),
     description: i18n.translate(
       'xpack.enterpriseSearch.content.newIndex.buttonGroup.connector.description',
       {
-        defaultMessage: 'Clone the connector package repo and build a custom connector',
+        defaultMessage:
+          'Use the connector framework to quickly build connectors for custom data sources',
       }
     ),
     footer: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.connector.footer', {
@@ -93,7 +94,9 @@ const METHOD_BUTTON_GROUP_OPTIONS: ButtonGroupOption[] = [
 ];
 
 export const NewIndex: React.FC = () => {
-  const [selectedMethod, setSelectedMethod] = useState<ButtonGroupOption>();
+  const [selectedMethod, setSelectedMethod] = useState<ButtonGroupOption>(
+    METHOD_BUTTON_GROUP_OPTIONS[0]
+  );
 
   return (
     <EnterpriseSearchContentPageTemplate
@@ -114,21 +117,21 @@ export const NewIndex: React.FC = () => {
       <EuiFlexGroup>
         <EuiFlexItem grow={false} style={{ maxWidth: '24rem' }}>
           <EuiPanel hasShadow={false} paddingSize="m" grow={false} color="subdued">
-            <EuiTitle size="xs">
+            <EuiTitle size="s">
               <h2>
                 {i18n.translate('xpack.enterpriseSearch.content.newIndex.selectSearchIndex.title', {
                   defaultMessage: 'Select an ingestion method',
                 })}
               </h2>
             </EuiTitle>
-            <EuiSpacer size="xs" />
-            <EuiText size="xs">
+            <EuiSpacer size="s" />
+            <EuiText size="s">
               <p>
                 {i18n.translate(
                   'xpack.enterpriseSearch.content.newIndex.selectSearchIndex.description',
                   {
                     defaultMessage:
-                      'Add your content to Enterprise Search by creating a search index.',
+                      'Create a search optimized Elasticsearch index by selecting an ingestion method for your use case.',
                   }
                 )}
               </p>

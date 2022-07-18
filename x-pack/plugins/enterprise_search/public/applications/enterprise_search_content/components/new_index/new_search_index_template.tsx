@@ -27,7 +27,6 @@ import {
   EuiPanel,
   EuiSelect,
   EuiSpacer,
-  EuiText,
   EuiTitle,
 } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
@@ -36,20 +35,17 @@ import { SUPPORTED_LANGUAGES } from './constants';
 import { NewSearchIndexLogic } from './new_search_index_logic';
 
 export interface Props {
-  title: React.ReactNode;
-  description: React.ReactNode;
-  docsUrl: string;
-  type: string;
-  onNameChange?(name: string): void;
-  onSubmit(name: string, language: string): void;
   buttonLoading?: boolean;
   formDisabled?: boolean;
+  onNameChange?(name: string): void;
+  onSubmit(name: string, language: string): void;
+  title: React.ReactNode;
+  type: string;
 }
 
 export const NewSearchIndexTemplate: React.FC<Props> = ({
   children,
   title,
-  description,
   onNameChange,
   onSubmit,
   formDisabled,
@@ -84,19 +80,6 @@ export const NewSearchIndexTemplate: React.FC<Props> = ({
             <EuiTitle size="s">
               <h2>{title}</h2>
             </EuiTitle>
-            <EuiText size="s" color="subdued">
-              <p>
-                {description}
-                <EuiLink target="_blank" href="#">
-                  {i18n.translate(
-                    'xpack.enterpriseSearch.content.newIndex.newSearchIndexTemplate.learnMore.linkText',
-                    {
-                      defaultMessage: 'Learn more',
-                    }
-                  )}
-                </EuiLink>
-              </p>
-            </EuiText>
           </EuiFlexItem>
           <EuiFlexItem grow>
             <EuiFlexGroup>
@@ -140,13 +123,13 @@ export const NewSearchIndexTemplate: React.FC<Props> = ({
                   label={i18n.translate(
                     'xpack.enterpriseSearch.content.newIndex.newSearchIndexTemplate.languageInputLabel',
                     {
-                      defaultMessage: 'Document language',
+                      defaultMessage: 'Language analyzer',
                     }
                   )}
                   helpText={i18n.translate(
                     'xpack.enterpriseSearch.content.newIndex.newSearchIndexTemplate.languageInputHelpText',
                     {
-                      defaultMessage: 'Analyzers can be changed later, but may require a reindex',
+                      defaultMessage: 'Language can be changed later, but may require a reindex',
                     }
                   )}
                 >

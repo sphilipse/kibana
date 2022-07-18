@@ -19,8 +19,6 @@ import {
 describe('NewSearchIndexTemplate', () => {
   const mockProps: NewSearchIndexTemplateProps = {
     title: 'Index using the API',
-    description: 'Provide a name and optionally select a language analyzer.',
-    docsUrl: 'http://www.elastic.co/guide',
     onSubmit: jest.fn(),
     type: 'api',
   };
