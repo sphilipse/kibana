@@ -32,11 +32,13 @@ import { SearchIndexEmptyState } from './empty_state';
 import { MethodApi } from './method_api/method_api';
 import { MethodConnector } from './method_connector/method_connector';
 import { MethodCrawler } from './method_crawler/method_crawler';
+import { MethodFileUpload } from './method_file_upload/method_file_upload';
 
 export enum IngestionMethodId {
   api = 'api',
   connector = 'connector',
   crawler = 'crawler',
+  file_upload = 'file_upload',
   native_connector = 'native_connector',
 }
 
@@ -121,6 +123,25 @@ const METHOD_BUTTON_GROUP_OPTIONS: ButtonGroupOption[] = [
       defaultMessage: 'Build a connector',
     }),
   },
+  {
+    description: i18n.translate(
+      'xpack.enterpriseSearch.content.newIndex.buttonGroup.fileUpload.description',
+      {
+        defaultMessage: 'Add documents programmatically by connecting with the API',
+      }
+    ),
+    footer: i18n.translate(
+      'xpack.enterpriseSearch.content.newIndex.buttonGroup.fileUpload.footer',
+      {
+        defaultMessage: 'No development required',
+      }
+    ),
+    icon: 'file',
+    id: IngestionMethodId.file_upload,
+    label: i18n.translate('xpack.enterpriseSearch.content.newIndex.buttonGroup.fileUpload.label', {
+      defaultMessage: 'Upload a file',
+    }),
+  },
 ];
 
 export const NewIndex: React.FC = () => {
@@ -196,6 +217,7 @@ export const NewIndex: React.FC = () => {
               {selectedMethod.id === IngestionMethodId.native_connector && (
                 <MethodConnector isNative />
               )}
+              {selectedMethod.id === IngestionMethodId.file_upload && <MethodFileUpload />}
             </>
           ) : (
             <SearchIndexEmptyState />

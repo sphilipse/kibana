@@ -25,7 +25,7 @@ import {
   SEARCH_INDEX_TAB_PATH,
 } from '../../routes';
 
-import { isConnectorIndex, isCrawlerIndex } from '../../utils/indices';
+import { isConnectorIndex, isCrawlerIndex, isFileUploadIndex } from '../../utils/indices';
 import { EnterpriseSearchContentPageTemplate } from '../layout/page_template';
 
 import { baseBreadcrumbs } from '../search_indices';
@@ -39,6 +39,7 @@ import { CrawlCustomSettingsFlyout } from './crawler/crawl_custom_settings_flyou
 import { CrawlerConfiguration } from './crawler/crawler_configuration/crawler_configuration';
 import { SearchIndexDomainManagement } from './crawler/domain_management/domain_management';
 import { SearchIndexDocuments } from './documents';
+import { UploadFile } from './file_upload/upload_file';
 import { SearchIndexIndexMappings } from './index_mappings';
 import { IndexNameLogic } from './index_name_logic';
 import { IndexViewLogic } from './index_view_logic';
@@ -58,6 +59,8 @@ export enum SearchIndexTabId {
   // crawler indices
   DOMAIN_MANAGEMENT = 'domain_management',
   CRAWLER_CONFIGURATION = 'crawler_configuration',
+  // file upload indices
+  UPLOAD_FILE = 'upload_file',
 }
 
 export const SearchIndex: React.FC = () => {
@@ -194,10 +197,19 @@ export const SearchIndex: React.FC = () => {
     }),
   };
 
+  const FILE_UPLOAD_TAB: EuiTabbedContentTab = {
+    content: <UploadFile />,
+    id: SearchIndexTabId.UPLOAD_FILE,
+    name: i18n.translate('xpack.enterpriseSearch.content.searchIndex.uploadFileTabLabel', {
+      defaultMessage: 'Upload file',
+    }),
+  };
+
   const tabs: EuiTabbedContentTab[] = [
     ...ALL_INDICES_TABS,
     ...(isConnectorIndex(index) ? CONNECTOR_TABS : []),
     ...(isCrawlerIndex(index) ? CRAWLER_TABS : []),
+    ...(isFileUploadIndex(index) ? [FILE_UPLOAD_TAB] : []),
     PIPELINES_TAB,
   ];
 

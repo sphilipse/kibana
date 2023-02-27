@@ -199,3 +199,7 @@ export interface NativeConnector {
   name: string;
   serviceType: string;
 }
+
+export enum ServiceTypes {
+  FILE_UPLOAD = 'file_upload',
+}

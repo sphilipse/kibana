@@ -146,6 +146,7 @@ export const WORKPLACE_SEARCH_URL = '/app/enterprise_search/workplace_search';
 export const ENTERPRISE_SEARCH_DOCUMENTS_DEFAULT_DOC_COUNT = 25;
 
 export const ENTERPRISE_SEARCH_CONNECTOR_CRAWLER_SERVICE_TYPE = 'elastic-crawler';
+export const ENTERPRISE_SEARCH_FILE_UPLOAD_SERVICE_TYPE = 'file_upload';
 
 export const DEFAULT_PIPELINE_NAME = 'ent-search-generic-ingestion';
 export const DEFAULT_PIPELINE_VALUES: IngestPipelineParams = {

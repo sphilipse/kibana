@@ -9,7 +9,10 @@ import moment from 'moment';
 
 import { i18n } from '@kbn/i18n';
 
-import { ENTERPRISE_SEARCH_CONNECTOR_CRAWLER_SERVICE_TYPE } from '../../../../common/constants';
+import {
+  ENTERPRISE_SEARCH_CONNECTOR_CRAWLER_SERVICE_TYPE,
+  ENTERPRISE_SEARCH_FILE_UPLOAD_SERVICE_TYPE,
+} from '../../../../common/constants';
 import { SyncStatus, ConnectorStatus } from '../../../../common/types/connectors';
 import {
   ConnectorIndex,
@@ -33,7 +36,18 @@ export function isConnectorIndex(
   const connectorIndex = index as ConnectorIndex;
   return (
     !!connectorIndex?.connector &&
-    connectorIndex.connector.service_type !== ENTERPRISE_SEARCH_CONNECTOR_CRAWLER_SERVICE_TYPE
+    connectorIndex.connector.service_type !== ENTERPRISE_SEARCH_CONNECTOR_CRAWLER_SERVICE_TYPE &&
+    connectorIndex.connector.service_type !== ENTERPRISE_SEARCH_FILE_UPLOAD_SERVICE_TYPE
+  );
+}
+
+export function isFileUploadIndex(
+  index: ElasticsearchIndexWithIngestion | null | undefined
+): index is ConnectorIndex {
+  const connectorIndex = index as ConnectorIndex;
+  return (
+    !!connectorIndex?.connector &&
+    connectorIndex.connector.service_type === ENTERPRISE_SEARCH_FILE_UPLOAD_SERVICE_TYPE
   );
 }
 

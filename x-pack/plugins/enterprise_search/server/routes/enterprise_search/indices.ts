@@ -40,6 +40,7 @@ import { createAndReferenceMlInferencePipeline } from '../../lib/indices/pipelin
 import { deleteMlInferencePipeline } from '../../lib/indices/pipelines/ml_inference/pipeline_processors/delete_ml_inference_pipeline';
 import { detachMlInferencePipeline } from '../../lib/indices/pipelines/ml_inference/pipeline_processors/detach_ml_inference_pipeline';
 import { fetchMlInferencePipelineProcessors } from '../../lib/indices/pipelines/ml_inference/pipeline_processors/get_ml_inference_pipeline_processors';
+import { postDocuments } from '../../lib/indices/post_documents';
 import { createIndexPipelineDefinitions } from '../../lib/pipelines/create_pipeline_definitions';
 import { getCustomPipelines } from '../../lib/pipelines/get_custom_pipelines';
 import { getPipeline } from '../../lib/pipelines/get_pipeline';
@@ -912,6 +913,32 @@ export function registerIndexRoutes({
         // otherwise, let the default handler wrap it
         throw error;
       }
+    })
+  );
+  router.post(
+    {
+      path: '/internal/enterprise_search/indices/{indexName}/documents',
+      validate: {
+        body: schema.object({
+          documents: schema.arrayOf(schema.recordOf(schema.string(), schema.any())),
+          pipeline: schema.object({
+            extract_binary_content: schema.boolean(),
+            name: schema.string(),
+            reduce_whitespace: schema.boolean(),
+            run_ml_inference: schema.boolean(),
+          }),
+        }),
+        params: schema.object({
+          indexName: schema.string(),
+        }),
+      },
+    },
+    elasticsearchErrorHandler(log, async (context, request, response) => {
+      const indexName = decodeURIComponent(request.params.indexName);
+      const { documents, pipeline } = request.body;
+      const { client } = (await context.core).elasticsearch;
+      const result = await postDocuments(client, indexName, documents, pipeline);
+      return response.ok({ body: result });
     })
   );
 }
