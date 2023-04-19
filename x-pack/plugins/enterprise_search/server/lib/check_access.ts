@@ -7,7 +7,7 @@
 
 import { KibanaRequest, Logger } from '@kbn/core/server';
 
-import { SecurityPluginSetup } from '@kbn/security-plugin/server';
+import { SecurityPluginStart } from '@kbn/security-plugin/server';
 import { SpacesPluginStart } from '@kbn/spaces-plugin/server';
 
 import { ConfigType } from '..';
@@ -17,7 +17,7 @@ import { callEnterpriseSearchConfigAPI } from './enterprise_search_config_api';
 
 interface CheckAccess {
   request: KibanaRequest;
-  security: SecurityPluginSetup;
+  security: SecurityPluginStart;
   spaces?: SpacesPluginStart;
   config: ConfigType;
   log: Logger;
@@ -51,53 +51,73 @@ export const checkAccess = async ({
     return DENY_ALL_PLUGINS;
   }
 
+  if (!config.host) {
+    return DENY_ALL_PLUGINS;
+  }
+
+  const productAccess = await Promise.all([
+    getSpaceAccess(request, spaces),
+    getSuperUserAccess(request, security),
+    getEntSearchAccess(request, config, log),
+  ]);
+
+  return productAccess.reduce(
+    (prev: ProductAccess, curr: Partial<ProductAccess>) => ({
+      hasAppSearchAccess:
+        curr.hasWorkplaceSearchAccess === false ? false : prev.hasWorkplaceSearchAccess,
+      hasWorkplaceSearchAccess: Boolean(
+        curr.hasWorkplaceSearchAccess === false ? false : prev.hasWorkplaceSearchAccess
+      ),
+    }),
+    { hasAppSearchAccess: true, hasWorkplaceSearchAccess: true }
+  );
+};
+
+async function getSpaceAccess(
+  request: KibanaRequest,
+  spaces: SpacesPluginStart | undefined
+): Promise<Partial<ProductAccess>> {
   // We can only retrieve the active space when security is enabled and the request has already been authenticated
   const attemptSpaceRetrieval = request.auth.isAuthenticated && !!spaces;
-  let allowedAtSpace = false;
 
   if (attemptSpaceRetrieval) {
     try {
       const space = await spaces.spacesService.getActiveSpace(request);
-      allowedAtSpace = !space.disabledFeatures?.includes('enterpriseSearch');
+      return space.disabledFeatures?.includes('enterpriseSearch') ? DENY_ALL_PLUGINS : {};
     } catch (err) {
       if (err?.output?.statusCode === 403) {
-        allowedAtSpace = false;
+        return DENY_ALL_PLUGINS;
       } else {
         throw err;
       }
     }
   }
+  return DENY_ALL_PLUGINS;
+}
 
-  // Hide the plugin if turned off in the current space.
-  if (!allowedAtSpace) {
-    return DENY_ALL_PLUGINS;
-  }
-
-  // If the user is a "superuser" or has the base Kibana all privilege globally, always show the plugin
-  const isSuperUser = async (): Promise<boolean> => {
-    try {
-      const { hasAllRequested } = await security.authz
-        .checkPrivilegesWithRequest(request)
-        .globally({ kibana: security.authz.actions.ui.get('enterpriseSearch', 'all') });
-      return hasAllRequested;
-    } catch (err) {
-      if (err.statusCode === 401 || err.statusCode === 403) {
-        return false;
-      }
-      throw err;
+// If the user is a "superuser" or has the base Kibana all privilege globally, always show the plugin
+async function getSuperUserAccess(
+  request: KibanaRequest,
+  security: SecurityPluginStart
+): Promise<Partial<ProductAccess>> {
+  try {
+    const { hasAllRequested } = await security.authz
+      .checkPrivilegesWithRequest(request)
+      .globally({ kibana: security.authz.actions.ui.get('enterpriseSearch', 'all') });
+    return hasAllRequested ? ALLOW_ALL_PLUGINS : {};
+  } catch (err) {
+    if (err.statusCode === 401 || err.statusCode === 403) {
+      return {};
     }
-  };
-  if (await isSuperUser()) {
-    return ALLOW_ALL_PLUGINS;
+    throw err;
   }
+}
 
-  // Hide the plugin when enterpriseSearch.host is not defined in kibana.yml
-  if (!config.host) {
-    return DENY_ALL_PLUGINS;
-  }
-
-  // When enterpriseSearch.host is defined in kibana.yml,
-  // make a HTTP call which returns product access
-  const response = (await callEnterpriseSearchConfigAPI({ request, config, log })) || {};
-  return 'access' in response ? response.access || DENY_ALL_PLUGINS : DENY_ALL_PLUGINS;
-};
+async function getEntSearchAccess(
+  request: KibanaRequest,
+  config: ConfigType,
+  log: Logger
+): Promise<ProductAccess> {
+  const response = (await callEnterpriseSearchConfigAPI({ config, log, request })) || {};
+  return 'access' in response ? response.access ?? DENY_ALL_PLUGINS : DENY_ALL_PLUGINS;
+}

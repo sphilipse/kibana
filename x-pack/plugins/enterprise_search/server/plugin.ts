@@ -114,15 +114,7 @@ export class EnterpriseSearchPlugin implements Plugin {
 
   public setup(
     { capabilities, http, savedObjects, getStartServices, uiSettings }: CoreSetup<PluginsStart>,
-    {
-      usageCollection,
-      security,
-      features,
-      infra,
-      customIntegrations,
-      ml,
-      guidedOnboarding,
-    }: PluginsSetup
+    { usageCollection, features, infra, customIntegrations, ml, guidedOnboarding }: PluginsSetup
   ) {
     const config = this.config;
     const log = this.logger;
@@ -166,7 +158,7 @@ export class EnterpriseSearchPlugin implements Plugin {
      * Register user access to the Enterprise Search plugins
      */
     capabilities.registerSwitcher(async (request: KibanaRequest) => {
-      const [, { spaces }] = await getStartServices();
+      const [, { security, spaces }] = await getStartServices();
 
       const dependencies = { config, security, spaces, request, log, ml };
 
