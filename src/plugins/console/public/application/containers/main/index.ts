@@ -6,4 +6,4 @@
  * Side Public License, v 1.
  */
 
-export { Main } from './main';
+export { MainConsole } from './main';

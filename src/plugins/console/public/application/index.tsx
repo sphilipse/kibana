@@ -28,7 +28,7 @@ import {
 } from '../services';
 import { createUsageTracker } from '../services/tracker';
 import * as localStorageObjectClient from '../lib/local_storage_object_client';
-import { Main } from './containers';
+import { MainConsole } from './containers';
 import { ServicesContextProvider, EditorContextProvider, RequestContextProvider } from './contexts';
 import { createApi, createEsHostService } from './lib';
 
@@ -94,7 +94,7 @@ export function renderApp({
         >
           <RequestContextProvider>
             <EditorContextProvider settings={settings.toJSON()}>
-              <Main />
+              <MainConsole />
             </EditorContextProvider>
           </RequestContextProvider>
         </ServicesContextProvider>

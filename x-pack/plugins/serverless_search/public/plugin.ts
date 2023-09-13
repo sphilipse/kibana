@@ -9,6 +9,7 @@ import { AppMountParameters, CoreSetup, CoreStart, Plugin } from '@kbn/core/publ
 import { i18n } from '@kbn/i18n';
 import { appIds } from '@kbn/management-cards-navigation';
 import { AuthenticatedUser } from '@kbn/security-plugin/common';
+import { AutocompleteInfo, setAutocompleteInfo } from '@kbn/console-plugin/public';
 import { createServerlessSearchSideNavComponent as createComponent } from './layout/nav';
 import { docLinks } from '../common/doc_links';
 import {
@@ -31,6 +32,10 @@ export class ServerlessSearchPlugin
     core: CoreSetup<ServerlessSearchPluginStartDependencies, ServerlessSearchPluginStart>,
     _setupDeps: ServerlessSearchPluginSetupDependencies
   ): ServerlessSearchPluginSetup {
+    const autocompleteInfo = new AutocompleteInfo();
+    autocompleteInfo.setup(core.http);
+    setAutocompleteInfo(autocompleteInfo);
+
     core.application.register({
       id: 'serverlessElasticsearch',
       title: i18n.translate('xpack.serverlessSearch.app.elasticsearch.title', {
@@ -50,7 +55,23 @@ export class ServerlessSearchPlugin
           user = undefined;
         }
 
-        return await renderApp(element, coreStart, { user, ...services });
+        const {
+          i18n: { Context: I18nContext },
+          docLinks: { DOC_LINK_VERSION, links },
+        } = coreStart;
+
+        const consoleDependencies = {
+          autocompleteInfo,
+          docLinks: links,
+          docLinkVersion: DOC_LINK_VERSION,
+          element,
+          http: core.http,
+          I18nContext,
+          notifications: coreStart.notifications,
+          theme$: coreStart.theme.theme$,
+        };
+
+        return await renderApp(element, coreStart, { user, ...services }, consoleDependencies);
       },
     });
 
