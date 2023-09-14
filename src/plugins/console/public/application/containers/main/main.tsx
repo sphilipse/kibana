@@ -9,6 +9,7 @@
 import React, { useState } from 'react';
 import { i18n } from '@kbn/i18n';
 import { EuiFlexGroup, EuiFlexItem, EuiTitle, EuiPageTemplate } from '@elastic/eui';
+import { DevToolsSettings } from '../../../services';
 import { ConsoleHistory } from '../console_history';
 import { Editor } from '../editor';
 import { Settings } from '../settings';
@@ -22,7 +23,13 @@ import {
   NetworkRequestStatusBar,
 } from '../../components';
 
-import { useServicesContext, useEditorReadContext, useRequestReadContext } from '../../contexts';
+import {
+  useServicesContext,
+  useEditorReadContext,
+  useRequestReadContext,
+  RequestContextProvider,
+  EditorContextProvider,
+} from '../../contexts';
 import { useDataInit } from '../../hooks';
 
 import { getTopNavConfig } from './get_top_nav';
@@ -30,10 +37,11 @@ import type { SenseEditor } from '../../models/sense_editor';
 import { getResponseWithMostSevereStatusCode } from '../../../lib/utils';
 
 export interface MainConsoleProps {
+  settings: DevToolsSettings;
   skipWelcome?: boolean;
 }
 
-export const MainConsole: React.FC<MainConsoleProps> = ({ skipWelcome }) => {
+export const MainConsole: React.FC<MainConsoleProps> = ({ settings, skipWelcome }) => {
   const {
     services: { storage },
   } = useServicesContext();
@@ -72,73 +80,79 @@ export const MainConsole: React.FC<MainConsoleProps> = ({ skipWelcome }) => {
   const data = getResponseWithMostSevereStatusCode(requestData) ?? requestError;
 
   return (
-    <div id="consoleRoot">
-      <EuiFlexGroup
-        className="consoleContainer"
-        gutterSize="none"
-        direction="column"
-        responsive={false}
-      >
-        <EuiFlexItem grow={false}>
-          <EuiTitle className="euiScreenReaderOnly">
-            <h1>
-              {i18n.translate('console.pageHeading', {
-                defaultMessage: 'Console',
-              })}
-            </h1>
-          </EuiTitle>
-          <EuiFlexGroup gutterSize="none">
-            <EuiFlexItem>
-              <TopNavMenu
-                disabled={!done}
-                items={getTopNavConfig({
-                  onClickHistory: () => setShowHistory(!showingHistory),
-                  onClickSettings: () => setShowSettings(true),
-                  onClickHelp: () => setShowHelp(!showHelp),
-                  onClickVariables: () => setShowVariables(!showVariables),
-                })}
-              />
+    <RequestContextProvider>
+      <EditorContextProvider settings={settings}>
+        <div id="consoleRoot">
+          <EuiFlexGroup
+            className="consoleContainer"
+            gutterSize="none"
+            direction="column"
+            responsive={false}
+          >
+            <EuiFlexItem grow={false}>
+              <EuiTitle className="euiScreenReaderOnly">
+                <h1>
+                  {i18n.translate('console.pageHeading', {
+                    defaultMessage: 'Console',
+                  })}
+                </h1>
+              </EuiTitle>
+              <EuiFlexGroup gutterSize="none">
+                <EuiFlexItem>
+                  <TopNavMenu
+                    disabled={!done}
+                    items={getTopNavConfig({
+                      onClickHistory: () => setShowHistory(!showingHistory),
+                      onClickSettings: () => setShowSettings(true),
+                      onClickHelp: () => setShowHelp(!showHelp),
+                      onClickVariables: () => setShowVariables(!showVariables),
+                    })}
+                  />
+                </EuiFlexItem>
+                <EuiFlexItem grow={false} className="conApp__tabsExtension">
+                  <NetworkRequestStatusBar
+                    requestInProgress={requestInProgress}
+                    requestResult={
+                      data
+                        ? {
+                            method: data.request.method.toUpperCase(),
+                            endpoint: data.request.path,
+                            statusCode: data.response.statusCode,
+                            statusText: data.response.statusText,
+                            timeElapsedMs: data.response.timeMs,
+                          }
+                        : undefined
+                    }
+                  />
+                </EuiFlexItem>
+              </EuiFlexGroup>
             </EuiFlexItem>
-            <EuiFlexItem grow={false} className="conApp__tabsExtension">
-              <NetworkRequestStatusBar
-                requestInProgress={requestInProgress}
-                requestResult={
-                  data
-                    ? {
-                        method: data.request.method.toUpperCase(),
-                        endpoint: data.request.path,
-                        statusCode: data.response.statusCode,
-                        statusText: data.response.statusText,
-                        timeElapsedMs: data.response.timeMs,
-                      }
-                    : undefined
-                }
-              />
+            {showingHistory ? (
+              <EuiFlexItem grow={false}>{renderConsoleHistory()}</EuiFlexItem>
+            ) : null}
+            <EuiFlexItem>
+              <Editor loading={!done} setEditorInstance={setEditorInstance} />
             </EuiFlexItem>
           </EuiFlexGroup>
-        </EuiFlexItem>
-        {showingHistory ? <EuiFlexItem grow={false}>{renderConsoleHistory()}</EuiFlexItem> : null}
-        <EuiFlexItem>
-          <Editor loading={!done} setEditorInstance={setEditorInstance} />
-        </EuiFlexItem>
-      </EuiFlexGroup>
 
-      {done && showWelcome ? (
-        <WelcomePanel
-          onDismiss={() => {
-            storage.set('version_welcome_shown', '@@SENSE_REVISION');
-            setShowWelcomePanel(false);
-          }}
-        />
-      ) : null}
+          {done && showWelcome ? (
+            <WelcomePanel
+              onDismiss={() => {
+                storage.set('version_welcome_shown', '@@SENSE_REVISION');
+                setShowWelcomePanel(false);
+              }}
+            />
+          ) : null}
 
-      {showSettings ? (
-        <Settings onClose={() => setShowSettings(false)} editorInstance={editorInstance} />
-      ) : null}
+          {showSettings ? (
+            <Settings onClose={() => setShowSettings(false)} editorInstance={editorInstance} />
+          ) : null}
 
-      {showVariables ? <Variables onClose={() => setShowVariables(false)} /> : null}
+          {showVariables ? <Variables onClose={() => setShowVariables(false)} /> : null}
 
-      {showHelp ? <HelpPanel onClose={() => setShowHelp(false)} /> : null}
-    </div>
+          {showHelp ? <HelpPanel onClose={() => setShowHelp(false)} /> : null}
+        </div>
+      </EditorContextProvider>
+    </RequestContextProvider>
   );
 };

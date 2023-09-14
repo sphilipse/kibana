@@ -10,8 +10,14 @@ import './index.scss';
 import { PluginInitializerContext } from '@kbn/core/public';
 
 import { ConsoleUIPlugin } from './plugin';
-export { renderApp as renderConsoleApp } from './application';
+export {
+  createContextServices,
+  renderApp as renderConsoleApp,
+  MainConsole,
+  ServicesContextProvider,
+} from './application';
 export { AutocompleteInfo, setAutocompleteInfo } from './services';
+export type { BootDependencies, ContextServices } from './application';
 
 export type { ConsoleUILocatorParams, ConsolePluginSetup } from './types';
 

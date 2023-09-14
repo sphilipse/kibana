@@ -9,7 +9,11 @@ import { AppMountParameters, CoreSetup, CoreStart, Plugin } from '@kbn/core/publ
 import { i18n } from '@kbn/i18n';
 import { appIds } from '@kbn/management-cards-navigation';
 import { AuthenticatedUser } from '@kbn/security-plugin/common';
-import { AutocompleteInfo, setAutocompleteInfo } from '@kbn/console-plugin/public';
+import {
+  AutocompleteInfo,
+  createContextServices,
+  setAutocompleteInfo,
+} from '@kbn/console-plugin/public';
 import { createServerlessSearchSideNavComponent as createComponent } from './layout/nav';
 import { docLinks } from '../common/doc_links';
 import {
@@ -55,21 +59,11 @@ export class ServerlessSearchPlugin
           user = undefined;
         }
 
-        const {
-          i18n: { Context: I18nContext },
-          docLinks: { DOC_LINK_VERSION, links },
-        } = coreStart;
-
-        const consoleDependencies = {
+        const consoleDependencies = createContextServices({
           autocompleteInfo,
-          docLinks: links,
-          docLinkVersion: DOC_LINK_VERSION,
-          element,
-          http: core.http,
-          I18nContext,
+          http: coreStart.http,
           notifications: coreStart.notifications,
-          theme$: coreStart.theme.theme$,
-        };
+        });
 
         return await renderApp(element, coreStart, { user, ...services }, consoleDependencies);
       },

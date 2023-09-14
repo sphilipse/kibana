@@ -28,9 +28,12 @@ import {
 } from '../services';
 import { createUsageTracker } from '../services/tracker';
 import * as localStorageObjectClient from '../lib/local_storage_object_client';
-import { MainConsole } from './containers';
-import { ServicesContextProvider, EditorContextProvider, RequestContextProvider } from './contexts';
+import { ServicesContextProvider } from './contexts';
+export { ServicesContextProvider } from './contexts';
+export type { ContextServices } from './contexts';
 import { createApi, createEsHostService } from './lib';
+import { MainConsole } from './containers';
+export { MainConsole } from './containers';
 
 export interface BootDependencies {
   http: HttpSetup;
@@ -44,20 +47,21 @@ export interface BootDependencies {
   autocompleteInfo: AutocompleteInfo;
 }
 
-export function renderApp({
-  I18nContext,
-  notifications,
-  docLinkVersion,
-  usageCollection,
-  element,
-  http,
-  theme$,
-  docLinks,
+export interface ServicesDependencies {
+  autocompleteInfo: AutocompleteInfo;
+  http: HttpSetup;
+  notifications: NotificationsSetup;
+  usageCollection?: UsageCollectionSetup;
+}
+
+export function createContextServices({
   autocompleteInfo,
-}: BootDependencies) {
+  http,
+  notifications,
+  usageCollection,
+}: ServicesDependencies) {
   const trackUiMetric = createUsageTracker(usageCollection);
   trackUiMetric.load('opened_app');
-
   const storage = createStorage({
     engine: window.localStorage,
     prefix: 'sense:',
@@ -70,6 +74,31 @@ export function renderApp({
   const esHostService = createEsHostService({ api });
 
   autocompleteInfo.mapping.setup(http, settings);
+  return {
+    esHostService,
+    storage,
+    history,
+    settings,
+    notifications,
+    trackUiMetric,
+    objectStorageClient,
+    http,
+    autocompleteInfo,
+  };
+}
+
+export function renderApp({
+  I18nContext,
+  notifications,
+  docLinkVersion,
+  usageCollection,
+  element,
+  http,
+  theme$,
+  docLinks,
+  autocompleteInfo,
+}: BootDependencies) {
+  const services = createContextServices({ autocompleteInfo, http, notifications });
 
   render(
     <I18nContext>
@@ -78,25 +107,11 @@ export function renderApp({
           value={{
             docLinkVersion,
             docLinks,
-            services: {
-              esHostService,
-              storage,
-              history,
-              settings,
-              notifications,
-              trackUiMetric,
-              objectStorageClient,
-              http,
-              autocompleteInfo,
-            },
+            services,
             theme$,
           }}
         >
-          <RequestContextProvider>
-            <EditorContextProvider settings={settings.toJSON()}>
-              <MainConsole />
-            </EditorContextProvider>
-          </RequestContextProvider>
+          <MainConsole settings={services.settings.toJSON()} />
         </ServicesContextProvider>
       </KibanaThemeProvider>
     </I18nContext>,

@@ -30,17 +30,18 @@ export const TryInConsoleButton = ({
   if (!canShowDevtools || !url) return null;
 
   const devToolsDataUri = compressToEncodedURIComponent(request);
-  const consolePreviewLink = url.locators.get('CONSOLE_APP_LOCATOR')?.useUrl(
-    {
-      loadFrom: `data:text/plain,${devToolsDataUri}`,
-    },
-    undefined,
-    [request]
-  );
+  // const consolePreviewLink = url.locators.get('CONSOLE_APP_LOCATOR')?.useUrl(
+  //   {
+  //     loadFrom: `data:text/plain,${devToolsDataUri}`,
+  //   },
+  //   undefined,
+  //   [request]
+  // );
+  const consolePreviewLink = `#/console?load_from=data:text/plain,${devToolsDataUri}`;
   if (!consolePreviewLink) return null;
 
   return (
-    <EuiButtonEmpty href={consolePreviewLink} iconType="popout" target="_blank">
+    <EuiButtonEmpty href={consolePreviewLink}>
       <FormattedMessage
         id="searchApiPanels.welcomeBanner.tryInConsoleButton"
         defaultMessage="Try in console"

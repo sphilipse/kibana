@@ -15,7 +15,7 @@ import { ObjectStorageClient } from '../../../common/types';
 import { MetricsTracker } from '../../types';
 import { EsHostService } from '../lib';
 
-interface ContextServices {
+export interface ContextServices {
   history: History;
   storage: Storage;
   settings: Settings;

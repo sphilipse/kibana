@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import React, { createRef } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { CoreStart } from '@kbn/core/public';
 import { KibanaContextProvider } from '@kbn/kibana-react-plugin/public';
@@ -13,7 +13,7 @@ import { I18nProvider } from '@kbn/i18n-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { KibanaThemeProvider } from '@kbn/react-kibana-context-theme';
-import { BootDependencies } from '@kbn/console-plugin/public/application';
+import { ContextServices, ServicesContextProvider } from '@kbn/console-plugin/public';
 import { ServerlessSearchContext } from './hooks/use_kibana';
 import { Console } from './components/console';
 
@@ -21,11 +21,11 @@ export async function renderApp(
   element: HTMLElement,
   core: CoreStart,
   services: ServerlessSearchContext,
-  consoleDependencies: BootDependencies
+  consoleDependencies: ContextServices
 ) {
   const { ElasticsearchOverview } = await import('./components/overview');
-  const devConsoleRef = createRef<HTMLDivElement>();
   const queryClient = new QueryClient();
+
   ReactDOM.render(
     <KibanaThemeProvider theme={core.theme}>
       <KibanaContextProvider services={{ ...core, ...services }}>
@@ -33,7 +33,16 @@ export async function renderApp(
           <ReactQueryDevtools initialIsOpen={false} />
           <I18nProvider>
             <ElasticsearchOverview />
-            <Console dependencies={consoleDependencies} />
+            <ServicesContextProvider
+              value={{
+                services: consoleDependencies,
+                docLinkVersion: core.docLinks.DOC_LINK_VERSION,
+                theme$: core.theme.theme$,
+                docLinks: core.docLinks.links,
+              }}
+            >
+              <Console />
+            </ServicesContextProvider>
           </I18nProvider>
         </QueryClientProvider>
       </KibanaContextProvider>

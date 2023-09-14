@@ -8,6 +8,7 @@
 
 export type { ContextValue } from './services_context';
 export { useServicesContext, ServicesContextProvider } from './services_context';
+export type { ContextServices } from './services_context';
 
 export {
   useRequestActionContext,

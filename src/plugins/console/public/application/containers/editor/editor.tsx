@@ -55,7 +55,7 @@ export const Editor = memo(({ loading, setEditorInstance }: Props) => {
     []
   );
 
-  if (!currentTextObject) return null;
+  // if (!currentTextObject) return null;
 
   return (
     <>
@@ -73,7 +73,7 @@ export const Editor = memo(({ loading, setEditorInstance }: Props) => {
             <EditorContentSpinner />
           ) : (
             <EditorUI
-              initialTextValue={currentTextObject.text}
+              initialTextValue={currentTextObject?.text ?? ''}
               setEditorInstance={setEditorInstance}
             />
           )}
