@@ -1,5 +1,45 @@
 # Search Relevance Workbench -- PRD
 
+## Implementation Progress
+
+### Phase 1: Data Model + Server Routes -- COMPLETE
+
+All server-side data model and route work is done. 39 tests passing, 0 regressions.
+
+**Common types (modified):**
+- `common/index.ts` -- Added `JUDGMENT_SET_SAVED_OBJECT_TYPE`, `EVALUATION_RUN_SAVED_OBJECT_TYPE`
+- `common/types.ts` -- Added 10 new API routes, 15+ type interfaces (JudgmentRating uses `index`/`id`, mapped to `_index`/`_id` at the ES API boundary)
+- `common/query_keys.ts` -- Added query/mutation keys for judgment sets, evaluation runs
+
+**Saved object schemas (new, 17 tests):**
+- `server/relevance/judgment_set_saved_object/schema/v1/v1.ts` + test
+- `server/relevance/evaluation_run_saved_object/schema/v1/v1.ts` + test
+
+**SO registrations (new):**
+- `server/relevance/judgment_set_saved_object/judgment_set_saved_object.ts`
+- `server/relevance/evaluation_run_saved_object/evaluation_run_saved_object.ts`
+- Both registered in `server/plugin.ts` with feature privileges extended
+
+**Server routes (new, 22 tests):**
+- `server/relevance/routes/judgment_sets.ts` -- Full CRUD (list, get, create, update, delete)
+- `server/relevance/routes/evaluate.ts` -- Fetches judgment set, builds `_rank_eval` request via `buildRankEvalRequest`, calls ES, persists run
+- `server/relevance/routes/runs.ts` -- List (with filter by judgment set), get, delete, compare
+
+**Utilities (new):**
+- `server/relevance/lib/build_rank_eval_request.ts` -- Transforms judgment set + query template + metric config into ES `RankEvalRequest` (uses official `@elastic/elasticsearch` types)
+- `server/relevance/utils/judgment_sets.ts` -- SO parsing helpers
+- `server/relevance/utils/evaluation_runs.ts` -- SO parsing + run comparison logic
+
+**Wiring:**
+- `server/routes.ts` -- Calls `defineJudgmentSetRoutes`, `defineEvaluateRoute`, `defineEvaluationRunRoutes`
+
+### Phase 2: Evaluation Engine -- NOT STARTED
+### Phase 3: UI -- Judgment Management -- NOT STARTED
+### Phase 4: UI -- Evaluation + History -- NOT STARTED
+### Phase 5: Index Config + Full Loop -- NOT STARTED
+
+---
+
 ## Problem
 
 Users tuning Elasticsearch search relevance lack a structured workflow within Kibana. Today they manually run queries, eyeball results, and have no systematic way to measure whether changes to queries, analyzers, pipelines, or mappings actually improved relevance. There is no way to track evaluation history or compare runs over time.
@@ -38,8 +78,8 @@ interface JudgmentSet {
 interface Judgment {
   query: string;
   ratings: Array<{
-    _index: string;
-    _id: string;
+    index: string;
+    id: string;
     rating: number; // 0-3 (irrelevant, marginal, relevant, highly relevant)
   }>;
 }

@@ -47,6 +47,7 @@ export interface QuerySourceFields {
 }
 
 const BASE_API_PATH = '/internal/search_playground';
+const RELEVANCE_API_PATH = `${BASE_API_PATH}/relevance`;
 
 export enum APIRoutes {
   BASE_API = BASE_API_PATH,
@@ -62,6 +63,18 @@ export enum APIRoutes {
   GET_PLAYGROUND = `${BASE_API_PATH}/playgrounds/{id}`,
   GET_PLAYGROUNDS = `${BASE_API_PATH}/playgrounds`,
   DELETE_PLAYGROUND = `${BASE_API_PATH}/playgrounds/{id}`,
+
+  // Relevance workbench routes
+  GET_JUDGMENT_SETS = `${RELEVANCE_API_PATH}/judgment_sets`,
+  PUT_JUDGMENT_SET_CREATE = `${RELEVANCE_API_PATH}/judgment_sets`,
+  GET_JUDGMENT_SET = `${RELEVANCE_API_PATH}/judgment_sets/{id}`,
+  PUT_JUDGMENT_SET_UPDATE = `${RELEVANCE_API_PATH}/judgment_sets/{id}`,
+  DELETE_JUDGMENT_SET = `${RELEVANCE_API_PATH}/judgment_sets/{id}`,
+  POST_EVALUATE = `${RELEVANCE_API_PATH}/evaluate`,
+  GET_EVALUATION_RUNS = `${RELEVANCE_API_PATH}/runs`,
+  GET_EVALUATION_RUN = `${RELEVANCE_API_PATH}/runs/{id}`,
+  DELETE_EVALUATION_RUN = `${RELEVANCE_API_PATH}/runs/{id}`,
+  POST_COMPARE_RUNS = `${RELEVANCE_API_PATH}/runs/compare`,
 }
 
 export enum LLMs {
@@ -152,4 +165,134 @@ export interface PlaygroundListResponse {
     total: number;
   };
   items: PlaygroundListObject[];
+}
+
+// Relevance workbench types
+
+export type RankEvalMetricType =
+  | 'precision'
+  | 'recall'
+  | 'mean_reciprocal_rank'
+  | 'dcg'
+  | 'ndcg'
+  | 'expected_reciprocal_rank';
+
+export interface JudgmentRating {
+  index: string;
+  id: string;
+  rating: number;
+}
+
+export interface Judgment {
+  query: string;
+  ratings: JudgmentRating[];
+}
+
+export interface JudgmentSetSavedObject {
+  name: string;
+  indices: string[];
+  judgments: Judgment[];
+}
+
+export interface MetricConfig {
+  type: RankEvalMetricType;
+  params: Record<string, unknown>;
+}
+
+export interface PerQueryScore {
+  query: string;
+  score: number;
+  unratedDocs: number;
+}
+
+export interface EvaluationRunSavedObject {
+  judgmentSetId: string;
+  name?: string;
+  timestamp: string;
+  queryTemplateJSON: string;
+  metric: MetricConfig;
+  overallScore: number;
+  perQueryScores: PerQueryScore[];
+  indexSettingsSnapshot?: Record<string, unknown>;
+}
+
+export interface JudgmentSetMetadata {
+  id: string;
+  createdAt?: string;
+  createdBy?: string;
+  updatedAt?: string;
+  updatedBy?: string;
+}
+
+export interface JudgmentSetResponse {
+  _meta: JudgmentSetMetadata;
+  data: JudgmentSetSavedObject;
+}
+
+export interface JudgmentSetListObject {
+  id: string;
+  name: string;
+  judgmentCount: number;
+  createdAt?: string;
+  createdBy?: string;
+  updatedAt?: string;
+  updatedBy?: string;
+}
+
+export interface JudgmentSetListResponse {
+  _meta: {
+    page: number;
+    size: number;
+    total: number;
+  };
+  items: JudgmentSetListObject[];
+}
+
+export interface EvaluationRunMetadata {
+  id: string;
+  createdAt?: string;
+  createdBy?: string;
+  updatedAt?: string;
+  updatedBy?: string;
+}
+
+export interface EvaluationRunResponse {
+  _meta: EvaluationRunMetadata;
+  data: EvaluationRunSavedObject;
+}
+
+export interface EvaluationRunListObject {
+  id: string;
+  name?: string;
+  judgmentSetId: string;
+  timestamp: string;
+  metricType: RankEvalMetricType;
+  overallScore: number;
+  createdAt?: string;
+  createdBy?: string;
+}
+
+export interface EvaluationRunListResponse {
+  _meta: {
+    page: number;
+    size: number;
+    total: number;
+  };
+  items: EvaluationRunListObject[];
+}
+
+export interface RunComparisonResult {
+  baselineRunId: string;
+  comparisonRunId: string;
+  baselineScore: number;
+  comparisonScore: number;
+  scoreDelta: number;
+  perQueryComparison: Array<{
+    query: string;
+    baselineScore: number;
+    comparisonScore: number;
+    delta: number;
+    improved: boolean;
+    regressed: boolean;
+  }>;
 }

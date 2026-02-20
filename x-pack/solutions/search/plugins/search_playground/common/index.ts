@@ -36,5 +36,7 @@ export enum ROUTE_VERSIONS {
 }
 
 export const PLAYGROUND_SAVED_OBJECT_TYPE = 'search_playground';
+export const JUDGMENT_SET_SAVED_OBJECT_TYPE = 'search_judgment_set';
+export const EVALUATION_RUN_SAVED_OBJECT_TYPE = 'search_evaluation_run';
 
 export const DEFAULT_CONTEXT_DOCUMENTS = 3;

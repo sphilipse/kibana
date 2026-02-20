@@ -31,6 +31,9 @@ import { contextDocumentHitMapper } from './utils/context_document_mapper';
 import { parseSourceFields } from './utils/parse_source_fields';
 import { getErrorMessage } from '../common/errors';
 import { defineSavedPlaygroundRoutes } from './routes/saved_playgrounds';
+import { defineJudgmentSetRoutes } from './relevance/routes/judgment_sets';
+import { defineEvaluateRoute } from './relevance/routes/evaluate';
+import { defineEvaluationRunRoutes } from './relevance/routes/runs';
 
 const EMPTY_INDICES_ERROR_MESSAGE = i18n.translate(
   'xpack.searchPlayground.serverErrors.emptyIndices',
@@ -489,4 +492,9 @@ export function defineRoutes(routeOptions: DefineRoutesOptions) {
   );
 
   defineSavedPlaygroundRoutes(routeOptions);
+
+  // Relevance workbench routes
+  defineJudgmentSetRoutes(routeOptions);
+  defineEvaluateRoute(routeOptions);
+  defineEvaluationRunRoutes(routeOptions);
 }

@@ -15,10 +15,19 @@ export enum SearchPlaygroundQueryKeys {
   QueryIndices = 'searchPlaygroundQueryIndices',
   IndicesFields = 'searchPlaygroundIndicesFields',
   IndexMappings = 'searchPlaygroundIndexMappings',
+  JudgmentSetsList = 'searchPlaygroundJudgmentSetsList',
+  JudgmentSet = 'searchPlaygroundJudgmentSet',
+  EvaluationRunsList = 'searchPlaygroundEvaluationRunsList',
+  EvaluationRun = 'searchPlaygroundEvaluationRun',
 }
 
 export enum SearchPlaygroundMutationKeys {
   DeletePlayground = 'searchPlaygroundDeletePlayground',
   SavePlayground = 'searchPlaygroundSavePlayground',
   UpdatePlayground = 'searchPlaygroundUpdatePlayground',
+  CreateJudgmentSet = 'searchPlaygroundCreateJudgmentSet',
+  UpdateJudgmentSet = 'searchPlaygroundUpdateJudgmentSet',
+  DeleteJudgmentSet = 'searchPlaygroundDeleteJudgmentSet',
+  RunEvaluation = 'searchPlaygroundRunEvaluation',
+  DeleteEvaluationRun = 'searchPlaygroundDeleteEvaluationRun',
 }

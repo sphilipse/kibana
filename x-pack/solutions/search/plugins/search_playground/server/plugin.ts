@@ -22,8 +22,16 @@ import type {
   SearchPlaygroundPluginStartDependencies,
 } from './types';
 import { defineRoutes } from './routes';
-import { PLUGIN_ID, PLUGIN_NAME, PLAYGROUND_SAVED_OBJECT_TYPE } from '../common';
+import {
+  PLUGIN_ID,
+  PLUGIN_NAME,
+  PLAYGROUND_SAVED_OBJECT_TYPE,
+  JUDGMENT_SET_SAVED_OBJECT_TYPE,
+  EVALUATION_RUN_SAVED_OBJECT_TYPE,
+} from '../common';
 import { createPlaygroundSavedObjectType } from './playground_saved_object/playground_saved_object';
+import { createJudgmentSetSavedObjectType } from './relevance/judgment_set_saved_object/judgment_set_saved_object';
+import { createEvaluationRunSavedObjectType } from './relevance/evaluation_run_saved_object/evaluation_run_saved_object';
 
 export class SearchPlaygroundPlugin
   implements
@@ -47,6 +55,8 @@ export class SearchPlaygroundPlugin
     this.logger.debug('searchPlayground: Setup');
 
     core.savedObjects.registerType(createPlaygroundSavedObjectType());
+    core.savedObjects.registerType(createJudgmentSetSavedObjectType());
+    core.savedObjects.registerType(createEvaluationRunSavedObjectType());
 
     const router = core.http.createRouter();
 
@@ -68,8 +78,16 @@ export class SearchPlaygroundPlugin
           api: [PLUGIN_ID],
           catalogue: [PLUGIN_ID],
           savedObject: {
-            all: [PLAYGROUND_SAVED_OBJECT_TYPE],
-            read: [PLAYGROUND_SAVED_OBJECT_TYPE],
+            all: [
+              PLAYGROUND_SAVED_OBJECT_TYPE,
+              JUDGMENT_SET_SAVED_OBJECT_TYPE,
+              EVALUATION_RUN_SAVED_OBJECT_TYPE,
+            ],
+            read: [
+              PLAYGROUND_SAVED_OBJECT_TYPE,
+              JUDGMENT_SET_SAVED_OBJECT_TYPE,
+              EVALUATION_RUN_SAVED_OBJECT_TYPE,
+            ],
           },
           ui: [],
         },
@@ -78,7 +96,11 @@ export class SearchPlaygroundPlugin
           api: [PLUGIN_ID],
           savedObject: {
             all: [],
-            read: [PLAYGROUND_SAVED_OBJECT_TYPE],
+            read: [
+              PLAYGROUND_SAVED_OBJECT_TYPE,
+              JUDGMENT_SET_SAVED_OBJECT_TYPE,
+              EVALUATION_RUN_SAVED_OBJECT_TYPE,
+            ],
           },
           ui: [],
         },
