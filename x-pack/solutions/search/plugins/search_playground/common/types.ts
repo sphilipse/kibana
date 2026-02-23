@@ -213,6 +213,7 @@ export interface EvaluationRunSavedObject {
   metric: MetricConfig;
   overallScore: number;
   perQueryScores: PerQueryScore[];
+  clientMetrics?: ClientMetrics;
   indexSettingsSnapshot?: Record<string, unknown>;
 }
 
@@ -279,6 +280,17 @@ export interface EvaluationRunListResponse {
     total: number;
   };
   items: EvaluationRunListObject[];
+}
+
+export interface ClientMetrics {
+  totalQueries: number;
+  medianScore: number;
+  scoreStandardDeviation: number;
+  minScore: number;
+  maxScore: number;
+  queryPassRate: number;
+  queriesWithUnratedDocs: number;
+  unratedDocRate: number;
 }
 
 export interface RunComparisonResult {

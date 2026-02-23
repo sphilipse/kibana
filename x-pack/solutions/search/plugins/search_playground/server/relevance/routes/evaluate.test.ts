@@ -119,6 +119,16 @@ describe('Relevance Workbench - Evaluate API', () => {
               { query: 'search term', score: 0.8, unratedDocs: 1 },
               { query: 'another query', score: 0.7, unratedDocs: 0 },
             ],
+            clientMetrics: {
+              totalQueries: 2,
+              medianScore: 0.75,
+              scoreStandardDeviation: expect.any(Number),
+              minScore: 0.7,
+              maxScore: 0.8,
+              queryPassRate: 1,
+              queriesWithUnratedDocs: 1,
+              unratedDocRate: 0.5,
+            },
           },
         });
 
@@ -161,6 +171,15 @@ describe('Relevance Workbench - Evaluate API', () => {
             judgmentSetId: 'js-1',
             overallScore: 0.75,
             metric: { type: 'ndcg', params: { k: 10 } },
+            clientMetrics: expect.objectContaining({
+              totalQueries: 2,
+              medianScore: 0.75,
+              minScore: 0.7,
+              maxScore: 0.8,
+              queryPassRate: 1,
+              queriesWithUnratedDocs: 1,
+              unratedDocRate: 0.5,
+            }),
           })
         );
 

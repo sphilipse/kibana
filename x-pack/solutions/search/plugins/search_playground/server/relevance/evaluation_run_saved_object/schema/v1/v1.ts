@@ -25,6 +25,17 @@ const perQueryScoreSchema = schema.object({
   unratedDocs: schema.number(),
 });
 
+const clientMetricsSchema = schema.object({
+  totalQueries: schema.number(),
+  medianScore: schema.number(),
+  scoreStandardDeviation: schema.number(),
+  minScore: schema.number(),
+  maxScore: schema.number(),
+  queryPassRate: schema.number(),
+  queriesWithUnratedDocs: schema.number(),
+  unratedDocRate: schema.number(),
+});
+
 export const evaluationRunAttributesSchema = schema.object({
   judgmentSetId: schema.string(),
   name: schema.maybe(schema.string()),
@@ -33,5 +44,6 @@ export const evaluationRunAttributesSchema = schema.object({
   metric: metricConfigSchema,
   overallScore: schema.number(),
   perQueryScores: schema.arrayOf(perQueryScoreSchema),
+  clientMetrics: schema.maybe(clientMetricsSchema),
   indexSettingsSnapshot: schema.maybe(schema.recordOf(schema.string(), schema.any())),
 });

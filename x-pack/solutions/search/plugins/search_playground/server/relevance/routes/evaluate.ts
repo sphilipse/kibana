@@ -23,6 +23,7 @@ import type {
 } from '../../../common/types';
 import { errorHandler } from '../../utils/error_handler';
 import { buildRankEvalRequest } from '../lib/build_rank_eval_request';
+import { computeClientMetrics } from '../lib/compute_client_metrics';
 import { metricConfigSchema } from '../evaluation_run_saved_object/schema/v1/v1';
 
 const evaluateBodySchema = schema.object({
@@ -31,6 +32,7 @@ const evaluateBodySchema = schema.object({
   metric: metricConfigSchema,
   indices: schema.arrayOf(schema.string(), { minSize: 1 }),
   name: schema.maybe(schema.string()),
+  passThreshold: schema.maybe(schema.number({ min: 0, max: 1 })),
 });
 
 export const defineEvaluateRoute = ({ logger, router }: DefineRoutesOptions) => {
@@ -59,7 +61,8 @@ export const defineEvaluateRoute = ({ logger, router }: DefineRoutesOptions) => 
         },
       },
       errorHandler(logger)(async (context, request, response) => {
-        const { judgmentSetId, queryTemplateJSON, metric, indices, name } = request.body;
+        const { judgmentSetId, queryTemplateJSON, metric, indices, name, passThreshold } =
+          request.body;
         const core = await context.core;
         const soClient = core.savedObjects.client;
         const esClient = core.elasticsearch.client.asCurrentUser;
@@ -143,6 +146,10 @@ export const defineEvaluateRoute = ({ logger, router }: DefineRoutesOptions) => 
           unratedDocs: detail.unrated_docs?.length ?? 0,
         }));
 
+        const clientMetricsResult = computeClientMetrics(perQueryScores, {
+          ...(passThreshold != null && { passThreshold }),
+        });
+
         const runAttributes: EvaluationRunSavedObject = {
           judgmentSetId,
           name,
@@ -151,6 +158,7 @@ export const defineEvaluateRoute = ({ logger, router }: DefineRoutesOptions) => 
           metric,
           overallScore: rankEvalResponse.metric_score,
           perQueryScores,
+          clientMetrics: clientMetricsResult,
         };
 
         // Persist the run

@@ -19,3 +19,12 @@ export const SAVED_PLAYGROUND_CHAT_PATH = `${SAVED_PLAYGROUND_BASE_PATH}/chat`;
 export const SAVED_PLAYGROUND_CHAT_QUERY_PATH = `${SAVED_PLAYGROUND_CHAT_PATH}/query`;
 export const SAVED_PLAYGROUND_SEARCH_PATH = `${SAVED_PLAYGROUND_BASE_PATH}/search`;
 export const SAVED_PLAYGROUND_SEARCH_QUERY_PATH = `${SAVED_PLAYGROUND_SEARCH_PATH}/query`;
+
+// Relevance workbench routes
+export const RELEVANCE_PATH = `${ROOT_PATH}relevance`;
+export const RELEVANCE_JUDGMENTS_NEW_PATH = `${RELEVANCE_PATH}/judgments/new`;
+export const RELEVANCE_JUDGMENTS_DETAIL_PATH = `${RELEVANCE_PATH}/judgments/:id`;
+// Phase 4: Evaluation + History UI
+export const RELEVANCE_EVALUATE_PATH = `${RELEVANCE_PATH}/evaluate/:judgmentSetId`;
+export const RELEVANCE_RUNS_PATH = `${RELEVANCE_PATH}/runs`;
+export const RELEVANCE_RUNS_DETAIL_PATH = `${RELEVANCE_PATH}/runs/:runId`;

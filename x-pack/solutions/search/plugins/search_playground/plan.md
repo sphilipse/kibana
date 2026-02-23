@@ -33,8 +33,52 @@ All server-side data model and route work is done. 39 tests passing, 0 regressio
 **Wiring:**
 - `server/routes.ts` -- Calls `defineJudgmentSetRoutes`, `defineEvaluateRoute`, `defineEvaluationRunRoutes`
 
-### Phase 2: Evaluation Engine -- NOT STARTED
-### Phase 3: UI -- Judgment Management -- NOT STARTED
+### Phase 2: Evaluation Engine -- COMPLETE
+
+All evaluation engine logic is tested and wired. 83 tests passing, 0 regressions.
+
+**Unit-tested library modules (new, 43 tests):**
+- `server/relevance/lib/build_rank_eval_request.test.ts` -- 13 tests covering query mapping, rating boundary conversion (`index`/`id` → `_index`/`_id`), all metric types, edge cases (empty judgments, empty ratings, multi-index, complex templates)
+- `server/relevance/lib/compare_runs.test.ts` -- 9 tests covering score deltas, per-query diffs, queries only in baseline (regressed to zero), queries only in comparison (new), zero-score edge case, empty runs
+- `server/relevance/lib/compute_client_metrics.test.ts` -- 21 tests covering median, standard deviation, min/max, query pass rate (default + custom threshold), unrated doc metrics, empty input edge cases
+
+**New modules:**
+- `server/relevance/lib/compare_runs.ts` -- Extracted from `utils/evaluation_runs.ts` for cleaner separation; `utils/evaluation_runs.ts` re-exports for backward compatibility
+- `server/relevance/lib/compute_client_metrics.ts` -- Computes client-side aggregate metrics (median, std dev, min/max, pass rate, unrated doc coverage) from per-query scores
+
+**New type:**
+- `common/types.ts` -- Added `ClientMetrics` interface, added optional `clientMetrics` field to `EvaluationRunSavedObject`
+
+**Schema update:**
+- `server/relevance/evaluation_run_saved_object/schema/v1/v1.ts` -- Added `clientMetricsSchema` and optional `clientMetrics` field
+
+**Wiring:**
+- `server/relevance/routes/evaluate.ts` -- Now calls `computeClientMetrics` after `_rank_eval` and persists `clientMetrics` alongside the run
+
+**Post-review fixes:**
+- `server/relevance/routes/evaluate.ts` -- Added optional `passThreshold` (0–1) to the evaluate request body schema; threaded through to `computeClientMetrics` so callers can override the default 0.5
+- `server/relevance/routes/evaluate.test.ts` -- Updated mock `create` return to include `clientMetrics` in attributes; added assertion that `clientMetrics` is persisted in the saved object with expected values
+
+### Phase 3: UI -- Judgment Management -- COMPLETE
+
+All judgment management UI is implemented and tested. 26 new tests, 363 total tests passing, 0 regressions.
+
+**Route constants (modified):**
+- `public/routes.ts` -- Added `RELEVANCE_PATH`, `RELEVANCE_JUDGMENTS_NEW_PATH`, `RELEVANCE_JUDGMENTS_DETAIL_PATH`, `RELEVANCE_EVALUATE_PATH`, `RELEVANCE_RUNS_PATH`, `RELEVANCE_RUNS_DETAIL_PATH`
+
+**React Query hooks (new, 9 tests):**
+- `public/hooks/use_judgment_sets.ts` -- `useJudgmentSetsList` (list with pagination/sort), `useJudgmentSet` (get by id), `useCreateJudgmentSet`, `useUpdateJudgmentSet`, `useDeleteJudgmentSet` (all with cache invalidation via `useQueryClient`)
+- `public/hooks/use_judgment_sets.test.ts` -- 9 tests: list fetch + default params + error handling, single fetch + disabled when empty id, create + cache invalidation, update + dual cache invalidation, delete + cache invalidation + error handling
+
+**Components (new, 17 tests):**
+- `public/components/relevance/judgment_editor.tsx` -- Core editing component: query table with expand-to-rate, inline rating via EuiButtonGroup (0-3 scale), add/remove queries, add/remove document ratings with duplicate prevention
+- `public/components/relevance/judgment_editor.test.tsx` -- 17 tests covering empty state, adding queries (button + Enter key), whitespace rejection, query table rendering, badge counts, delete queries, expanding ratings panel, document management, duplicate prevention, disabled states
+- `public/components/relevance/relevance_landing.tsx` -- Landing page: list judgment sets with table (name, query count, updated), pagination/sort, empty state, loading state, error state, "Create Judgment Set" CTA
+- `public/components/relevance/judgment_set_form.tsx` -- `JudgmentSetCreatePage` (new set: name + indices + JudgmentEditor) and `JudgmentSetDetailPage` (edit existing: loads via `useJudgmentSet`, pre-populates form, update on save)
+
+**Wiring:**
+- `public/playground_router.tsx` -- Added `<Route>` entries for `/relevance`, `/relevance/judgments/new`, `/relevance/judgments/:id`
+
 ### Phase 4: UI -- Evaluation + History -- NOT STARTED
 ### Phase 5: Index Config + Full Loop -- NOT STARTED
 
