@@ -21,6 +21,9 @@ import {
   RELEVANCE_PATH,
   RELEVANCE_JUDGMENTS_NEW_PATH,
   RELEVANCE_JUDGMENTS_DETAIL_PATH,
+  RELEVANCE_EVALUATE_PATH,
+  RELEVANCE_RUNS_PATH,
+  RELEVANCE_RUNS_DETAIL_PATH,
 } from './routes';
 import { usePlaygroundLicenseStatus } from './hooks/use_license_status';
 import { useSearchPlaygroundFeatureFlag } from './hooks/use_search_playground_feature_flag';
@@ -31,6 +34,9 @@ import {
   JudgmentSetCreatePage,
   JudgmentSetDetailPage,
 } from './components/relevance/judgment_set_form';
+import { EvaluatePage } from './components/relevance/evaluate_page';
+import { RunsListPage } from './components/relevance/runs_list_page';
+import { RunDetailPage } from './components/relevance/run_detail_page';
 
 export const PlaygroundRouter: React.FC = () => {
   const { hasRequiredLicense } = usePlaygroundLicenseStatus();
@@ -50,6 +56,9 @@ export const PlaygroundRouter: React.FC = () => {
       <Route exact path={RELEVANCE_PATH} component={RelevanceLanding} />
       <Route exact path={RELEVANCE_JUDGMENTS_NEW_PATH} component={JudgmentSetCreatePage} />
       <Route exact path={RELEVANCE_JUDGMENTS_DETAIL_PATH} component={JudgmentSetDetailPage} />
+      <Route exact path={RELEVANCE_EVALUATE_PATH} component={EvaluatePage} />
+      <Route exact path={RELEVANCE_RUNS_PATH} component={RunsListPage} />
+      <Route exact path={RELEVANCE_RUNS_DETAIL_PATH} component={RunDetailPage} />
       <Route path={SAVED_PLAYGROUND_PATH} component={SavedPlaygroundPage} />
       {!isSearchModeEnabled && (
         <Redirect from={SEARCH_PLAYGROUND_SEARCH_PATH} to={SEARCH_PLAYGROUND_CHAT_PATH} />

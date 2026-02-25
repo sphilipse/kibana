@@ -94,11 +94,11 @@ describe('getErrorMessage', () => {
     expect(getErrorMessage(errorNumber)).toBe('12345');
   });
 
-  it('should return "undefined" if the input is undefined', () => {
-    expect(getErrorMessage(undefined)).toBe('undefined');
+  it('should return a generic message if the input is undefined', () => {
+    expect(getErrorMessage(undefined)).toBe('An unknown error occurred');
   });
 
-  it('should return "null" if the input is null', () => {
-    expect(getErrorMessage(null)).toBe('null');
+  it('should return a generic message if the input is null', () => {
+    expect(getErrorMessage(null)).toBe('An unknown error occurred');
   });
 });

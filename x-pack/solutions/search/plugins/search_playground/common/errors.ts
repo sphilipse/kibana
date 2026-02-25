@@ -31,6 +31,11 @@ function HttpErrorHasBodyMessage(
 }
 
 export function getErrorMessage(e: unknown): string {
+  if (e == null) {
+    return i18n.translate('xpack.searchPlayground.unknownErrorMessage', {
+      defaultMessage: 'An unknown error occurred',
+    });
+  }
   if (e instanceof Error) {
     if (isHttpError(e) && HttpErrorHasBodyMessage(e)) {
       return e.body.message;

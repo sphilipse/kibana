@@ -79,7 +79,32 @@ All judgment management UI is implemented and tested. 26 new tests, 363 total te
 **Wiring:**
 - `public/playground_router.tsx` -- Added `<Route>` entries for `/relevance`, `/relevance/judgments/new`, `/relevance/judgments/:id`
 
-### Phase 4: UI -- Evaluation + History -- NOT STARTED
+### Phase 4: UI -- Evaluation + History -- COMPLETE
+
+All evaluation and history UI is implemented and tested. 41 new tests, 404 total tests passing, 0 regressions.
+
+**React Query hooks (new, 13 tests):**
+- `public/hooks/use_evaluation.ts` -- `useRunEvaluation` mutation hook: sends evaluate request, invalidates runs list cache on success, supports optional `name` and `passThreshold`
+- `public/hooks/use_evaluation.test.ts` -- 4 tests: send eval request + return result, cache invalidation, error handling, optional params
+- `public/hooks/use_evaluation_runs.ts` -- `useEvaluationRunsList` (list with pagination/sort/filter by judgment set), `useEvaluationRun` (get by id), `useDeleteEvaluationRun` (with cache invalidation), `useCompareRuns` (compare two runs)
+- `public/hooks/use_evaluation_runs.test.ts` -- 9 tests: list fetch + default params + judgmentSetId filter + error handling, single fetch + disabled when empty id, delete + cache invalidation + error handling, compare + error handling
+
+**Components (new, 28 tests):**
+- `public/components/relevance/evaluation_config_panel.tsx` -- Metric selection (6 types), k parameter, query template editor (CodeEditor with JSON validation), run name, run/cancel buttons, error display
+- `public/components/relevance/evaluation_config_panel.test.tsx` -- 12 tests: renders all fields, default metric (nDCG), default k (10), metric change, k change, onRun callback, onCancel callback, disabled when running, error callout, no error when none, JSON validation, all 6 metrics available
+- `public/components/relevance/run_history_chart.tsx` -- Line chart (@elastic/charts) showing score over time, empty state, click-to-navigate
+- `public/components/relevance/run_history_chart.test.tsx` -- 6 tests: empty state, chart with data, correct data point count, both axes, title, single run
+- `public/components/relevance/run_comparison_view.tsx` -- Side-by-side per-query score diff with improved/regressed/unchanged badges, overall score stats, summary counts
+- `public/components/relevance/run_comparison_view.test.tsx` -- 10 tests: empty state, overall scores, per-query table, improved badges, regressed badges, unchanged badges, summary counts, all-improved, negative delta, title
+
+**Page components (new):**
+- `public/components/relevance/evaluate_page.tsx` -- Loads judgment set, renders EvaluationConfigPanel, triggers evaluation, navigates to run detail on success
+- `public/components/relevance/runs_list_page.tsx` -- Lists runs with chart, table with pagination, checkbox selection, compare button, delete button, comparison view inline
+- `public/components/relevance/run_detail_page.tsx` -- Run detail with overall score, query count, client metrics (median, pass rate, min/max, std dev, unrated doc rate), per-query scores table
+
+**Wiring:**
+- `public/playground_router.tsx` -- Added `<Route>` entries for `/relevance/evaluate/:judgmentSetId`, `/relevance/runs`, `/relevance/runs/:runId`
+
 ### Phase 5: Index Config + Full Loop -- NOT STARTED
 
 ---
