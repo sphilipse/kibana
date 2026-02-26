@@ -11,14 +11,10 @@ describe('judgmentSetAttributesSchema', () => {
   const validJudgmentSet = {
     name: 'My Judgment Set',
     indices: ['my-index'],
+    query: 'search term',
     judgments: [
-      {
-        query: 'search term',
-        ratings: [
-          { index: 'my-index', id: 'doc1', rating: 3 },
-          { index: 'my-index', id: 'doc2', rating: 0 },
-        ],
-      },
+      { index: 'my-index', id: 'doc1', rating: 3 },
+      { index: 'my-index', id: 'doc2', rating: 0 },
     ],
   };
 
@@ -38,26 +34,23 @@ describe('judgmentSetAttributesSchema', () => {
     ).toThrow();
   });
 
-  it('requires at least one judgment', () => {
+  it('requires a non-empty query', () => {
     expect(() =>
-      judgmentSetAttributesSchema.validate({ ...validJudgmentSet, judgments: [] })
+      judgmentSetAttributesSchema.validate({ ...validJudgmentSet, query: '' })
     ).toThrow();
   });
 
-  it('requires each judgment to have a query string', () => {
+  it('allows an empty judgments array', () => {
     expect(() =>
-      judgmentSetAttributesSchema.validate({
-        ...validJudgmentSet,
-        judgments: [{ query: '', ratings: [{ index: 'i', id: 'd', rating: 1 }] }],
-      })
-    ).toThrow();
+      judgmentSetAttributesSchema.validate({ ...validJudgmentSet, judgments: [] })
+    ).not.toThrow();
   });
 
   it('requires each rating to have index, id, and rating', () => {
     expect(() =>
       judgmentSetAttributesSchema.validate({
         ...validJudgmentSet,
-        judgments: [{ query: 'q', ratings: [{ index: 'i', id: 'd' }] }],
+        judgments: [{ index: 'i', id: 'd' }],
       })
     ).toThrow();
   });
@@ -66,7 +59,7 @@ describe('judgmentSetAttributesSchema', () => {
     expect(() =>
       judgmentSetAttributesSchema.validate({
         ...validJudgmentSet,
-        judgments: [{ query: 'q', ratings: [{ index: 'i', id: 'd', rating: -1 }] }],
+        judgments: [{ index: 'i', id: 'd', rating: -1 }],
       })
     ).toThrow();
   });
@@ -75,17 +68,8 @@ describe('judgmentSetAttributesSchema', () => {
     expect(() =>
       judgmentSetAttributesSchema.validate({
         ...validJudgmentSet,
-        judgments: [{ query: 'q', ratings: [{ index: 'i', id: 'd', rating: 4 }] }],
+        judgments: [{ index: 'i', id: 'd', rating: 4 }],
       })
     ).toThrow();
-  });
-
-  it('allows empty ratings array for a judgment', () => {
-    expect(() =>
-      judgmentSetAttributesSchema.validate({
-        ...validJudgmentSet,
-        judgments: [{ query: 'q', ratings: [] }],
-      })
-    ).not.toThrow();
   });
 });

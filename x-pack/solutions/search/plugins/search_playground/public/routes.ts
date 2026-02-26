@@ -20,11 +20,10 @@ export const SAVED_PLAYGROUND_CHAT_QUERY_PATH = `${SAVED_PLAYGROUND_CHAT_PATH}/q
 export const SAVED_PLAYGROUND_SEARCH_PATH = `${SAVED_PLAYGROUND_BASE_PATH}/search`;
 export const SAVED_PLAYGROUND_SEARCH_QUERY_PATH = `${SAVED_PLAYGROUND_SEARCH_PATH}/query`;
 
-// Relevance workbench routes
-export const RELEVANCE_PATH = `${ROOT_PATH}relevance`;
-export const RELEVANCE_JUDGMENTS_NEW_PATH = `${RELEVANCE_PATH}/judgments/new`;
-export const RELEVANCE_JUDGMENTS_DETAIL_PATH = `${RELEVANCE_PATH}/judgments/:id`;
-// Phase 4: Evaluation + History UI
-export const RELEVANCE_EVALUATE_PATH = `${RELEVANCE_PATH}/evaluate/:judgmentSetId`;
-export const RELEVANCE_RUNS_PATH = `${RELEVANCE_PATH}/runs`;
-export const RELEVANCE_RUNS_DETAIL_PATH = `${RELEVANCE_PATH}/runs/:runId`;
+// Relevance workbench routes (relative to the relevance app root)
+export const RELEVANCE_JUDGMENTS_NEW_PATH = `${ROOT_PATH}judgments/new`;
+export const RELEVANCE_JUDGMENTS_DETAIL_PATH = `${ROOT_PATH}judgments/:id`;
+export const RELEVANCE_EVALUATE_PATH = `${ROOT_PATH}evaluate/:judgmentSetId`;
+export const RELEVANCE_RUNS_PATH = `${ROOT_PATH}runs`;
+export const RELEVANCE_RUNS_DETAIL_PATH = `${ROOT_PATH}runs/:runId`;
+export const RELEVANCE_INDEX_CONFIG_PATH = `${ROOT_PATH}index-config/:judgmentSetId`;

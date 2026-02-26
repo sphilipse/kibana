@@ -75,6 +75,13 @@ export enum APIRoutes {
   GET_EVALUATION_RUN = `${RELEVANCE_API_PATH}/runs/{id}`,
   DELETE_EVALUATION_RUN = `${RELEVANCE_API_PATH}/runs/{id}`,
   POST_COMPARE_RUNS = `${RELEVANCE_API_PATH}/runs/compare`,
+
+  // Index config routes
+  POST_INDEX_CONFIG = `${RELEVANCE_API_PATH}/index_config`,
+  PUT_INDEX_SETTINGS = `${RELEVANCE_API_PATH}/index_config/settings`,
+  PUT_INDEX_MAPPINGS = `${RELEVANCE_API_PATH}/index_config/mappings`,
+  GET_PIPELINES = `${RELEVANCE_API_PATH}/pipelines`,
+  PUT_PIPELINE = `${RELEVANCE_API_PATH}/pipelines/{id}`,
 }
 
 export enum LLMs {
@@ -183,15 +190,11 @@ export interface JudgmentRating {
   rating: number;
 }
 
-export interface Judgment {
-  query: string;
-  ratings: JudgmentRating[];
-}
-
 export interface JudgmentSetSavedObject {
   name: string;
   indices: string[];
-  judgments: Judgment[];
+  query: string;
+  judgments: JudgmentRating[];
 }
 
 export interface MetricConfig {
@@ -307,4 +310,21 @@ export interface RunComparisonResult {
     improved: boolean;
     regressed: boolean;
   }>;
+}
+
+// Index config types
+
+export interface IndexConfigResponse {
+  settings: Record<string, Record<string, unknown>>;
+  mappings: Record<string, Record<string, unknown>>;
+}
+
+export interface PipelineInfo {
+  id: string;
+  description?: string;
+  processors: unknown[];
+}
+
+export interface PipelineListResponse {
+  pipelines: PipelineInfo[];
 }

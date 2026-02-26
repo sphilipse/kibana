@@ -8,7 +8,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import {
   EuiBasicTable,
-  EuiButton,
   EuiButtonEmpty,
   EuiFieldText,
   EuiFlexGroup,
@@ -16,18 +15,13 @@ import {
   EuiFormRow,
   EuiSpacer,
   EuiText,
-  EuiBadge,
   EuiButtonGroup,
-  EuiPanel,
-  EuiTitle,
-  useEuiTheme,
-  transparentize,
 } from '@elastic/eui';
 import type { EuiBasicTableColumn } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
 
-import type { Judgment, JudgmentRating } from '../../types';
+import type { JudgmentRating } from '../../types';
 
 const RATING_OPTIONS = [
   {
@@ -62,13 +56,8 @@ const RATING_OPTIONS = [
 ];
 
 export interface JudgmentEditorProps {
-  judgments: Judgment[];
-  onJudgmentsChange: (judgments: Judgment[]) => void;
-}
-
-interface RatingRowItem extends JudgmentRating {
-  queryIndex: number;
-  ratingIndex: number;
+  judgments: JudgmentRating[];
+  onJudgmentsChange: (judgments: JudgmentRating[]) => void;
 }
 
 const ratingValueByOptionId = new Map<string, number>();
@@ -77,146 +66,42 @@ export const JudgmentEditor: React.FC<JudgmentEditorProps> = ({
   judgments,
   onJudgmentsChange,
 }) => {
-  const { euiTheme } = useEuiTheme();
-  const [expandedQueryIndex, setExpandedQueryIndex] = useState<number | null>(null);
-  const [newQueryText, setNewQueryText] = useState('');
   const [newDocId, setNewDocId] = useState('');
   const [newDocIndex, setNewDocIndex] = useState('');
 
-  const handleAddQuery = useCallback(() => {
-    const trimmed = newQueryText.trim();
-    if (!trimmed) return;
-
-    const updated = [...judgments, { query: trimmed, ratings: [] }];
-    onJudgmentsChange(updated);
-    setNewQueryText('');
-    setExpandedQueryIndex(updated.length - 1);
-  }, [judgments, newQueryText, onJudgmentsChange]);
-
-  const handleRemoveQuery = useCallback(
-    (queryIndex: number) => {
-      const updated = judgments.filter((_, idx) => idx !== queryIndex);
-      onJudgmentsChange(updated);
-      if (expandedQueryIndex === queryIndex) {
-        setExpandedQueryIndex(null);
-      } else if (expandedQueryIndex !== null && expandedQueryIndex > queryIndex) {
-        setExpandedQueryIndex(expandedQueryIndex - 1);
-      }
-    },
-    [judgments, expandedQueryIndex, onJudgmentsChange]
-  );
-
   const handleAddDocument = useCallback(() => {
-    if (expandedQueryIndex === null || !newDocId.trim() || !newDocIndex.trim()) return;
+    const trimmedId = newDocId.trim();
+    const trimmedIndex = newDocIndex.trim();
+    if (!trimmedId || !trimmedIndex) return;
 
-    const updated = judgments.map((judgment, idx) => {
-      if (idx !== expandedQueryIndex) return judgment;
-      const alreadyRated = judgment.ratings.some(
-        (r) => r.id === newDocId.trim() && r.index === newDocIndex.trim()
-      );
-      if (alreadyRated) return judgment;
-      return {
-        ...judgment,
-        ratings: [...judgment.ratings, { index: newDocIndex.trim(), id: newDocId.trim(), rating: 0 }],
-      };
-    });
-    onJudgmentsChange(updated);
+    const alreadyExists = judgments.some(
+      (r) => r.id === trimmedId && r.index === trimmedIndex
+    );
+    if (alreadyExists) return;
+
+    onJudgmentsChange([...judgments, { index: trimmedIndex, id: trimmedId, rating: 0 }]);
     setNewDocId('');
     setNewDocIndex('');
-  }, [expandedQueryIndex, judgments, newDocId, newDocIndex, onJudgmentsChange]);
+  }, [judgments, newDocId, newDocIndex, onJudgmentsChange]);
 
   const handleRatingChange = useCallback(
-    (queryIndex: number, ratingIndex: number, newRating: number) => {
-      const updated = judgments.map((judgment, qIdx) => {
-        if (qIdx !== queryIndex) return judgment;
-        return {
-          ...judgment,
-          ratings: judgment.ratings.map((r, rIdx) =>
-            rIdx === ratingIndex ? { ...r, rating: newRating } : r
-          ),
-        };
-      });
+    (ratingIndex: number, newRating: number) => {
+      const updated = judgments.map((r, idx) =>
+        idx === ratingIndex ? { ...r, rating: newRating } : r
+      );
       onJudgmentsChange(updated);
     },
     [judgments, onJudgmentsChange]
   );
 
   const handleRemoveRating = useCallback(
-    (queryIndex: number, ratingIndex: number) => {
-      const updated = judgments.map((judgment, qIdx) => {
-        if (qIdx !== queryIndex) return judgment;
-        return {
-          ...judgment,
-          ratings: judgment.ratings.filter((_, rIdx) => rIdx !== ratingIndex),
-        };
-      });
-      onJudgmentsChange(updated);
+    (ratingIndex: number) => {
+      onJudgmentsChange(judgments.filter((_, idx) => idx !== ratingIndex));
     },
     [judgments, onJudgmentsChange]
   );
 
-  const queryColumns: Array<EuiBasicTableColumn<Judgment & { originalIndex: number }>> = useMemo(
-    () => [
-      {
-        field: 'query',
-        name: i18n.translate('xpack.searchPlayground.relevance.judgmentEditor.queryColumn', {
-          defaultMessage: 'Query',
-        }),
-        'data-test-subj': 'judgmentEditorQueryColumn',
-      },
-      {
-        name: i18n.translate('xpack.searchPlayground.relevance.judgmentEditor.ratingsColumn', {
-          defaultMessage: 'Rated Documents',
-        }),
-        render: (item: Judgment) => (
-          <EuiBadge color="hollow">{item.ratings.length}</EuiBadge>
-        ),
-        width: '140px',
-      },
-      {
-        actions: [
-          {
-            name: i18n.translate(
-              'xpack.searchPlayground.relevance.judgmentEditor.expandAction',
-              { defaultMessage: 'Expand' }
-            ),
-            description: i18n.translate(
-              'xpack.searchPlayground.relevance.judgmentEditor.expandDescription',
-              { defaultMessage: 'Expand to view and edit ratings' }
-            ),
-            icon: 'expand',
-            type: 'icon',
-            'data-test-subj': 'judgmentEditorExpandButton',
-            onClick: (item: Judgment & { originalIndex: number }) => {
-              setExpandedQueryIndex(
-                expandedQueryIndex === item.originalIndex ? null : item.originalIndex
-              );
-            },
-          },
-          {
-            name: i18n.translate(
-              'xpack.searchPlayground.relevance.judgmentEditor.deleteQueryAction',
-              { defaultMessage: 'Delete' }
-            ),
-            description: i18n.translate(
-              'xpack.searchPlayground.relevance.judgmentEditor.deleteQueryDescription',
-              { defaultMessage: 'Delete this query' }
-            ),
-            icon: 'trash',
-            color: 'danger',
-            type: 'icon',
-            'data-test-subj': 'judgmentEditorDeleteQueryButton',
-            onClick: (item: Judgment & { originalIndex: number }) => {
-              handleRemoveQuery(item.originalIndex);
-            },
-          },
-        ],
-      },
-    ],
-    [expandedQueryIndex, handleRemoveQuery]
-  );
-
-  const ratingColumns: Array<EuiBasicTableColumn<RatingRowItem>> = useMemo(
+  const columns: Array<EuiBasicTableColumn<JudgmentRating & { originalIndex: number }>> = useMemo(
     () => [
       {
         field: 'index',
@@ -236,24 +121,24 @@ export const JudgmentEditor: React.FC<JudgmentEditorProps> = ({
         name: i18n.translate('xpack.searchPlayground.relevance.judgmentEditor.ratingColumn', {
           defaultMessage: 'Rating',
         }),
-        render: (item: RatingRowItem) => (
+        render: (item: JudgmentRating & { originalIndex: number }) => (
           <EuiButtonGroup
             legend={i18n.translate(
               'xpack.searchPlayground.relevance.judgmentEditor.ratingLegend',
               { defaultMessage: 'Rating for document {docId}', values: { docId: item.id } }
             )}
             options={RATING_OPTIONS.map((opt) => {
-              const optId = `${item.queryIndex}-${item.ratingIndex}-${opt.id}`;
+              const optId = `${item.originalIndex}-${opt.id}`;
               ratingValueByOptionId.set(optId, opt.value);
               return { id: optId, label: String(opt.value) };
             })}
-            idSelected={`${item.queryIndex}-${item.ratingIndex}-rating-${item.rating}`}
+            idSelected={`${item.originalIndex}-rating-${item.rating}`}
             onChange={(optionId) => {
               const ratingValue = ratingValueByOptionId.get(optionId) ?? 0;
-              handleRatingChange(item.queryIndex, item.ratingIndex, ratingValue);
+              handleRatingChange(item.originalIndex, ratingValue);
             }}
             buttonSize="compressed"
-            data-test-subj={`judgmentEditorRatingGroup-${item.queryIndex}-${item.ratingIndex}`}
+            data-test-subj={`judgmentEditorRatingGroup-${item.originalIndex}`}
           />
         ),
         width: '30%',
@@ -273,8 +158,8 @@ export const JudgmentEditor: React.FC<JudgmentEditorProps> = ({
             color: 'danger',
             type: 'icon',
             'data-test-subj': 'judgmentEditorRemoveDocButton',
-            onClick: (item: RatingRowItem) => {
-              handleRemoveRating(item.queryIndex, item.ratingIndex);
+            onClick: (item: JudgmentRating & { originalIndex: number }) => {
+              handleRemoveRating(item.originalIndex);
             },
           },
         ],
@@ -284,19 +169,10 @@ export const JudgmentEditor: React.FC<JudgmentEditorProps> = ({
     [handleRatingChange, handleRemoveRating]
   );
 
-  const queriesWithIndex = useMemo(
-    () => judgments.map((j, idx) => ({ ...j, originalIndex: idx })),
+  const itemsWithIndex = useMemo(
+    () => judgments.map((r, idx) => ({ ...r, originalIndex: idx })),
     [judgments]
   );
-
-  const expandedRatings: RatingRowItem[] = useMemo(() => {
-    if (expandedQueryIndex === null || expandedQueryIndex >= judgments.length) return [];
-    return judgments[expandedQueryIndex].ratings.map((r, rIdx) => ({
-      ...r,
-      queryIndex: expandedQueryIndex,
-      ratingIndex: rIdx,
-    }));
-  }, [expandedQueryIndex, judgments]);
 
   return (
     <div data-test-subj="judgmentEditor">
@@ -304,39 +180,58 @@ export const JudgmentEditor: React.FC<JudgmentEditorProps> = ({
         <EuiFlexItem>
           <EuiFormRow
             label={i18n.translate(
-              'xpack.searchPlayground.relevance.judgmentEditor.addQueryLabel',
-              { defaultMessage: 'Add query' }
+              'xpack.searchPlayground.relevance.judgmentEditor.docIndexLabel',
+              { defaultMessage: 'Index' }
             )}
           >
             <EuiFieldText
-              data-test-subj="judgmentEditorNewQueryInput"
+              data-test-subj="judgmentEditorNewDocIndex"
+              value={newDocIndex}
+              onChange={(e) => setNewDocIndex(e.target.value)}
               placeholder={i18n.translate(
-                'xpack.searchPlayground.relevance.judgmentEditor.queryPlaceholder',
-                { defaultMessage: 'Enter a test query...' }
+                'xpack.searchPlayground.relevance.judgmentEditor.docIndexPlaceholder',
+                { defaultMessage: 'my-index' }
               )}
-              value={newQueryText}
-              onChange={(e) => setNewQueryText(e.target.value)}
+            />
+          </EuiFormRow>
+        </EuiFlexItem>
+        <EuiFlexItem>
+          <EuiFormRow
+            label={i18n.translate(
+              'xpack.searchPlayground.relevance.judgmentEditor.docIdLabel',
+              { defaultMessage: 'Document ID' }
+            )}
+          >
+            <EuiFieldText
+              data-test-subj="judgmentEditorNewDocId"
+              value={newDocId}
+              onChange={(e) => setNewDocId(e.target.value)}
+              placeholder={i18n.translate(
+                'xpack.searchPlayground.relevance.judgmentEditor.docIdPlaceholder',
+                { defaultMessage: 'doc-id' }
+              )}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
-                  handleAddQuery();
+                  handleAddDocument();
                 }
               }}
             />
           </EuiFormRow>
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
-          <EuiButton
-            data-test-subj="judgmentEditorAddQueryButton"
-            onClick={handleAddQuery}
-            disabled={!newQueryText.trim()}
+          <EuiButtonEmpty
+            data-test-subj="judgmentEditorAddDocButton"
+            onClick={handleAddDocument}
+            disabled={!newDocId.trim() || !newDocIndex.trim()}
             iconType="plusInCircle"
+            size="s"
           >
             <FormattedMessage
-              id="xpack.searchPlayground.relevance.judgmentEditor.addQuery"
-              defaultMessage="Add"
+              id="xpack.searchPlayground.relevance.judgmentEditor.addDoc"
+              defaultMessage="Add document"
             />
-          </EuiButton>
+          </EuiButtonEmpty>
         </EuiFlexItem>
       </EuiFlexGroup>
 
@@ -347,129 +242,20 @@ export const JudgmentEditor: React.FC<JudgmentEditorProps> = ({
           <p>
             <FormattedMessage
               id="xpack.searchPlayground.relevance.judgmentEditor.emptyState"
-              defaultMessage="No queries added yet. Add a query above to begin rating documents."
+              defaultMessage="No document ratings yet. Add a document above to begin rating."
             />
           </p>
         </EuiText>
       ) : (
         <EuiBasicTable
-          data-test-subj="judgmentEditorQueryTable"
-          items={queriesWithIndex}
-          columns={queryColumns}
+          data-test-subj="judgmentEditorRatingsTable"
+          items={itemsWithIndex}
+          columns={columns}
           tableCaption={i18n.translate(
-            'xpack.searchPlayground.relevance.judgmentEditor.tableCaption',
-            { defaultMessage: 'Judgment queries' }
+            'xpack.searchPlayground.relevance.judgmentEditor.ratingsTableCaption',
+            { defaultMessage: 'Document ratings' }
           )}
-          rowProps={(item) => ({
-            'data-test-subj': `judgmentEditorQueryRow-${item.originalIndex}`,
-            onClick: () =>
-              setExpandedQueryIndex(
-                expandedQueryIndex === item.originalIndex ? null : item.originalIndex
-              ),
-            style: {
-              cursor: 'pointer',
-              backgroundColor:
-                expandedQueryIndex === item.originalIndex
-                  ? transparentize(euiTheme.colors.primary, 0.05)
-                  : undefined,
-            },
-          })}
         />
-      )}
-
-      {expandedQueryIndex !== null && expandedQueryIndex < judgments.length && (
-        <>
-          <EuiSpacer size="m" />
-          <EuiPanel paddingSize="m" hasBorder data-test-subj="judgmentEditorRatingsPanel">
-            <EuiTitle size="xs">
-              <h4>
-                <FormattedMessage
-                  id="xpack.searchPlayground.relevance.judgmentEditor.ratingsTitle"
-                  defaultMessage='Ratings for "{query}"'
-                  values={{ query: judgments[expandedQueryIndex].query }}
-                />
-              </h4>
-            </EuiTitle>
-
-            <EuiSpacer size="s" />
-
-            <EuiFlexGroup gutterSize="s" alignItems="flexEnd">
-              <EuiFlexItem>
-                <EuiFormRow
-                  label={i18n.translate(
-                    'xpack.searchPlayground.relevance.judgmentEditor.docIndexLabel',
-                    { defaultMessage: 'Index' }
-                  )}
-                >
-                  <EuiFieldText
-                    data-test-subj="judgmentEditorNewDocIndex"
-                    value={newDocIndex}
-                    onChange={(e) => setNewDocIndex(e.target.value)}
-                    placeholder={i18n.translate(
-                      'xpack.searchPlayground.relevance.judgmentEditor.docIndexPlaceholder',
-                      { defaultMessage: 'my-index' }
-                    )}
-                  />
-                </EuiFormRow>
-              </EuiFlexItem>
-              <EuiFlexItem>
-                <EuiFormRow
-                  label={i18n.translate(
-                    'xpack.searchPlayground.relevance.judgmentEditor.docIdLabel',
-                    { defaultMessage: 'Document ID' }
-                  )}
-                >
-                  <EuiFieldText
-                    data-test-subj="judgmentEditorNewDocId"
-                    value={newDocId}
-                    onChange={(e) => setNewDocId(e.target.value)}
-                    placeholder={i18n.translate(
-                      'xpack.searchPlayground.relevance.judgmentEditor.docIdPlaceholder',
-                      { defaultMessage: 'doc-id' }
-                    )}
-                  />
-                </EuiFormRow>
-              </EuiFlexItem>
-              <EuiFlexItem grow={false}>
-                <EuiButtonEmpty
-                  data-test-subj="judgmentEditorAddDocButton"
-                  onClick={handleAddDocument}
-                  disabled={!newDocId.trim() || !newDocIndex.trim()}
-                  iconType="plusInCircle"
-                  size="s"
-                >
-                  <FormattedMessage
-                    id="xpack.searchPlayground.relevance.judgmentEditor.addDoc"
-                    defaultMessage="Add document"
-                  />
-                </EuiButtonEmpty>
-              </EuiFlexItem>
-            </EuiFlexGroup>
-
-            <EuiSpacer size="s" />
-
-            {expandedRatings.length === 0 ? (
-              <EuiText color="subdued" size="s" data-test-subj="judgmentEditorNoRatings">
-                <p>
-                  <FormattedMessage
-                    id="xpack.searchPlayground.relevance.judgmentEditor.noRatings"
-                    defaultMessage="No documents rated for this query yet."
-                  />
-                </p>
-              </EuiText>
-            ) : (
-              <EuiBasicTable
-                data-test-subj="judgmentEditorRatingsTable"
-                items={expandedRatings}
-                columns={ratingColumns}
-                tableCaption={i18n.translate(
-                  'xpack.searchPlayground.relevance.judgmentEditor.ratingsTableCaption',
-                  { defaultMessage: 'Document ratings' }
-                )}
-              />
-            )}
-          </EuiPanel>
-        </>
       )}
     </div>
   );

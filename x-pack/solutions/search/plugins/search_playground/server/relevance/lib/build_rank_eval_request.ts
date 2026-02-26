@@ -14,20 +14,22 @@ export const buildRankEvalRequest = (
   metric: MetricConfig,
   indices: string[]
 ): RankEvalRequest => {
-  const requests = judgmentSet.judgments.map((judgment) => ({
-    id: judgment.query,
-    request: queryTemplate,
-    params: { query: judgment.query },
-    ratings: judgment.ratings.map(({ index: idx, id: docId, rating }) => ({
-      _index: idx,
-      _id: docId,
-      rating,
-    })),
+  const ratings = judgmentSet.judgments.map(({ index: idx, id: docId, rating }) => ({
+    _index: idx,
+    _id: docId,
+    rating,
   }));
 
   return {
     index: indices,
-    requests,
+    requests: [
+      {
+        id: judgmentSet.query,
+        request: queryTemplate,
+        params: { query: judgmentSet.query },
+        ratings,
+      },
+    ],
     metric: { [metric.type]: metric.params },
   };
 };

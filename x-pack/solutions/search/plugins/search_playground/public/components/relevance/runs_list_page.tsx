@@ -32,7 +32,7 @@ import type { EvaluationRunListObject } from '../../types';
 import { useEvaluationRunsList, useDeleteEvaluationRun, useCompareRuns } from '../../hooks/use_evaluation_runs';
 import { SearchPlaygroundPageTemplate } from '../../layout/page_template';
 import { usePlaygroundBreadcrumbs } from '../../hooks/use_playground_breadcrumbs';
-import { RELEVANCE_RUNS_DETAIL_PATH, RELEVANCE_PATH } from '../../routes';
+import { RELEVANCE_RUNS_DETAIL_PATH, ROOT_PATH } from '../../routes';
 import { getErrorMessage } from '../../../common/errors';
 
 import { RunHistoryChart } from './run_history_chart';
@@ -239,7 +239,7 @@ export const RunsListPage: React.FC = () => {
             actions={
               <EuiButton
                 data-test-subj="backToRelevanceButton"
-                onClick={() => history.push(RELEVANCE_PATH)}
+                onClick={() => history.push(ROOT_PATH)}
               >
                 <FormattedMessage
                   id="xpack.searchPlayground.relevance.runsList.backButton"

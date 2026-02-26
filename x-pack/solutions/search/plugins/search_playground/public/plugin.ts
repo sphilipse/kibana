@@ -15,7 +15,7 @@ import {
   type PluginInitializerContext,
   DEFAULT_APP_CATEGORIES,
 } from '@kbn/core/public';
-import { PLUGIN_ID, PLUGIN_NAME, PLUGIN_PATH } from '../common';
+import { PLUGIN_ID, PLUGIN_NAME, PLUGIN_PATH, RELEVANCE_APP_ID, RELEVANCE_APP_NAME, RELEVANCE_APP_PATH } from '../common';
 import { docLinks } from '../common/doc_links';
 import type {
   AppPluginSetupDependencies,
@@ -69,6 +69,32 @@ export class SearchPlaygroundPlugin
       },
       visibleIn: ['sideNav', 'globalSearch'],
       order: 3,
+    });
+
+    core.application.register({
+      id: RELEVANCE_APP_ID,
+      appRoute: RELEVANCE_APP_PATH,
+      category: DEFAULT_APP_CATEGORIES.enterpriseSearch,
+      euiIconType: 'logoElasticsearch',
+      title: RELEVANCE_APP_NAME,
+      mount: async ({ element, history }: AppMountParameters) => {
+        const { renderRelevanceApp } = await import('./relevance_application');
+        const [coreStart, depsStart] = await core.getStartServices();
+
+        coreStart.chrome.docTitle.change(RELEVANCE_APP_NAME);
+        depsStart.searchNavigation?.handleOnAppMount();
+
+        const startDeps: AppServices = {
+          ...depsStart,
+          history,
+          licenseManagement: deps.licenseManagement,
+          getLicenseStatus: this.getLicenseStatus.bind(this),
+        };
+
+        return renderRelevanceApp(coreStart, startDeps, element);
+      },
+      visibleIn: ['sideNav', 'globalSearch'],
+      order: 4,
     });
 
     registerLocators(deps.share);

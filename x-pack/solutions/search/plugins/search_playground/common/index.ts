@@ -16,6 +16,12 @@ export const PLUGIN_NAME = i18n.translate('xpack.searchPlayground.plugin.name', 
 });
 export const PLUGIN_PATH = '/app/search_playground';
 
+export const RELEVANCE_APP_ID = 'searchRelevance';
+export const RELEVANCE_APP_NAME = i18n.translate('xpack.searchPlayground.relevance.appName', {
+  defaultMessage: 'Relevance Workbench',
+});
+export const RELEVANCE_APP_PATH = '/app/search_relevance';
+
 export const SEARCH_MODE_FEATURE_FLAG_ID = 'searchPlayground:searchModeEnabled';
 
 export const DEFAULT_PAGINATION: Pagination = {

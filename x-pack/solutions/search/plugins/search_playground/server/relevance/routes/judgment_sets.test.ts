@@ -21,14 +21,10 @@ import { defineJudgmentSetRoutes } from './judgment_sets';
 const validJudgmentSet = {
   name: 'My Judgment Set',
   indices: ['my-index'],
+  query: 'search term',
   judgments: [
-    {
-      query: 'search term',
-      ratings: [
-        { index: 'my-index', id: 'doc1', rating: 3 },
-        { index: 'my-index', id: 'doc2', rating: 0 },
-      ],
-    },
+    { index: 'my-index', id: 'doc1', rating: 3 },
+    { index: 'my-index', id: 'doc2', rating: 0 },
   ],
 };
 
@@ -90,8 +86,9 @@ describe('Relevance Workbench - Judgment Sets API', () => {
               attributes: {
                 name: 'My Judgment Set',
                 indices: ['my-index'],
+                query: 'q1',
                 judgments: [
-                  { query: 'q1', ratings: [{ index: 'my-index', id: 'd1', rating: 2 }] },
+                  { index: 'my-index', id: 'd1', rating: 2 },
                 ],
               },
             },

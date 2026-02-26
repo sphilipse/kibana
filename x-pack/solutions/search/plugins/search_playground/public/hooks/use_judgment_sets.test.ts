@@ -73,11 +73,9 @@ const mockSetResponse: JudgmentSetResponse = {
   data: {
     name: 'Test Set 1',
     indices: ['my-index'],
+    query: 'test query',
     judgments: [
-      {
-        query: 'test query',
-        ratings: [{ index: 'my-index', id: 'doc-1', rating: 3 }],
-      },
+      { index: 'my-index', id: 'doc-1', rating: 3 },
     ],
   },
 };
@@ -180,6 +178,7 @@ describe('useJudgmentSets hooks', () => {
       const newSet: JudgmentSetSavedObject = {
         name: 'New Set',
         indices: ['my-index'],
+        query: 'test query',
         judgments: [],
       };
 
@@ -215,8 +214,9 @@ describe('useJudgmentSets hooks', () => {
       const updatedSet: JudgmentSetSavedObject = {
         name: 'Updated Set',
         indices: ['my-index'],
+        query: 'test',
         judgments: [
-          { query: 'test', ratings: [{ index: 'my-index', id: 'doc-1', rating: 2 }] },
+          { index: 'my-index', id: 'doc-1', rating: 2 },
         ],
       };
 

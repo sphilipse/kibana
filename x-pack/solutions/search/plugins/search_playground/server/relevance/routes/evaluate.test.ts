@@ -43,18 +43,10 @@ describe('Relevance Workbench - Evaluate API', () => {
   const judgmentSet = {
     name: 'Test Set',
     indices: ['my-index'],
+    query: 'search term',
     judgments: [
-      {
-        query: 'search term',
-        ratings: [
-          { index: 'my-index', id: 'doc1', rating: 3 },
-          { index: 'my-index', id: 'doc2', rating: 1 },
-        ],
-      },
-      {
-        query: 'another query',
-        ratings: [{ index: 'my-index', id: 'doc3', rating: 2 }],
-      },
+      { index: 'my-index', id: 'doc1', rating: 3 },
+      { index: 'my-index', id: 'doc2', rating: 1 },
     ],
   };
 
@@ -91,15 +83,11 @@ describe('Relevance Workbench - Evaluate API', () => {
         });
 
         mockEsClient.rankEval.mockResolvedValue({
-          metric_score: 0.75,
+          metric_score: 0.8,
           details: {
             'search term': {
               metric_score: 0.8,
               unrated_docs: [{ _index: 'my-index', _id: 'doc5' }],
-            },
-            'another query': {
-              metric_score: 0.7,
-              unrated_docs: [],
             },
           },
         });
@@ -114,20 +102,19 @@ describe('Relevance Workbench - Evaluate API', () => {
             timestamp: expect.any(String),
             queryTemplateJSON: '{"query":{"match":{"title":"{{query}}"}}}',
             metric: { type: 'ndcg', params: { k: 10 } },
-            overallScore: 0.75,
+            overallScore: 0.8,
             perQueryScores: [
               { query: 'search term', score: 0.8, unratedDocs: 1 },
-              { query: 'another query', score: 0.7, unratedDocs: 0 },
             ],
             clientMetrics: {
-              totalQueries: 2,
-              medianScore: 0.75,
-              scoreStandardDeviation: expect.any(Number),
-              minScore: 0.7,
+              totalQueries: 1,
+              medianScore: 0.8,
+              scoreStandardDeviation: 0,
+              minScore: 0.8,
               maxScore: 0.8,
               queryPassRate: 1,
               queriesWithUnratedDocs: 1,
-              unratedDocRate: 0.5,
+              unratedDocRate: 1,
             },
           },
         });
@@ -155,12 +142,6 @@ describe('Relevance Workbench - Evaluate API', () => {
                 { _index: 'my-index', _id: 'doc2', rating: 1 },
               ],
             },
-            {
-              id: 'another query',
-              request: { query: { match: { title: '{{query}}' } } },
-              params: { query: 'another query' },
-              ratings: [{ _index: 'my-index', _id: 'doc3', rating: 2 }],
-            },
           ],
           metric: { ndcg: { k: 10 } },
         });
@@ -169,16 +150,16 @@ describe('Relevance Workbench - Evaluate API', () => {
           'search_evaluation_run',
           expect.objectContaining({
             judgmentSetId: 'js-1',
-            overallScore: 0.75,
+            overallScore: 0.8,
             metric: { type: 'ndcg', params: { k: 10 } },
             clientMetrics: expect.objectContaining({
-              totalQueries: 2,
-              medianScore: 0.75,
-              minScore: 0.7,
+              totalQueries: 1,
+              medianScore: 0.8,
+              minScore: 0.8,
               maxScore: 0.8,
               queryPassRate: 1,
               queriesWithUnratedDocs: 1,
-              unratedDocRate: 0.5,
+              unratedDocRate: 1,
             }),
           })
         );

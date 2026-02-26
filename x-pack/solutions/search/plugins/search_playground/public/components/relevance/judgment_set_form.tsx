@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   EuiButton,
   EuiButtonEmpty,
@@ -23,7 +23,7 @@ import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { useHistory, useParams } from 'react-router-dom';
 
-import type { Judgment, JudgmentSetSavedObject } from '../../types';
+import type { JudgmentRating, JudgmentSetSavedObject } from '../../types';
 import {
   useJudgmentSet,
   useCreateJudgmentSet,
@@ -31,8 +31,9 @@ import {
 } from '../../hooks/use_judgment_sets';
 import { SearchPlaygroundPageTemplate } from '../../layout/page_template';
 import { usePlaygroundBreadcrumbs } from '../../hooks/use_playground_breadcrumbs';
-import { RELEVANCE_PATH } from '../../routes';
+import { ROOT_PATH, RELEVANCE_INDEX_CONFIG_PATH } from '../../routes';
 
+import { useQueryIndices } from '../../hooks/use_query_indices';
 import { JudgmentEditor } from './judgment_editor';
 
 export const JudgmentSetCreatePage: React.FC = () => {
@@ -42,26 +43,36 @@ export const JudgmentSetCreatePage: React.FC = () => {
 
   const [name, setName] = useState('');
   const [indices, setIndices] = useState<EuiComboBoxOptionOption[]>([]);
-  const [judgments, setJudgments] = useState<Judgment[]>([]);
+  const [indexSearchValue, setIndexSearchValue] = useState('');
+  const { indices: availableIndices, isLoading: isLoadingIndices } = useQueryIndices({
+    query: indexSearchValue,
+  });
+  const indexOptions = useMemo(
+    () => availableIndices.map((idx) => ({ label: idx })),
+    [availableIndices]
+  );
+  const [query, setQuery] = useState('');
+  const [judgments, setJudgments] = useState<JudgmentRating[]>([]);
 
   const handleSave = useCallback(() => {
     const judgmentSet: JudgmentSetSavedObject = {
       name: name.trim(),
       indices: indices.map((opt) => opt.label),
+      query: query.trim(),
       judgments,
     };
     createJudgmentSet(judgmentSet, {
       onSuccess: () => {
-        history.push(RELEVANCE_PATH);
+        history.push(ROOT_PATH);
       },
     });
-  }, [name, indices, judgments, createJudgmentSet, history]);
+  }, [name, indices, query, judgments, createJudgmentSet, history]);
 
   const handleCancel = useCallback(() => {
-    history.push(RELEVANCE_PATH);
+    history.push(ROOT_PATH);
   }, [history]);
 
-  const isValid = name.trim().length > 0 && indices.length > 0;
+  const isValid = name.trim().length > 0 && indices.length > 0 && query.trim().length > 0;
 
   return (
     <SearchPlaygroundPageTemplate restrictWidth={false} data-test-subj="judgmentSetCreatePage">
@@ -103,14 +114,38 @@ export const JudgmentSetCreatePage: React.FC = () => {
           <EuiComboBox
             data-test-subj="judgmentSetIndicesInput"
             fullWidth
+            options={indexOptions}
             selectedOptions={indices}
+            onSearchChange={setIndexSearchValue}
+            isLoading={isLoadingIndices}
             onCreateOption={(value) => {
               setIndices((prev) => [...prev, { label: value }]);
             }}
             onChange={setIndices}
             placeholder={i18n.translate(
               'xpack.searchPlayground.relevance.judgmentSetForm.indicesPlaceholder',
-              { defaultMessage: 'Type index name and press Enter' }
+              { defaultMessage: 'Search for an index' }
+            )}
+          />
+        </EuiFormRow>
+
+        <EuiSpacer size="m" />
+
+        <EuiFormRow
+          label={i18n.translate(
+            'xpack.searchPlayground.relevance.judgmentSetForm.queryLabel',
+            { defaultMessage: 'Query' }
+          )}
+          fullWidth
+        >
+          <EuiFieldText
+            data-test-subj="judgmentSetQueryInput"
+            fullWidth
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={i18n.translate(
+              'xpack.searchPlayground.relevance.judgmentSetForm.queryPlaceholder',
+              { defaultMessage: 'Enter the search query for this judgment set' }
             )}
           />
         </EuiFormRow>
@@ -162,34 +197,45 @@ export const JudgmentSetDetailPage: React.FC = () => {
 
   const [name, setName] = useState<string | null>(null);
   const [indices, setIndices] = useState<EuiComboBoxOptionOption[] | null>(null);
-  const [judgments, setJudgments] = useState<Judgment[] | null>(null);
+  const [query, setQuery] = useState<string | null>(null);
+  const [judgments, setJudgments] = useState<JudgmentRating[] | null>(null);
+  const [editIndexSearchValue, setEditIndexSearchValue] = useState('');
+  const { indices: editAvailableIndices, isLoading: isLoadingEditIndices } = useQueryIndices({
+    query: editIndexSearchValue,
+  });
+  const editIndexOptions = useMemo(
+    () => editAvailableIndices.map((idx) => ({ label: idx })),
+    [editAvailableIndices]
+  );
 
   const effectiveName = name ?? data?.data.name ?? '';
   const effectiveIndices =
     indices ?? data?.data.indices.map((idx) => ({ label: idx })) ?? [];
+  const effectiveQuery = query ?? data?.data.query ?? '';
   const effectiveJudgments = judgments ?? data?.data.judgments ?? [];
 
   const handleSave = useCallback(() => {
     const judgmentSet: JudgmentSetSavedObject = {
       name: effectiveName.trim(),
       indices: effectiveIndices.map((opt) => opt.label),
+      query: effectiveQuery.trim(),
       judgments: effectiveJudgments,
     };
     updateJudgmentSet(
       { id, judgmentSet },
       {
         onSuccess: () => {
-          history.push(RELEVANCE_PATH);
+          history.push(ROOT_PATH);
         },
       }
     );
-  }, [effectiveName, effectiveIndices, effectiveJudgments, updateJudgmentSet, id, history]);
+  }, [effectiveName, effectiveIndices, effectiveQuery, effectiveJudgments, updateJudgmentSet, id, history]);
 
   const handleCancel = useCallback(() => {
-    history.push(RELEVANCE_PATH);
+    history.push(ROOT_PATH);
   }, [history]);
 
-  const isValid = effectiveName.trim().length > 0 && effectiveIndices.length > 0;
+  const isValid = effectiveName.trim().length > 0 && effectiveIndices.length > 0 && effectiveQuery.trim().length > 0;
 
   if (isLoading) {
     return (
@@ -221,6 +267,20 @@ export const JudgmentSetDetailPage: React.FC = () => {
           'xpack.searchPlayground.relevance.judgmentSetForm.editTitle',
           { defaultMessage: 'Edit Judgment Set' }
         )}
+        rightSideItems={[
+          <EuiButton
+            data-test-subj="judgmentSetIndexConfigButton"
+            iconType="gear"
+            onClick={() =>
+              history.push(RELEVANCE_INDEX_CONFIG_PATH.replace(':judgmentSetId', id))
+            }
+          >
+            <FormattedMessage
+              id="xpack.searchPlayground.relevance.judgmentSetForm.indexConfig"
+              defaultMessage="Index Configuration"
+            />
+          </EuiButton>,
+        ]}
       />
       <KibanaPageTemplate.Section color="plain">
         <EuiFormRow
@@ -250,11 +310,31 @@ export const JudgmentSetDetailPage: React.FC = () => {
           <EuiComboBox
             data-test-subj="judgmentSetIndicesInput"
             fullWidth
+            options={editIndexOptions}
             selectedOptions={effectiveIndices}
+            onSearchChange={setEditIndexSearchValue}
+            isLoading={isLoadingEditIndices}
             onCreateOption={(value) => {
               setIndices((prev) => [...(prev ?? effectiveIndices), { label: value }]);
             }}
             onChange={(opts) => setIndices(opts)}
+          />
+        </EuiFormRow>
+
+        <EuiSpacer size="m" />
+
+        <EuiFormRow
+          label={i18n.translate(
+            'xpack.searchPlayground.relevance.judgmentSetForm.queryLabel',
+            { defaultMessage: 'Query' }
+          )}
+          fullWidth
+        >
+          <EuiFieldText
+            data-test-subj="judgmentSetQueryInput"
+            fullWidth
+            value={effectiveQuery}
+            onChange={(e) => setQuery(e.target.value)}
           />
         </EuiFormRow>
 

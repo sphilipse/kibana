@@ -34,6 +34,7 @@ import { defineSavedPlaygroundRoutes } from './routes/saved_playgrounds';
 import { defineJudgmentSetRoutes } from './relevance/routes/judgment_sets';
 import { defineEvaluateRoute } from './relevance/routes/evaluate';
 import { defineEvaluationRunRoutes } from './relevance/routes/runs';
+import { defineIndexConfigRoutes } from './relevance/routes/index_config';
 
 const EMPTY_INDICES_ERROR_MESSAGE = i18n.translate(
   'xpack.searchPlayground.serverErrors.emptyIndices',
@@ -497,4 +498,5 @@ export function defineRoutes(routeOptions: DefineRoutesOptions) {
   defineJudgmentSetRoutes(routeOptions);
   defineEvaluateRoute(routeOptions);
   defineEvaluationRunRoutes(routeOptions);
+  defineIndexConfigRoutes(routeOptions);
 }

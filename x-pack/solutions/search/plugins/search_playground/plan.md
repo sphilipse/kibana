@@ -105,7 +105,27 @@ All evaluation and history UI is implemented and tested. 41 new tests, 404 total
 **Wiring:**
 - `public/playground_router.tsx` -- Added `<Route>` entries for `/relevance/evaluate/:judgmentSetId`, `/relevance/runs`, `/relevance/runs/:runId`
 
-### Phase 5: Index Config + Full Loop -- NOT STARTED
+### Phase 5: Index Config + Full Loop -- COMPLETE
+
+All index configuration UI and server routes are implemented and tested. 33 new tests, 0 regressions.
+
+**Server routes (new, 6 tests):**
+- `server/relevance/routes/index_config.ts` -- Five endpoints: get index config (settings + mappings), update settings, update mappings, list ingest pipelines, update pipeline
+- `server/relevance/routes/index_config.test.ts` -- 6 tests covering all endpoints: multi-index support, settings update + re-fetch, mappings update + re-fetch, pipeline listing, pipeline update
+
+**React Query hooks (new, 9 tests):**
+- `public/hooks/use_index_config.ts` -- `useIndexConfig` (fetch settings + mappings), `usePipelines` (list pipelines), `useUpdateIndexSettings`, `useUpdateIndexMappings`, `useUpdatePipeline` (all with cache invalidation)
+- `public/hooks/use_index_config.test.ts` -- 9 tests: config fetch + disabled when empty + error handling, pipeline listing, settings update + cache invalidation + error, mappings update + cache invalidation, pipeline update + cache invalidation + error
+
+**Components (new, 18 tests):**
+- `public/components/relevance/index_config_panel.tsx` -- Tabbed panel with CodeEditor for settings/mappings/pipeline JSON, index selector for multi-index, JSON validation, dirty tracking, save buttons with loading states
+- `public/components/relevance/index_config_panel.test.tsx` -- 18 tests: rendering, loading state, error states, settings/mappings display, multi-index selector, single-index no-selector, save button disabled when clean, save callbacks, JSON validation errors, pipeline selection, pipeline options, saving loading states
+
+**Page component (pre-existing scaffold, updated):**
+- `public/components/relevance/index_config_page.tsx` -- Loads judgment set, renders IndexConfigPanel, "Run Evaluation" CTA navigates to evaluate page
+
+**Wiring (pre-existing):**
+- Routes, types, query keys, and router entries were already scaffolded in earlier phases
 
 ---
 

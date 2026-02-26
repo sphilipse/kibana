@@ -108,8 +108,8 @@ export const RelevanceLanding: React.FC = () => {
       {
         field: 'judgmentCount',
         name: i18n.translate(
-          'xpack.searchPlayground.relevance.landing.columns.queries',
-          { defaultMessage: 'Queries' }
+          'xpack.searchPlayground.relevance.landing.columns.ratings',
+          { defaultMessage: 'Ratings' }
         ),
         render: (count: number) => <EuiBadge color="hollow">{count}</EuiBadge>,
         width: '120px',

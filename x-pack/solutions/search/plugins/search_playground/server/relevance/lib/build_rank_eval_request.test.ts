@@ -12,51 +12,31 @@ describe('buildRankEvalRequest', () => {
   const judgmentSet: JudgmentSetSavedObject = {
     name: 'Test Judgments',
     indices: ['my-index'],
+    query: 'laptop',
     judgments: [
-      {
-        query: 'laptop',
-        ratings: [
-          { index: 'products', id: 'doc1', rating: 3 },
-          { index: 'products', id: 'doc2', rating: 1 },
-        ],
-      },
-      {
-        query: 'keyboard',
-        ratings: [{ index: 'products', id: 'doc3', rating: 2 }],
-      },
+      { index: 'products', id: 'doc1', rating: 3 },
+      { index: 'products', id: 'doc2', rating: 1 },
     ],
   };
 
   const queryTemplate = { query: { match: { title: '{{query}}' } } };
 
-  it('produces one request entry per judgment', () => {
+  it('produces a single request entry with the judgment set query', () => {
     const metric: MetricConfig = { type: 'ndcg', params: { k: 10 } };
     const result = buildRankEvalRequest(judgmentSet, queryTemplate, metric, ['products']);
 
-    expect(result.requests).toHaveLength(2);
-  });
-
-  it('maps judgment query to request id and params', () => {
-    const metric: MetricConfig = { type: 'precision', params: {} };
-    const result = buildRankEvalRequest(judgmentSet, queryTemplate, metric, ['products']);
-
+    expect(result.requests).toHaveLength(1);
     expect(result.requests[0]).toMatchObject({
       id: 'laptop',
       params: { query: 'laptop' },
     });
-    expect(result.requests[1]).toMatchObject({
-      id: 'keyboard',
-      params: { query: 'keyboard' },
-    });
   });
 
-  it('passes the query template as the request body for each entry', () => {
+  it('passes the query template as the request body', () => {
     const metric: MetricConfig = { type: 'ndcg', params: {} };
     const result = buildRankEvalRequest(judgmentSet, queryTemplate, metric, ['products']);
 
-    for (const req of result.requests) {
-      expect(req.request).toEqual(queryTemplate);
-    }
+    expect(result.requests[0].request).toEqual(queryTemplate);
   });
 
   it('maps ratings using _index and _id at the ES API boundary', () => {
@@ -66,9 +46,6 @@ describe('buildRankEvalRequest', () => {
     expect(result.requests[0].ratings).toEqual([
       { _index: 'products', _id: 'doc1', rating: 3 },
       { _index: 'products', _id: 'doc2', rating: 1 },
-    ]);
-    expect(result.requests[1].ratings).toEqual([
-      { _index: 'products', _id: 'doc3', rating: 2 },
     ]);
   });
 
@@ -111,22 +88,11 @@ describe('buildRankEvalRequest', () => {
     const emptySet: JudgmentSetSavedObject = {
       name: 'Empty',
       indices: ['products'],
+      query: 'test',
       judgments: [],
     };
     const metric: MetricConfig = { type: 'ndcg', params: {} };
     const result = buildRankEvalRequest(emptySet, queryTemplate, metric, ['products']);
-
-    expect(result.requests).toEqual([]);
-  });
-
-  it('handles a judgment with no ratings', () => {
-    const setWithEmptyRatings: JudgmentSetSavedObject = {
-      name: 'Sparse',
-      indices: ['products'],
-      judgments: [{ query: 'orphan query', ratings: [] }],
-    };
-    const metric: MetricConfig = { type: 'precision', params: {} };
-    const result = buildRankEvalRequest(setWithEmptyRatings, queryTemplate, metric, ['products']);
 
     expect(result.requests).toHaveLength(1);
     expect(result.requests[0].ratings).toEqual([]);
@@ -152,14 +118,10 @@ describe('buildRankEvalRequest', () => {
     const multiIndexSet: JudgmentSetSavedObject = {
       name: 'Multi-index',
       indices: ['products', 'catalog'],
+      query: 'laptop',
       judgments: [
-        {
-          query: 'laptop',
-          ratings: [
-            { index: 'products', id: 'p1', rating: 3 },
-            { index: 'catalog', id: 'c1', rating: 2 },
-          ],
-        },
+        { index: 'products', id: 'p1', rating: 3 },
+        { index: 'catalog', id: 'c1', rating: 2 },
       ],
     };
     const metric: MetricConfig = { type: 'ndcg', params: {} };

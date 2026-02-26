@@ -8,7 +8,7 @@
 import React from 'react';
 
 import { EuiText } from '@elastic/eui';
-import { SEARCH_HOMEPAGE, SEARCH_GETTING_STARTED } from '@kbn/deeplinks-search';
+import { SEARCH_HOMEPAGE, SEARCH_GETTING_STARTED, ES_SEARCH_RELEVANCE_ID } from '@kbn/deeplinks-search';
 import { i18n } from '@kbn/i18n';
 
 import type { ClassicNavItem } from './types';
@@ -114,6 +114,14 @@ export const BaseClassicNavItems: ClassicNavItem[] = [
           shouldShowActiveForSubroutes: true,
         },
         id: 'inference_endpoints',
+      },
+      {
+        'data-test-subj': 'searchSideNav-RelevanceWorkbench',
+        deepLink: {
+          link: ES_SEARCH_RELEVANCE_ID,
+          shouldShowActiveForSubroutes: true,
+        },
+        id: 'relevance_workbench',
       },
     ],
     name: i18n.translate('xpack.searchNavigation.classicNav.relevanceTitle', {

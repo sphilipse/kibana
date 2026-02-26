@@ -104,8 +104,15 @@ export const EvaluatePage: React.FC = () => {
         </EuiText>
         <EuiText size="s" color="subdued">
           <FormattedMessage
-            id="xpack.searchPlayground.relevance.evaluate.queriesLabel"
-            defaultMessage="{count} {count, plural, one {query} other {queries}} in judgment set"
+            id="xpack.searchPlayground.relevance.evaluate.queryLabel"
+            defaultMessage='Query: "{query}"'
+            values={{ query: judgmentSetData.data.query }}
+          />
+        </EuiText>
+        <EuiText size="s" color="subdued">
+          <FormattedMessage
+            id="xpack.searchPlayground.relevance.evaluate.ratingsLabel"
+            defaultMessage="{count} {count, plural, one {document rating} other {document ratings}} in judgment set"
             values={{ count: judgmentSetData.data.judgments.length }}
           />
         </EuiText>

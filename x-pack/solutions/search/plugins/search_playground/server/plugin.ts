@@ -25,6 +25,7 @@ import { defineRoutes } from './routes';
 import {
   PLUGIN_ID,
   PLUGIN_NAME,
+  RELEVANCE_APP_ID,
   PLAYGROUND_SAVED_OBJECT_TYPE,
   JUDGMENT_SET_SAVED_OBJECT_TYPE,
   EVALUATION_RUN_SAVED_OBJECT_TYPE,
@@ -70,11 +71,11 @@ export class SearchPlaygroundPlugin
       name: PLUGIN_NAME,
       order: 1,
       category: DEFAULT_APP_CATEGORIES.enterpriseSearch,
-      app: ['kibana', PLUGIN_ID],
+      app: ['kibana', PLUGIN_ID, RELEVANCE_APP_ID],
       catalogue: [PLUGIN_ID],
       privileges: {
         all: {
-          app: ['kibana', PLUGIN_ID],
+          app: ['kibana', PLUGIN_ID, RELEVANCE_APP_ID],
           api: [PLUGIN_ID],
           catalogue: [PLUGIN_ID],
           savedObject: {

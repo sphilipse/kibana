@@ -19,6 +19,8 @@ export enum SearchPlaygroundQueryKeys {
   JudgmentSet = 'searchPlaygroundJudgmentSet',
   EvaluationRunsList = 'searchPlaygroundEvaluationRunsList',
   EvaluationRun = 'searchPlaygroundEvaluationRun',
+  IndexConfig = 'searchPlaygroundIndexConfig',
+  Pipelines = 'searchPlaygroundPipelines',
 }
 
 export enum SearchPlaygroundMutationKeys {
@@ -30,4 +32,7 @@ export enum SearchPlaygroundMutationKeys {
   DeleteJudgmentSet = 'searchPlaygroundDeleteJudgmentSet',
   RunEvaluation = 'searchPlaygroundRunEvaluation',
   DeleteEvaluationRun = 'searchPlaygroundDeleteEvaluationRun',
+  UpdateIndexSettings = 'searchPlaygroundUpdateIndexSettings',
+  UpdateIndexMappings = 'searchPlaygroundUpdateIndexMappings',
+  UpdatePipeline = 'searchPlaygroundUpdatePipeline',
 }
