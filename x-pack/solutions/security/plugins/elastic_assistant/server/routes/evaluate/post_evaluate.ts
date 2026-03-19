@@ -231,6 +231,7 @@ export const postEvaluateRoute = (
           if (defendInsightsGraphs.length > 0) {
             try {
               void evaluateDefendInsights({
+                actionsClient,
                 getInferenceConnectorById: getInferenceConnectorById(inference, request),
                 defendInsightsGraphs,
                 connectors,

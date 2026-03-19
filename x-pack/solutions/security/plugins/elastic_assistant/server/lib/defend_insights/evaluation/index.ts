@@ -6,7 +6,9 @@
  */
 
 import type { LangChainTracer } from '@langchain/core/tracers/tracer_langchain';
+import type { ActionsClient } from '@kbn/actions-plugin/server';
 import type { Connector } from '@kbn/actions-plugin/server/application/connector/types';
+import type { PublicMethodsOf } from '@kbn/utility-types';
 import type { ElasticsearchClient } from '@kbn/core-elasticsearch-server';
 import type { InferenceConnector } from '@kbn/inference-common';
 import type { Logger } from '@kbn/logging';
@@ -26,6 +28,7 @@ import { getDefendInsightsPrompt } from '../graphs/default_defend_insights_graph
 import { runDefendInsightsEvaluations } from './run_evaluations';
 
 export const evaluateDefendInsights = async ({
+  actionsClient,
   getInferenceConnectorById,
   defendInsightsGraphs,
   anonymizationFields = DEFAULT_EVAL_ANONYMIZATION_FIELDS, // determines which fields are included in the alerts
@@ -44,6 +47,7 @@ export const evaluateDefendInsights = async ({
   runName,
   size,
 }: {
+  actionsClient: PublicMethodsOf<ActionsClient>;
   getInferenceConnectorById: (id: string) => Promise<InferenceConnector>;
   defendInsightsGraphs: DefendInsightsGraphMetadata[];
   anonymizationFields?: AnonymizationFieldResponse[];

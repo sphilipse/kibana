@@ -86,6 +86,7 @@ describe('evaluateDefendInsights', () => {
 
     await evaluateDefendInsights({
       actionsClient: mockActionsClient,
+      getInferenceConnectorById: jest.fn(),
       defendInsightsGraphs: mockGraphMetadata,
       anonymizationFields: [],
       connectors: mockConnectors,
