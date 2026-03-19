@@ -10,7 +10,8 @@
   "include": ["**/*.ts"],
   "kbn_references": [
     "@kbn/core-saved-objects-api-server",
-    "@kbn/inference-common"
+    "@kbn/inference-common",
+    "@kbn/core"
   ],
   "exclude": [
     "target/**/*"
