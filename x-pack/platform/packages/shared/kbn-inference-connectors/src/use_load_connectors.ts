@@ -61,9 +61,11 @@ const applyConnectorSettings = <T extends { id: string }>(
     false
   );
 
-  return defaultConnectorOnly
-    ? [allConnectors.find((connector) => connector.id === defaultConnectorId)]
-    : allConnectors;
+  if (defaultConnectorOnly && defaultConnectorId) {
+    const connector = allConnectors.find((c) => c.id === defaultConnectorId);
+    return connector ? [connector] : allConnectors;
+  }
+  return allConnectors;
 };
 
 const fetchAllConnectors = async (http: HttpSetup): Promise<InferenceConnector[]> => {
