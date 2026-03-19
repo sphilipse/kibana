@@ -124,9 +124,17 @@ export const chatCompleteRoute = (
           // get the actions plugin start contract from the request context:
           const actions = ctx.elasticAssistant.actions;
           const actionsClient = await actions.getActionsClientWithRequest(request);
-          const connectors = await actionsClient.getBulk({ ids: [connectorId] });
-          const connector = connectors.length > 0 ? connectors[0] : undefined;
-          actionTypeId = connector?.actionTypeId ?? '.gen-ai';
+          // Native inference endpoints are not Kibana saved objects, so getBulk would throw for
+          // them. Catch and default to .inference since that is the only connector type without
+          // a Kibana saved object backing it.
+          let connector;
+          try {
+            const connectors = await actionsClient.getBulk({ ids: [connectorId] });
+            connector = connectors.length > 0 ? connectors[0] : undefined;
+          } catch {
+            // connectorId is likely a native inference endpoint
+          }
+          actionTypeId = connector?.actionTypeId ?? '.inference';
           const isOssModel = isOpenSourceModel(connector);
           const savedObjectsClient = ctx.elasticAssistant.savedObjectsClient;
 

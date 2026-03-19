@@ -25,7 +25,7 @@ import {
 } from '@kbn/elastic-assistant-common';
 import { buildRouteValidationWithZod } from '@kbn/elastic-assistant-common/impl/schemas/common';
 import { defaultInferenceEndpoints } from '@kbn/inference-common';
-import { getPrompt } from '../lib/prompt';
+import { getPrompt, getInferenceConnectorById } from '../lib/prompt';
 import { INVOKE_ASSISTANT_ERROR_EVENT } from '../lib/telemetry/event_based_telemetry';
 import { buildResponse } from '../lib/build_response';
 import type { ElasticAssistantRequestHandlerContext } from '../types';
@@ -138,8 +138,13 @@ export const postActionsConnectorExecuteRoute = (
               inferenceId: defaultInferenceEndpoints.ELSER,
             })) ?? false;
           const actionsClient = await actions.getActionsClientWithRequest(request);
-          const connectors = await actionsClient.getBulk({ ids: [connectorId] });
-          const connector = connectors.length > 0 ? connectors[0] : undefined;
+          // Skip getBulk for .inference connectors: native inference endpoints are not Kibana
+          // saved objects, so getBulk would throw. isOpenSourceModel always returns false for
+          // .inference connectors, so we can safely skip the lookup.
+          const connector =
+            actionTypeId !== '.inference'
+              ? (await actionsClient.getBulk({ ids: [connectorId] }))[0]
+              : undefined;
           const isOssModel = isOpenSourceModel(connector);
 
           const conversationsDataClient =
@@ -206,7 +211,7 @@ export const postActionsConnectorExecuteRoute = (
           }
           if (promptIds) {
             const additionalSystemPrompt = await getPrompt({
-              actionsClient,
+              getInferenceConnectorById: getInferenceConnectorById(inference, request),
               connectorId,
               // promptIds is promptId and promptGroupId
               ...promptIds,
