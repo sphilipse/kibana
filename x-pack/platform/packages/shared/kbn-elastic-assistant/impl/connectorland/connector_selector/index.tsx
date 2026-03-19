@@ -28,8 +28,8 @@ import type { OpenAiProviderType } from '@kbn/connector-schemas/openai';
 import { some } from 'lodash';
 import type { AttackDiscoveryStats } from '@kbn/elastic-assistant-common';
 import { GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR } from '@kbn/management-settings-ids';
+import { useLoadConnectors } from '@kbn/inference-connectors';
 import { AttackDiscoveryStatusIndicator } from './attack_discovery_status_indicator';
-import { useLoadConnectors } from '../use_load_connectors';
 import * as i18n from '../translations';
 import { useLoadActionTypes } from '../use_load_action_types';
 import { useAssistantContext } from '../../assistant_context';
@@ -105,7 +105,7 @@ export const ConnectorSelector: React.FC<Props> = React.memo(
 
     const { data: aiConnectors, refetch: refetchConnectors } = useLoadConnectors({
       http,
-      inferenceEnabled,
+      featureId: 'elastic-assistant',
       settings,
     });
 

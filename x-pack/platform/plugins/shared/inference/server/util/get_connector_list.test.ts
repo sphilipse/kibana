@@ -144,6 +144,41 @@ describe('getConnectorList', () => {
     });
   });
 
+  it('deduplicates: excludes the .inference stack connector when a matching ES endpoint exists', async () => {
+    actionsClient.getAll.mockResolvedValue([
+      {
+        id: 'stack-connector-id',
+        actionTypeId: InferenceConnectorType.Inference,
+        name: 'My Custom Connector',
+        config: { inferenceId: 'my-endpoint', taskType: 'chat_completion' },
+        isPreconfigured: false,
+        isSystemAction: false,
+        isDeprecated: false,
+        referencedByCount: 0,
+        isMissingSecrets: false,
+      },
+    ] as any);
+
+    getInferenceEndpointsMock.mockResolvedValue([
+      {
+        inferenceId: 'my-endpoint',
+        taskType: 'chat_completion',
+        service: 'openai',
+        serviceSettings: {},
+        metadata: {},
+      },
+    ]);
+
+    const result = await getConnectorList({ actions, request, esClient, logger });
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      connectorId: 'my-endpoint',
+      isInferenceEndpoint: true,
+    });
+    expect(result.find((c) => !c.isInferenceEndpoint)).toBeUndefined();
+  });
+
   it('prefers display.name over stack connector name', async () => {
     actionsClient.getAll.mockResolvedValue([
       {

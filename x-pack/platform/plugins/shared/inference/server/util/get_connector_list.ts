@@ -77,7 +77,16 @@ export const getConnectorList = async ({
     isPreconfigured: !!ep.metadata.display?.name,
   }));
 
-  return [...connectors, ...inferenceEndpointConnectors];
+  // Exclude .inference stack connectors that have a corresponding ES inference endpoint,
+  // since the endpoint representation is preferred (includes native endpoints too).
+  const endpointInferenceIds = new Set(endpoints.map((ep) => ep.inferenceId));
+  const filteredConnectors = connectors.filter(
+    (c) =>
+      c.type !== InferenceConnectorType.Inference ||
+      !endpointInferenceIds.has(c.config?.inferenceId as string)
+  );
+
+  return [...filteredConnectors, ...inferenceEndpointConnectors];
 };
 
 const getStackConnectors = async ({
