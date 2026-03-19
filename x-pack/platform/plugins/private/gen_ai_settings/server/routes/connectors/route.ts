@@ -4,8 +4,7 @@
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
-import type { FindActionResult } from '@kbn/actions-plugin/server';
-import { isSupportedConnector } from '@kbn/inference-common';
+import type { InferenceConnector } from '@kbn/inference-common';
 import { createGenAiSettingsServerRoute } from '../create_gen_ai_settings_server_route';
 
 const listConnectorsRoute = createGenAiSettingsServerRoute({
@@ -16,30 +15,12 @@ const listConnectorsRoute = createGenAiSettingsServerRoute({
       reason: 'The route is protected by the actions plugin',
     },
   },
-  handler: async (resources): Promise<FindActionResult[]> => {
+  handler: async (resources): Promise<InferenceConnector[]> => {
     const { request, plugins } = resources;
 
-    const actionsClient = await (
-      await plugins.actions.start()
-    ).getActionsClientWithRequest(request);
+    const inferenceStart = await plugins.inference.start();
 
-    const [availableTypes, connectors] = await Promise.all([
-      actionsClient
-        .listTypes({
-          includeSystemActionTypes: false,
-        })
-        .then((types) =>
-          types
-            .filter((type) => type.enabled && type.enabledInLicense && type.enabledInConfig)
-            .map((type) => type.id)
-        ),
-      actionsClient.getAll(),
-    ]);
-
-    return connectors.filter(
-      (connector) =>
-        availableTypes.includes(connector.actionTypeId) && isSupportedConnector(connector)
-    );
+    return inferenceStart.getConnectorList(request);
   },
 });
 

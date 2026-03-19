@@ -30,6 +30,7 @@ describe('getConnectorById', () => {
     type: InferenceConnectorType.OpenAI,
     config: {},
     isInferenceEndpoint: false,
+    isPreconfigured: false,
     capabilities: {},
     ...parts,
   });

@@ -418,7 +418,7 @@ export function ChatBody({
 
   const showElasticLlmCalloutInChat =
     !!elasticManagedLlm &&
-    connectors.selectedConnector === elasticManagedLlm.id &&
+    connectors.selectedConnector === elasticManagedLlm.connectorId &&
     !conversationCalloutDismissed;
 
   const showKnowledgeBaseReIndexingCallout =
