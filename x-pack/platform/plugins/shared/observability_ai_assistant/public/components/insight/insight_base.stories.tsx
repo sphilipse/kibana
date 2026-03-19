@@ -37,8 +37,24 @@ const defaultProps: InsightBaseProps = {
     <ActionsMenu
       connectors={{
         connectors: [
-          { connectorId: 'gpt-4', name: 'GPT-4', type: InferenceConnectorType.OpenAI, config: {}, capabilities: {}, isInferenceEndpoint: false, isPreconfigured: false },
-          { connectorId: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', type: InferenceConnectorType.OpenAI, config: {}, capabilities: {}, isInferenceEndpoint: false, isPreconfigured: false },
+          {
+            connectorId: 'gpt-4',
+            name: 'GPT-4',
+            type: InferenceConnectorType.OpenAI,
+            config: {},
+            capabilities: {},
+            isInferenceEndpoint: false,
+            isPreconfigured: false,
+          },
+          {
+            connectorId: 'gpt-3.5-turbo',
+            name: 'GPT-3.5 Turbo',
+            type: InferenceConnectorType.OpenAI,
+            config: {},
+            capabilities: {},
+            isInferenceEndpoint: false,
+            isPreconfigured: false,
+          },
         ] as InferenceConnector[],
         selectedConnector: 'gpt-4',
         loading: false,
