@@ -60,8 +60,8 @@ const applyConnectorSettings = <T extends { id: string }>(
     GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR_DEFAULT_ONLY,
     false
   );
-
-  return defaultConnectorId
+  
+  return defaultConnectorOnly
     ? [allConnectors.find((connector) => connector.id === defaultConnectorId)]
     : allConnectors;
 };
