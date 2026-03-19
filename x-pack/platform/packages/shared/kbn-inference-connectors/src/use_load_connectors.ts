@@ -16,8 +16,8 @@ import {
   GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR,
   GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR_DEFAULT_ONLY,
 } from '@kbn/management-settings-ids';
-import type { AIConnector } from './types';
 import { i18n } from '@kbn/i18n';
+import type { AIConnector } from './types';
 
 const INFERENCE_CONNECTORS_PATH = '/internal/inference/connectors';
 const QUERY_KEY = ['kbn-inference-connectors', 'load-connectors'];
@@ -35,7 +35,7 @@ export interface UseLoadConnectorsProps {
 
 const toAIConnector = (connector: InferenceConnector): AIConnector =>
   ({
-    id: connector.id,
+    id: connector.connectorId,
     name: connector.name,
     actionTypeId: connector.type,
     config: connector.config,
@@ -61,7 +61,9 @@ const applyConnectorSettings = <T extends { id: string }>(
     false
   );
 
-  return defaultConnectorId ? [allConnectors.find((connector) => connector.id === defaultConnectorId)] : allConnectors;
+  return defaultConnectorId
+    ? [allConnectors.find((connector) => connector.id === defaultConnectorId)]
+    : allConnectors;
 };
 
 const fetchAllConnectors = async (http: HttpSetup): Promise<InferenceConnector[]> => {
@@ -92,12 +94,11 @@ export const useLoadConnectors = ({
             error.body && (error.body as { message?: string }).message
               ? new Error((error.body as { message: string }).message)
               : error,
-            { title: i18n.translate(
-              'inferenceConnectors.useLoadConnectors.errorMessage',
-              {
+            {
+              title: i18n.translate('inferenceConnectors.useLoadConnectors.errorMessage', {
                 defaultMessage: 'Error loading connectors',
-              }
-            ); }
+              }),
+            }
           );
         }
       },
