@@ -42,7 +42,11 @@ import {
   DEFAULT_ASSISTANT_GRAPH_PROMPT_TEMPLATE,
   chatPromptFactory,
 } from '../../lib/langchain/graphs/default_assistant_graph/prompts';
-import { getPrompt as localGetPrompt, promptDictionary } from '../../lib/prompt';
+import {
+  getPrompt as localGetPrompt,
+  getInferenceConnectorById,
+  promptDictionary,
+} from '../../lib/prompt';
 import { buildResponse } from '../../lib/build_response';
 import type { AssistantDataClients } from '../../lib/langchain/executors/types';
 import type { AssistantToolParams, ElasticAssistantRequestHandlerContext } from '../../types';
@@ -227,7 +231,7 @@ export const postEvaluateRoute = (
           if (defendInsightsGraphs.length > 0) {
             try {
               void evaluateDefendInsights({
-                actionsClient,
+                getInferenceConnectorById: getInferenceConnectorById(inference, request),
                 defendInsightsGraphs,
                 connectors,
                 connectorTimeout: RESPONSE_TIMEOUT,
@@ -257,9 +261,8 @@ export const postEvaluateRoute = (
             const connectorsWithPrompts = await Promise.all(
               connectors.map(async (connector) => {
                 const prompts = await getAttackDiscoveryPrompts({
-                  actionsClient,
+                  getInferenceConnectorById: getInferenceConnectorById(inference, request),
                   connectorId: connector.id,
-                  connector,
                   savedObjectsClient,
                 });
                 return {
@@ -412,8 +415,7 @@ export const postEvaluateRoute = (
                     let description: string | undefined;
                     try {
                       description = await getPrompt({
-                        actionsClient,
-                        connector,
+                        getInferenceConnectorById: getInferenceConnectorById(inference, request),
                         connectorId: connector.id,
                         model: getModelOrOss(llmType, isOssModel),
                         localPrompts: localToolPrompts,
@@ -464,7 +466,7 @@ export const postEvaluateRoute = (
                 logger.debug(`input:\n ${JSON.stringify(evaluationInput, null, 2)}`);
 
                 const defaultSystemPrompt = await localGetPrompt({
-                  actionsClient,
+                  getInferenceConnectorById: getInferenceConnectorById(inference, request),
                   connectorId,
                   model: getModelOrOss(llmType, isOssModel),
                   promptId: promptDictionary.systemPrompt,
@@ -487,7 +489,7 @@ export const postEvaluateRoute = (
                       ),
                       screenContextTimezone: 'UTC',
                     }),
-                    actionsClient,
+                    getInferenceConnectorById: getInferenceConnectorById(inference, request),
                     savedObjectsClient,
                     connectorId,
                     llmType,
