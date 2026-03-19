@@ -38,7 +38,7 @@ export interface InferenceConnector {
   capabilities: InferenceConnectorCapabilities;
   /**
    * When true, this entry represents an Elasticsearch inference endpoint
-   * rather than a Kibana stack connector. `connectorId` holds the inference endpoint ID.d` holds the inference endpoint ID.
+   * rather than a Kibana stack connector. `connectorId` holds the inference endpoint ID.
    */
   isInferenceEndpoint: boolean;
   /**
