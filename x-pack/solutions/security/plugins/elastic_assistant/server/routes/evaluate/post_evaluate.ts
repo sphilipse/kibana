@@ -31,7 +31,7 @@ import { buildRouteValidationWithZod } from '@kbn/elastic-assistant-common/impl/
 import { getDefaultArguments } from '@kbn/langchain/server';
 import type { StructuredTool } from '@langchain/core/tools';
 import { omit } from 'lodash/fp';
-import { defaultInferenceEndpoints } from '@kbn/inference-common';
+import { connectorToInference, defaultInferenceEndpoints } from '@kbn/inference-common';
 import { HumanMessage } from '@langchain/core/messages';
 import { evaluateDefendInsights } from '../../lib/defend_insights/evaluation';
 import { localToolPrompts, promptGroupId as toolsGroupId } from '../../lib/prompt/tool_prompts';
@@ -312,7 +312,7 @@ export const postEvaluateRoute = (
           }> = await Promise.all(
             connectors.map(async (connector) => {
               const llmType = getLlmType(connector.actionTypeId);
-              const isOssModel = isOpenSourceModel(connector);
+              const isOssModel = isOpenSourceModel(connectorToInference(connector));
               const llmClass = getLlmClass(llmType);
               const createLlmInstance = async () =>
                 !inferenceChatModelDisabled

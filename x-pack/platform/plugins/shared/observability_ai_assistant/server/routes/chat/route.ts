@@ -84,7 +84,7 @@ const chatCompletePublicRt = t.intersection([
 async function initializeChatRequest({
   context,
   request,
-  plugins: { cloud, actions },
+  plugins: { cloud, inference },
   params: {
     body: { connectorId, scopes },
   },
@@ -93,14 +93,8 @@ async function initializeChatRequest({
   params: { body: { connectorId: string; scopes: AssistantScope[] } };
 }) {
   await withAssistantSpan('guard_against_invalid_connector', async () => {
-    const actionsClient = await (await actions.start()).getActionsClientWithRequest(request);
-
-    const connector = await actionsClient.get({
-      id: connectorId,
-      throwIfSystemAction: true,
-    });
-
-    return connector;
+    const inferenceStart = await inference.start();
+    return inferenceStart.getConnectorById(connectorId, request);
   });
 
   const [client, cloudStart, simulateFunctionCalling] = await Promise.all([

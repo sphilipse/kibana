@@ -22,6 +22,7 @@ import { buildRouteValidationWithZod } from '@kbn/elastic-assistant-common/impl/
 import { getRequestAbortedSignal } from '@kbn/data-plugin/server';
 import { defaultInferenceEndpoints } from '@kbn/inference-common';
 import { v4 as uuidv4 } from 'uuid';
+import { getInferenceConnectorById } from '../../lib/prompt';
 import { INVOKE_ASSISTANT_ERROR_EVENT } from '../../lib/telemetry/event_based_telemetry';
 import type { ElasticAssistantPluginRouter } from '../../types';
 import { buildResponse } from '../../lib/build_response';
@@ -124,18 +125,12 @@ export const chatCompleteRoute = (
           // get the actions plugin start contract from the request context:
           const actions = ctx.elasticAssistant.actions;
           const actionsClient = await actions.getActionsClientWithRequest(request);
-          // Native inference endpoints are not Kibana saved objects, so getBulk would throw for
-          // them. Catch and default to .inference since that is the only connector type without
-          // a Kibana saved object backing it.
-          let connector;
-          try {
-            const connectors = await actionsClient.getBulk({ ids: [connectorId] });
-            connector = connectors.length > 0 ? connectors[0] : undefined;
-          } catch {
-            // connectorId is likely a native inference endpoint
-          }
-          actionTypeId = connector?.actionTypeId ?? '.inference';
-          const isOssModel = isOpenSourceModel(connector);
+          const inferenceConnector = await getInferenceConnectorById(
+            inference,
+            request
+          )(connectorId).catch(() => undefined);
+          actionTypeId = inferenceConnector?.type ?? '.inference';
+          const isOssModel = isOpenSourceModel(inferenceConnector);
           const savedObjectsClient = ctx.elasticAssistant.savedObjectsClient;
 
           // replacements

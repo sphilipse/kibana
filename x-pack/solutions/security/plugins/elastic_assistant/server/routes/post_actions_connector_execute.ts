@@ -138,14 +138,11 @@ export const postActionsConnectorExecuteRoute = (
               inferenceId: defaultInferenceEndpoints.ELSER,
             })) ?? false;
           const actionsClient = await actions.getActionsClientWithRequest(request);
-          // Skip getBulk for .inference connectors: native inference endpoints are not Kibana
-          // saved objects, so getBulk would throw. isOpenSourceModel always returns false for
-          // .inference connectors, so we can safely skip the lookup.
-          const connector =
-            actionTypeId !== '.inference'
-              ? (await actionsClient.getBulk({ ids: [connectorId] }))[0]
-              : undefined;
-          const isOssModel = isOpenSourceModel(connector);
+          const inferenceConnector = await getInferenceConnectorById(
+            inference,
+            request
+          )(connectorId).catch(() => undefined);
+          const isOssModel = isOpenSourceModel(inferenceConnector);
 
           const conversationsDataClient =
             await assistantContext.getAIAssistantConversationsDataClient({
