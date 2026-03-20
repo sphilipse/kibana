@@ -87,13 +87,8 @@ export const ConnectorSelector: React.FC<Props> = React.memo(
     stats = null,
     explicitConnectorSelection,
   }) => {
-    const {
-      actionTypeRegistry,
-      http,
-      assistantAvailability,
-      settings,
-      navigateToApp,
-    } = useAssistantContext();
+    const { actionTypeRegistry, http, assistantAvailability, settings, navigateToApp } =
+      useAssistantContext();
     const { euiTheme } = useEuiTheme();
 
     const [isConnectorModalVisible, setIsConnectorModalVisible] = useState<boolean>(false);

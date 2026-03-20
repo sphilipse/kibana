@@ -12,8 +12,5 @@ export const getElasticManagedLlmConnector = (connectors: InferenceConnector[] |
     return undefined;
   }
 
-  return connectors.find(
-    (connector) =>
-      connector.isPreconfigured
-  );
+  return connectors.find((connector) => connector.isPreconfigured);
 };

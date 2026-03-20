@@ -13,8 +13,6 @@ export const getElasticManagedLlmConnector = (connectors: InferenceConnector[] |
   }
 
   return connectors.find(
-    (connector) =>
-      connector.isPreconfigured &&
-      connector.config?.provider === 'elastic'
+    (connector) => connector.isPreconfigured && connector.config?.provider === 'elastic'
   );
 };
