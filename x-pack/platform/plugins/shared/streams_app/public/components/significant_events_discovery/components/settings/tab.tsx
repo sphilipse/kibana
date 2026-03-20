@@ -135,7 +135,8 @@ export function SettingsTab() {
   const showNoDefaultCallout = !genAiConnectors.loading && !hasDefaultConnector && anyUsesDefault;
   const defaultConnectorName =
     hasDefaultConnector && anyUsesDefault
-      ? genAiConnectors.connectors?.find((c) => c.connectorId === genAiConnectors.defaultConnector)?.name
+      ? genAiConnectors.connectors?.find((c) => c.connectorId === genAiConnectors.defaultConnector)
+          ?.name
       : undefined;
 
   return (

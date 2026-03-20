@@ -415,8 +415,10 @@ export function ChatBody({
   const { conversationCalloutDismissed } = useElasticLlmCalloutsStatus(false);
 
   const showElasticLlmCalloutInChat =
-    (connectors.connectors || []).some(connector => connector.connectorId === connectors.selectedConnector && connector.isPreconfigured) &&
-    !conversationCalloutDismissed;
+    (connectors.connectors || []).some(
+      (connector) =>
+        connector.connectorId === connectors.selectedConnector && connector.isPreconfigured
+    ) && !conversationCalloutDismissed;
 
   const showKnowledgeBaseReIndexingCallout =
     knowledgeBase.status.value?.enabled === true &&
