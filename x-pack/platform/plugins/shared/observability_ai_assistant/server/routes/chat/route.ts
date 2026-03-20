@@ -4,7 +4,8 @@
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
-import { notImplemented } from '@hapi/boom';
+import { boomify, notImplemented } from '@hapi/boom';
+import { isInferenceError } from '@kbn/inference-common';
 import { toBooleanRt } from '@kbn/io-ts-utils';
 import * as t from 'io-ts';
 import type { Observable } from 'rxjs';
@@ -92,10 +93,17 @@ async function initializeChatRequest({
 }: ObservabilityAIAssistantRouteHandlerResources & {
   params: { body: { connectorId: string; scopes: AssistantScope[] } };
 }) {
-  await withAssistantSpan('guard_against_invalid_connector', async () => {
-    const inferenceStart = await inference.start();
-    return inferenceStart.getConnectorById(connectorId, request);
-  });
+  try {
+    await withAssistantSpan('guard_against_invalid_connector', async () => {
+      const inferenceStart = await inference.start();
+      return inferenceStart.getConnectorById(connectorId, request);
+    });
+  } catch (error) {
+    if (isInferenceError(error) && error.status) {
+      throw boomify(error, { statusCode: error.status });
+    }
+    throw error;
+  }
 
   const [client, cloudStart, simulateFunctionCalling] = await Promise.all([
     service.getClient({ request, scopes }),
