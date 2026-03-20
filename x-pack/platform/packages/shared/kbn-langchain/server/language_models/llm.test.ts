@@ -174,7 +174,9 @@ describe('ActionsClientLlm', () => {
       } as unknown as InferenceClient;
 
       beforeEach(() => {
-        (mockInferenceClient.chatComplete as jest.Mock).mockResolvedValue({ content: 'Hello, world' });
+        (mockInferenceClient.chatComplete as jest.Mock).mockResolvedValue({
+          content: 'Hello, world',
+        });
       });
 
       it('calls inferenceClient.chatComplete with the correct arguments', async () => {
