@@ -31,7 +31,7 @@ import { buildRouteValidationWithZod } from '@kbn/elastic-assistant-common/impl/
 import { getDefaultArguments } from '@kbn/langchain/server';
 import type { StructuredTool } from '@langchain/core/tools';
 import { omit } from 'lodash/fp';
-import { connectorToInference, defaultInferenceEndpoints } from '@kbn/inference-common';
+import { defaultInferenceEndpoints, getConnectorDefaultModel } from '@kbn/inference-common';
 import { HumanMessage } from '@langchain/core/messages';
 import { evaluateDefendInsights } from '../../lib/defend_insights/evaluation';
 import { localToolPrompts, promptGroupId as toolsGroupId } from '../../lib/prompt/tool_prompts';
@@ -207,10 +207,9 @@ export const postEvaluateRoute = (
 
           // Actions
           const actionsClient = await actions.getActionsClientWithRequest(request);
-          const connectors = await actionsClient.getBulk({
-            ids: connectorIds,
-            throwIfSystemAction: false,
-          });
+          const connectors = await Promise.all(
+            connectorIds.map(getInferenceConnectorById(inference, request))
+          );
 
           // Fetch any tools registered to the security assistant
           const assistantTools = assistantContext.getRegisteredTools(DEFAULT_PLUGIN_NAME);
@@ -263,7 +262,7 @@ export const postEvaluateRoute = (
               connectors.map(async (connector) => {
                 const prompts = await getAttackDiscoveryPrompts({
                   getInferenceConnectorById: getInferenceConnectorById(inference, request),
-                  connectorId: connector.id,
+                  connectorId: connector.connectorId,
                   savedObjectsClient,
                 });
                 return {
@@ -287,6 +286,7 @@ export const postEvaluateRoute = (
                 esClientInternalUser,
                 evaluationId,
                 evaluatorConnectorId,
+                getInferenceConnectorById: getInferenceConnectorById(inference, request),
                 langSmithApiKey,
                 langSmithProject,
                 logger,
@@ -312,14 +312,14 @@ export const postEvaluateRoute = (
             contentReferencesStore: ContentReferencesStore;
           }> = await Promise.all(
             connectors.map(async (connector) => {
-              const llmType = getLlmType(connector.actionTypeId);
-              const isOssModel = isOpenSourceModel(connectorToInference(connector));
+              const llmType = getLlmType(connector.type);
+              const isOssModel = isOpenSourceModel(connector);
               const llmClass = getLlmClass(llmType);
               const createLlmInstance = async () =>
                 !inferenceChatModelDisabled
                   ? inference.getChatModel({
                       request,
-                      connectorId: connector.id,
+                      connectorId: connector.connectorId,
                       chatModelOptions: {
                         signal: abortSignal,
                         temperature: getDefaultArguments(llmType).temperature,
@@ -335,10 +335,10 @@ export const postEvaluateRoute = (
                     })
                   : new llmClass({
                       actionsClient,
-                      connectorId: connector.id,
+                      connectorId: connector.connectorId,
                       llmType,
                       logger,
-                      model: connector.config?.defaultModel,
+                      model: getConnectorDefaultModel(connector),
                       temperature: getDefaultArguments(llmType).temperature,
                       signal: abortSignal,
                       streaming: false,
@@ -403,7 +403,7 @@ export const postEvaluateRoute = (
                 replacements,
                 contentReferencesStore,
                 inference,
-                connectorId: connector.id,
+                connectorId: connector.connectorId,
                 size,
                 telemetry: ctx.elasticAssistant.telemetry,
                 ...(productDocsAvailable ? { llmTasks: ctx.elasticAssistant.llmTasks } : {}),
@@ -417,7 +417,7 @@ export const postEvaluateRoute = (
                     try {
                       description = await getPrompt({
                         getInferenceConnectorById: getInferenceConnectorById(inference, request),
-                        connectorId: connector.id,
+                        connectorId: connector.connectorId,
                         model: getModelOrOss(llmType, isOssModel),
                         localPrompts: localToolPrompts,
                         promptId: tool.name,
@@ -440,7 +440,7 @@ export const postEvaluateRoute = (
               ).filter((e) => e != null) as StructuredTool[];
 
               return {
-                connectorId: connector.id,
+                connectorId: connector.connectorId,
                 name: `${runName} - ${connector.name}`,
                 llmType,
                 isOssModel,
@@ -448,8 +448,8 @@ export const postEvaluateRoute = (
                 graph: await getDefaultAssistantGraph({
                   contentReferencesStore,
                   createLlmInstance,
+                  getInferenceConnectorById: getInferenceConnectorById(inference, request),
                   logger,
-                  actionsClient,
                   savedObjectsClient,
                   tools,
                   checkpointSaver: await assistantContext.getCheckpointSaver(),
