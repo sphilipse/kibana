@@ -53,6 +53,8 @@ interface TestWrapperProps {
   canSaveAdvancedSettings?: boolean;
 }
 
+const mockGenAiSettingsApi = jest.fn().mockResolvedValue({});
+
 function TestWrapper({ children, canSaveAdvancedSettings = true }: TestWrapperProps) {
   const queryClient = new QueryClient();
 
@@ -71,6 +73,7 @@ function TestWrapper({ children, canSaveAdvancedSettings = true }: TestWrapperPr
             addDanger: jest.fn(),
           },
         },
+        genAiSettingsApi: mockGenAiSettingsApi,
       }}
     >
       <I18nProvider>
