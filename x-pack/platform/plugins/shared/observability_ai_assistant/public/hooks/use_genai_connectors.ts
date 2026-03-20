@@ -86,12 +86,20 @@ export function useGenAIConnectorsWithoutContext(
   const fetchConnectors = useCallback(async () => {
     setLoading(true);
     try {
-      let results = await assistant.callApi('GET /internal/observability_ai_assistant/connectors', {
-        signal: controller.signal,
-      });
+      let results: CommonInferenceConnector[];
       if (isConnectorSelectionRestricted) {
-        const defaultC = results.find((con) => con.connectorId === defaultConnector);
-        results = defaultC ? [defaultC] : [];
+        const connector = await assistant.callApi(
+          'GET /internal/observability_ai_assistant/connectors/{connectorId}',
+          {
+            signal: controller.signal,
+            params: { path: { connectorId: defaultConnector } },
+          }
+        );
+        results = [connector];
+      } else {
+        results = await assistant.callApi('GET /internal/observability_ai_assistant/connectors', {
+          signal: controller.signal,
+        });
       }
       setConnectors(results);
       setLastUsedConnector((connectorId) => {
