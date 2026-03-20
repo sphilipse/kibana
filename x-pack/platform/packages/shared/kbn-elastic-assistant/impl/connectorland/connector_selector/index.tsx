@@ -91,7 +91,6 @@ export const ConnectorSelector: React.FC<Props> = React.memo(
       actionTypeRegistry,
       http,
       assistantAvailability,
-      inferenceEnabled,
       settings,
       navigateToApp,
     } = useAssistantContext();

@@ -35,7 +35,7 @@ export const ConnectorSetup = ({
   );
   const { setApiConfig } = useConversation();
   // Access all conversations so we can add connector to all on initial setup
-  const { actionTypeRegistry, assistantAvailability, http, inferenceEnabled, settings } =
+  const { actionTypeRegistry, assistantAvailability, http, settings } =
     useAssistantContext();
 
   const isMissingConnectorPrivileges = !assistantAvailability.hasConnectorsAllPrivilege;
