@@ -5,18 +5,15 @@
  * 2.0.
  */
 
-import type { FindActionResult } from '@kbn/actions-plugin/server';
+import type { InferenceConnector } from '@kbn/inference-common';
 
-export const INFERENCE_CONNECTOR_ACTION_TYPE_ID = '.inference';
-
-export const getElasticManagedLlmConnector = (connectors: FindActionResult[] | undefined) => {
+export const getElasticManagedLlmConnector = (connectors: InferenceConnector[] | undefined) => {
   if (!Array.isArray(connectors) || connectors.length === 0) {
     return undefined;
   }
 
   return connectors.find(
     (connector) =>
-      connector.actionTypeId === INFERENCE_CONNECTOR_ACTION_TYPE_ID &&
       connector.isPreconfigured &&
       connector.config?.provider === 'elastic'
   );

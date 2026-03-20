@@ -34,7 +34,7 @@ export const getAttackDiscoveryPrompts = async ({
   provider,
   savedObjectsClient,
 }: {
-  getInferenceConnectorById: (id: string) => Promise<InferenceConnector>;
+  getInferenceConnectorById?: (id: string) => Promise<InferenceConnector>;
   connectorId: string;
   model?: string;
   provider?: string;

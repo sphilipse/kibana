@@ -53,7 +53,7 @@ const validateDefaultAIConnector = (
 
   // Check if selected connector exists
   const selectedConnectorExists =
-    connectors.connectors?.some((connector) => connector.id === defaultLlmValue) ||
+    connectors.connectors?.some((connector) => connector.connectorId === defaultLlmValue) ||
     defaultLlmValue === NO_DEFAULT_CONNECTOR;
 
   if (!selectedConnectorExists && !connectors.loading) {
@@ -92,7 +92,7 @@ const getOptions = (connectors: UseGenAiConnectorsResult): EuiComboBoxOptionOpti
       ?.filter((connector) => connector.isPreconfigured)
       .map((connector) => ({
         label: connector.name,
-        value: connector.id,
+        value: connector.connectorId,
       })) ?? [];
 
   const custom =
@@ -100,7 +100,7 @@ const getOptions = (connectors: UseGenAiConnectorsResult): EuiComboBoxOptionOpti
       ?.filter((connector) => !connector.isPreconfigured)
       .map((connector) => ({
         label: connector.name,
-        value: connector.id,
+        value: connector.connectorId,
       })) ?? [];
 
   return [

@@ -120,7 +120,7 @@ export function SettingsTab() {
         defaultMessage: 'Use default (genAiSettings:defaultAIConnector)',
       }),
     },
-    ...(genAiConnectors.connectors ?? []).map((c) => ({ value: c.id, text: c.name })),
+    ...(genAiConnectors.connectors ?? []).map((c) => ({ value: c.connectorId, text: c.name })),
   ];
 
   if (settingsFetch.loading && !settingsFetch.value) {

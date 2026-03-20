@@ -37,7 +37,7 @@ export function getDefendInsightsPrompt({
   ...args
 }: {
   type: DefendInsightType;
-  getInferenceConnectorById: (id: string) => Promise<InferenceConnector>;
+  getInferenceConnectorById?: (id: string) => Promise<InferenceConnector>;
   connectorId: string;
   model?: string;
   provider?: string;

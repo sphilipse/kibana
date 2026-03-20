@@ -5,19 +5,15 @@
  * 2.0.
  */
 
-import type { Connector } from '../hooks/use_genai_connectors';
+import type { InferenceConnector } from '@kbn/inference-common';
 
-export const INFERENCE_CONNECTOR_ACTION_TYPE_ID = '.inference';
-
-export const getElasticManagedLlmConnector = (connectors: Connector[] | undefined) => {
+export const getElasticManagedLlmConnector = (connectors: InferenceConnector[] | undefined) => {
   if (!Array.isArray(connectors) || connectors.length === 0) {
     return undefined;
   }
 
   return connectors.find(
     (connector) =>
-      connector.actionTypeId === INFERENCE_CONNECTOR_ACTION_TYPE_ID &&
-      connector.isPreconfigured &&
-      (connector.config as { provider?: string })?.provider === 'elastic'
+      connector.isPreconfigured
   );
 };

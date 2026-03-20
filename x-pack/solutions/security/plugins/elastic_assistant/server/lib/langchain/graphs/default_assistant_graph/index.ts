@@ -214,7 +214,7 @@ export const callAssistantGraph: AgentExecutor<true | false> = async ({
   }
 
   const defaultSystemPrompt = await localGetPrompt({
-    actionsClient,
+    getInferenceConnectorById: (id) => inference.getConnectorById(id, request),
     connectorId,
     model: getModelOrOss(llmType, isOssModel, request.body.model),
     promptId: promptDictionary.systemPrompt,

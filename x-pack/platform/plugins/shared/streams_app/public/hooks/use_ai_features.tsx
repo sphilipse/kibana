@@ -61,8 +61,6 @@ export function useAIFeatures(): AIFeatures | null {
     };
   }
 
-  const elasticManagedLlmConnector = getElasticManagedLlmConnector(genAiConnectors.connectors);
-
   // Check for actions.show permission (read access is sufficient for listing connectors)
   const hasActionsPermission = core.application.capabilities.actions?.show || false;
 
@@ -74,9 +72,9 @@ export function useAIFeatures(): AIFeatures | null {
   const couldBeEnabled = Boolean(
     license?.hasAtLeast('enterprise') && core.application.capabilities.actions?.show
   );
-  const isManagedAIConnector = elasticManagedLlmConnector
-    ? elasticManagedLlmConnector.id === genAiConnectors.selectedConnector
-    : false;
+  const selectedConnector = (genAiConnectors.connectors || []).find(connector => connector.connectorId === genAiConnectors.selectedConnector);
+  const isManagedAIConnector = selectedConnector?.isPreconfigured || false;
+  
 
   return {
     loading: false,
