@@ -54,6 +54,17 @@ export function SettingsTab() {
     uiSettings: core.uiSettings,
   });
 
+  const defaultConnectorFetch = useStreamsAppFetch(
+    async ({ signal }) => {
+      if (!genAiConnectors.defaultConnector) return undefined;
+      return streams.streamsRepositoryClient.fetch(
+        'GET /internal/streams/connectors/{connectorId}',
+        { signal, params: { path: { connectorId: genAiConnectors.defaultConnector } } }
+      );
+    },
+    [streams.streamsRepositoryClient, genAiConnectors.defaultConnector]
+  );
+
   const settingsFetch = useStreamsAppFetch(
     async ({ signal }) =>
       streams.streamsRepositoryClient.fetch('GET /internal/streams/_significant_events/settings', {
@@ -134,10 +145,7 @@ export function SettingsTab() {
     discovery === NOT_SET_VALUE;
   const showNoDefaultCallout = !genAiConnectors.loading && !hasDefaultConnector && anyUsesDefault;
   const defaultConnectorName =
-    hasDefaultConnector && anyUsesDefault
-      ? genAiConnectors.connectors?.find((c) => c.connectorId === genAiConnectors.defaultConnector)
-          ?.name
-      : undefined;
+    hasDefaultConnector && anyUsesDefault ? defaultConnectorFetch.value?.name : undefined;
 
   return (
     <EuiPanel paddingSize="l">
