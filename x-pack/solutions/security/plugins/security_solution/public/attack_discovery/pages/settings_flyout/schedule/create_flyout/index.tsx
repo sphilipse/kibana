@@ -62,7 +62,7 @@ export const CreateFlyout: React.FC<Props> = React.memo(({ onClose }) => {
   const { alertsIndexPattern, http, settings } = useAssistantContext();
   const { data: aiConnectors, isLoading: isLoadingConnectors } = useLoadConnectors({
     http,
-    featureId: 'attack-discovery',
+    featureId: 'attack_discovery',
     settings,
   });
 

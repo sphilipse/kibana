@@ -49,7 +49,7 @@ export const ConnectorSelector: React.FC<ConnectorSelectorProps> = ({
 
   const { data: dataConnectors, isLoading } = useLoadConnectors({
     http,
-    featureId: 'workplace-ai',
+    featureId: 'workplace_ai',
     settings: {
       client: uiSettings,
       globalClient: uiSettings,

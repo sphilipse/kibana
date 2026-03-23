@@ -99,7 +99,7 @@ export const ConnectorSelector: React.FC<Props> = React.memo(
 
     const { data: aiConnectors, refetch: refetchConnectors } = useLoadConnectors({
       http,
-      featureId: 'elastic-assistant',
+      featureId: 'elastic_assistant',
       settings,
     });
 

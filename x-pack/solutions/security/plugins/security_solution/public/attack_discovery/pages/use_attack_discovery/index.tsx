@@ -60,7 +60,7 @@ export const useAttackDiscovery = ({
 
   const { data: aiConnectors } = useLoadConnectors({
     http,
-    featureId: 'attack-discovery',
+    featureId: 'attack_discovery',
     settings,
   });
 

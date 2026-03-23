@@ -33,7 +33,7 @@ export const useChatComplete = ({ connectorId }: { connectorId: string }): UseCh
   const abortController = useRef(new AbortController());
   const { data: connectors } = useLoadConnectors({
     http,
-    featureId: 'elastic-assistant',
+    featureId: 'elastic_assistant',
     settings,
   });
   const actionTypeId = useMemo(

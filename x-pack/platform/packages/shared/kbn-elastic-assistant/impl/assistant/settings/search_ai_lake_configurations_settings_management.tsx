@@ -67,7 +67,7 @@ export const SearchAILakeConfigurationsSettingsManagement: React.FC<Props> = Rea
 
     const { data: connectors } = useLoadConnectors({
       http,
-      featureId: 'elastic-assistant',
+      featureId: 'elastic_assistant',
       settings,
     });
     const defaultConnector = useMemo(

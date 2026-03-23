@@ -69,7 +69,7 @@ export const AssistantSettingsManagement: React.FC<Props> = React.memo(
 
     const { data: connectors } = useLoadConnectors({
       http,
-      featureId: 'elastic-assistant',
+      featureId: 'elastic_assistant',
       settings,
     });
     const defaultConnector = useMemo(

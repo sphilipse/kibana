@@ -60,7 +60,7 @@ export const ConversationSettingsEditor: React.FC<ConversationSettingsEditorProp
     const { settings } = useAssistantContext();
     const { data: connectors, isSuccess: areConnectorsFetched } = useLoadConnectors({
       http,
-      featureId: 'elastic-assistant',
+      featureId: 'elastic_assistant',
       settings,
     });
     const [conversationUpdates, setConversationUpdates] =

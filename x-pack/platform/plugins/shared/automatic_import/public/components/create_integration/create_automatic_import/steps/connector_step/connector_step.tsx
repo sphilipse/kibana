@@ -113,7 +113,7 @@ export const ConnectorStep = React.memo<ConnectorStepProps>(({ connector }) => {
   } = useLoadConnectors({
     http,
     toasts: notifications.toasts,
-    featureId: 'automatic-import',
+    featureId: 'automatic_import',
     settings,
   });
 

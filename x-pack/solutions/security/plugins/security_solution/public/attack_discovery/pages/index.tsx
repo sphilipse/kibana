@@ -61,7 +61,7 @@ const AttackDiscoveryPageComponent: React.FC = () => {
   const { http } = useAssistantContext();
   const { data: aiConnectors } = useLoadConnectors({
     http,
-    featureId: 'attack-discovery',
+    featureId: 'attack_discovery',
     settings,
   });
 

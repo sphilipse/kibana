@@ -86,7 +86,7 @@ export const AssistantSettings: React.FC<Props> = React.memo(
 
     const { data: connectors } = useLoadConnectors({
       http,
-      featureId: 'elastic-assistant',
+      featureId: 'elastic_assistant',
       settings,
     });
     const {

@@ -295,7 +295,7 @@ export const ConnectorSelector: React.FC<ConnectorSelectorProps> = ({
   } = useLoadConnectors({
     http,
     toasts: notifications.toasts,
-    featureId: 'automatic-import-v2',
+    featureId: 'automatic_import_v2',
     settings,
   });
 

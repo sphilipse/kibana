@@ -160,7 +160,7 @@ export const ConnectorSelector: React.FC<{}> = () => {
 
   const { data: aiConnectors, isLoading } = useLoadConnectors({
     http,
-    featureId: 'agent-builder',
+    featureId: 'agent_builder',
     settings,
   });
 

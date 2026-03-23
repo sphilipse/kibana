@@ -41,7 +41,7 @@ export const ConnectorSetup = ({
 
   const { refetch: refetchConnectors } = useLoadConnectors({
     http,
-    featureId: 'elastic-assistant',
+    featureId: 'elastic_assistant',
     settings,
   });
 

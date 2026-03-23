@@ -62,7 +62,7 @@ export const WorkflowInsightsScanSection = ({
   const { http, settings, docLinks } = useKibana().services;
   const { data: aiConnectors } = useLoadConnectors({
     http,
-    featureId: 'defend-insights',
+    featureId: 'defend_insights',
     settings,
   });
   const { canWriteWorkflowInsights } = useUserPrivileges().endpointPrivileges;

@@ -124,7 +124,7 @@ const AssistantComponent: React.FC<Props> = ({
   // Connector details
   const { data: connectors, isFetchedAfterMount: isFetchedConnectors } = useLoadConnectors({
     http,
-    featureId: 'elastic-assistant',
+    featureId: 'elastic_assistant',
     settings,
   });
   const defaultConnector = useMemo(

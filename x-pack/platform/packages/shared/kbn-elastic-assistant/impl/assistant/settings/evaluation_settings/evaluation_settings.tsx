@@ -53,7 +53,7 @@ export const EvaluationSettings: React.FC = React.memo(() => {
     useAssistantContext();
   const { data: connectors } = useLoadConnectors({
     http,
-    featureId: 'elastic-assistant',
+    featureId: 'elastic_assistant',
     settings,
   });
   const { mutate: performEvaluation, isLoading: isPerformingEvaluation } = usePerformEvaluation({

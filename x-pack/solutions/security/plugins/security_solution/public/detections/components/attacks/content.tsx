@@ -88,7 +88,7 @@ export const AttacksPageContent = React.memo(({ dataView }: AttacksPageContentPr
   const { http } = useAssistantContext();
   const { data: aiConnectors } = useLoadConnectors({
     http,
-    featureId: 'attack-discovery',
+    featureId: 'attack_discovery',
     settings,
   });
   const { from } = useGlobalTime();
