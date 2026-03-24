@@ -75,7 +75,9 @@ export class SearchInferenceEndpointsPlugin
     const getForFeature = async (featureId: string) => {
       const [coreStart] = await core.getStartServices();
       const esClient = coreStart.elasticsearch.client.asInternalUser;
-      const soClient = coreStart.savedObjects.createInternalRepository([INFERENCE_SETTINGS_SO_TYPE]);
+      const soClient = coreStart.savedObjects.createInternalRepository([
+        INFERENCE_SETTINGS_SO_TYPE,
+      ]);
       return getForFeatureFn(featureRegistry, soClient, esClient, featureId);
     };
 
