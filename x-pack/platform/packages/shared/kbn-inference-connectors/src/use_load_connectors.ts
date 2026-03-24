@@ -11,7 +11,7 @@ import type { IHttpFetchError, HttpSetup } from '@kbn/core-http-browser';
 import type { IToasts } from '@kbn/core-notifications-browser';
 import type { OpenAiProviderType } from '@kbn/connector-schemas/openai';
 import type { SettingsStart } from '@kbn/core-ui-settings-browser';
-import { type InferenceConnector } from '@kbn/inference-common';
+import { type InferenceConnector, defaultInferenceEndpoints } from '@kbn/inference-common';
 import {
   GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR,
   GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR_DEFAULT_ONLY,
@@ -33,23 +33,25 @@ export interface UseLoadConnectorsProps {
   settings: SettingsStart;
 }
 
-const toAIConnector = (connector: InferenceConnector): AIConnector =>
-  ({
-    id: connector.connectorId,
-    name: connector.name,
-    actionTypeId: connector.type,
-    config: connector.config,
-    secrets: {},
-    isPreconfigured: connector.isPreconfigured,
-    isSystemAction: false,
-    isDeprecated: false,
-    isConnectorTypeDeprecated: false,
-    isMissingSecrets: false,
-    apiProvider:
-      !connector.isPreconfigured && connector.config?.apiProvider
-        ? (connector.config.apiProvider as OpenAiProviderType)
-        : undefined,
-  } as AIConnector);
+const toAIConnector = (
+  connector: InferenceConnector & { isRecommended?: boolean }
+): AIConnector => ({
+  id: connector.connectorId,
+  name: connector.name,
+  actionTypeId: connector.type,
+  config: connector.config,
+  secrets: {},
+  isPreconfigured: connector.isPreconfigured,
+  isSystemAction: false,
+  isDeprecated: false,
+  isConnectorTypeDeprecated: false,
+  isMissingSecrets: false,
+  isRecommended: connector.isRecommended,
+  apiProvider:
+    !connector.isPreconfigured && connector.config?.apiProvider
+      ? (connector.config.apiProvider as OpenAiProviderType)
+      : undefined,
+});
 
 const applyConnectorSettings = <T extends { id: string }>(
   allConnectors: T[],
@@ -68,17 +70,39 @@ const applyConnectorSettings = <T extends { id: string }>(
   return allConnectors;
 };
 
+interface FetchConnectorsResponse {
+  connectors: InferenceConnector[];
+  allConnectors: InferenceConnector[];
+  isFromRecommendation: boolean;
+}
+
+const DEFAULT_KIBANA_ENDPOINT_ID = defaultInferenceEndpoints.KIBANA_DEFAULT_CHAT_COMPLETION;
+
 const fetchConnectorsForFeature = async (
   http: HttpSetup,
   featureId: string
 ): Promise<InferenceConnector[]> => {
-  const { connectors } = await http.get<{ connectors: InferenceConnector[] }>(
-    INFERENCE_CONNECTORS_PATH,
-    {
+  const { connectors, allConnectors, isFromRecommendation } =
+    await http.get<FetchConnectorsResponse>(INFERENCE_CONNECTORS_PATH, {
       query: { featureId },
       version: '1',
-    }
-  );
+    });
+
+  if (isFromRecommendation) {
+    const recommendedIds = new Set(connectors.map((c) => c.connectorId));
+    const otherConnectors = allConnectors.filter((c) => !recommendedIds.has(c.connectorId));
+    return [...connectors, ...otherConnectors];
+  }
+
+  // No recommendations — return full list with default endpoint first if present.
+  const defaultIndex = connectors.findIndex((c) => c.connectorId === DEFAULT_KIBANA_ENDPOINT_ID);
+  if (defaultIndex > 0) {
+    const reordered = [...connectors];
+    const [defaultConnector] = reordered.splice(defaultIndex, 1);
+    reordered.unshift(defaultConnector);
+    return reordered;
+  }
+
   return connectors;
 };
 

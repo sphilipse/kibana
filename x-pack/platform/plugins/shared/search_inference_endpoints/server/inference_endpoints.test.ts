@@ -97,11 +97,43 @@ describe('getForFeature', () => {
     ).rejects.toThrow('not registered');
   });
 
-  it('returns empty result when no endpoints resolved', async () => {
+  it('returns default Kibana endpoint when no endpoints resolved and it exists', async () => {
+    registry.register(createValidFeature({ featureId: 'f1' }));
+    const info = createEndpointInfo('.anthropic-claude-4.5-sonnet-chat_completion');
+    const result = await getForFeature(
+      registry,
+      createSoClient(),
+      createEsClient({ '.anthropic-claude-4.5-sonnet-chat_completion': info }),
+      'f1'
+    );
+    expect(result.endpoints).toEqual([
+      createExpectedConnector('.anthropic-claude-4.5-sonnet-chat_completion'),
+    ]);
+    expect(result.isFromRecommendation).toBe(true);
+  });
+
+  it('returns empty result when no endpoints resolved and default endpoint does not exist', async () => {
+    registry.register(createValidFeature({ featureId: 'f1' }));
+    const result = await getForFeature(
+      registry,
+      createSoClient(),
+      createEsClient({ '.anthropic-claude-4.5-sonnet-chat_completion': 'not_found' }),
+      'f1'
+    );
+    expect(result.endpoints).toEqual([]);
+    expect(result.isFromRecommendation).toBe(false);
+  });
+
+  it('returns empty result when SO explicitly lists empty endpoints', async () => {
     registry.register(createValidFeature({ featureId: 'f1' }));
     await expect(
-      getForFeature(registry, createSoClient(), createEsClient(), 'f1')
-    ).resolves.toEqual({ endpoints: [], warnings: [] });
+      getForFeature(
+        registry,
+        createSoClient([{ feature_id: 'f1', endpoints: [] }]),
+        createEsClient({ '.anthropic-claude-4.5-sonnet-chat_completion': createEndpointInfo('.anthropic-claude-4.5-sonnet-chat_completion') }),
+        'f1'
+      )
+    ).resolves.toEqual({ endpoints: [], warnings: [], isFromRecommendation: false });
   });
 
   it('returns hydrated endpoints from SO override', async () => {
@@ -114,7 +146,7 @@ describe('getForFeature', () => {
         createEsClient({ ep1: info }),
         'f1'
       )
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('ep1')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [createExpectedConnector('ep1')], warnings: [], isFromRecommendation: false });
   });
 
   it('returns hydrated endpoints from recommendedEndpoints', async () => {
@@ -122,7 +154,7 @@ describe('getForFeature', () => {
     const info = createEndpointInfo('rec1');
     await expect(
       getForFeature(registry, createSoClient(), createEsClient({ rec1: info }), 'f1')
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('rec1')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [createExpectedConnector('rec1')], warnings: [], isFromRecommendation: true });
   });
 
   it('walks the fallback chain to parent recommendedEndpoints', async () => {
@@ -131,7 +163,7 @@ describe('getForFeature', () => {
     const info = createEndpointInfo('prec1');
     await expect(
       getForFeature(registry, createSoClient(), createEsClient({ prec1: info }), 'child')
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('prec1')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [createExpectedConnector('prec1')], warnings: [], isFromRecommendation: true });
   });
 
   it('walks the full chain: child -> parent -> grandparent', async () => {
@@ -143,7 +175,7 @@ describe('getForFeature', () => {
     const info = createEndpointInfo('gp_ep');
     await expect(
       getForFeature(registry, createSoClient(), createEsClient({ gp_ep: info }), 'child')
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('gp_ep')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [createExpectedConnector('gp_ep')], warnings: [], isFromRecommendation: true });
   });
 
   it('prefers SO override over recommendedEndpoints', async () => {
@@ -156,10 +188,10 @@ describe('getForFeature', () => {
         createEsClient({ so_ep: soInfo, rec1: createEndpointInfo('rec1') }),
         'f1'
       )
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('so_ep')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [createExpectedConnector('so_ep')], warnings: [], isFromRecommendation: false });
   });
 
-  it('skips SO entry with empty endpoints and falls through to recommended', async () => {
+  it('returns empty when SO explicitly lists empty endpoints even if recommended exist', async () => {
     registry.register(createValidFeature({ featureId: 'f1', recommendedEndpoints: ['rec1'] }));
     const info = createEndpointInfo('rec1');
     await expect(
@@ -169,7 +201,7 @@ describe('getForFeature', () => {
         createEsClient({ rec1: info }),
         'f1'
       )
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('rec1')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [], warnings: [], isFromRecommendation: false });
   });
 
   it('handles SO 404 and falls through to recommended', async () => {
@@ -177,7 +209,7 @@ describe('getForFeature', () => {
     const info = createEndpointInfo('rec1');
     await expect(
       getForFeature(registry, createSoClient('not_found'), createEsClient({ rec1: info }), 'f1')
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('rec1')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [createExpectedConnector('rec1')], warnings: [], isFromRecommendation: true });
   });
 
   it('returns warning for ES endpoints that no longer exist (404)', async () => {
@@ -220,12 +252,20 @@ describe('getForFeature', () => {
     );
   });
 
-  it('detects cycles and returns empty result with warning', async () => {
+  it('detects cycles and returns default endpoint with warning', async () => {
     registry.register(createValidFeature({ featureId: 'a' }));
     registry.register(createValidFeature({ featureId: 'b', parentFeatureId: 'a' }));
     (registry as any).features.get('a').parentFeatureId = 'b';
-    const result = await getForFeature(registry, createSoClient(), createEsClient(), 'a');
-    expect(result.endpoints).toEqual([]);
+    const defaultInfo = createEndpointInfo('.anthropic-claude-4.5-sonnet-chat_completion');
+    const result = await getForFeature(
+      registry,
+      createSoClient(),
+      createEsClient({ '.anthropic-claude-4.5-sonnet-chat_completion': defaultInfo }),
+      'a'
+    );
+    expect(result.endpoints).toEqual([
+      createExpectedConnector('.anthropic-claude-4.5-sonnet-chat_completion'),
+    ]);
     expect(result.warnings).toHaveLength(1);
     expect(result.warnings[0]).toContain('Cyclic dependency');
   });
@@ -249,7 +289,7 @@ describe('getForFeature', () => {
         createEsClient({ child_ep: info, parent_ep: createEndpointInfo('parent_ep') }),
         'child'
       )
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('child_ep')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [createExpectedConnector('child_ep')], warnings: [], isFromRecommendation: true });
   });
 
   it('uses first recommendedEndpoints found in chain when child has none', async () => {
@@ -272,7 +312,7 @@ describe('getForFeature', () => {
         createEsClient({ parent_ep: info, gp_ep: createEndpointInfo('gp_ep') }),
         'child'
       )
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('parent_ep')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [createExpectedConnector('parent_ep')], warnings: [], isFromRecommendation: true });
   });
 
   it('prefers parent SO override over child recommendedEndpoints', async () => {
@@ -292,7 +332,7 @@ describe('getForFeature', () => {
         createEsClient({ so_ep: soInfo, child_ep: createEndpointInfo('child_ep') }),
         'child'
       )
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('so_ep')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [createExpectedConnector('so_ep')], warnings: [], isFromRecommendation: false });
   });
 
   it('uses grandparent recommendedEndpoints when parent has none', async () => {
@@ -304,7 +344,7 @@ describe('getForFeature', () => {
     const info = createEndpointInfo('gp_ep');
     await expect(
       getForFeature(registry, createSoClient(), createEsClient({ gp_ep: info }), 'child')
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('gp_ep')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [createExpectedConnector('gp_ep')], warnings: [], isFromRecommendation: true });
   });
 
   it('prefers grandparent SO override over all recommendedEndpoints', async () => {
@@ -338,6 +378,6 @@ describe('getForFeature', () => {
         }),
         'child'
       )
-    ).resolves.toEqual({ endpoints: [createExpectedConnector('gp_so')], warnings: [] });
+    ).resolves.toEqual({ endpoints: [createExpectedConnector('gp_so')], warnings: [], isFromRecommendation: false });
   });
 });

@@ -8,13 +8,19 @@
 import type { ElasticsearchClient, ISavedObjectsRepository } from '@kbn/core/server';
 import { SavedObjectsErrorHelpers } from '@kbn/core/server';
 import { i18n } from '@kbn/i18n';
-import { type InferenceConnector, InferenceConnectorType } from '@kbn/inference-common';
+import {
+  type InferenceConnector,
+  InferenceConnectorType,
+  defaultInferenceEndpoints,
+} from '@kbn/inference-common';
 import { INFERENCE_SETTINGS_SO_TYPE, INFERENCE_SETTINGS_ID } from '../common/constants';
 import { isInferenceEndpointWithDisplayNameMetadata } from '../common/type_guards';
 import type { InferenceSettingsAttributes } from '../common/types';
 import type { InferenceFeatureRegistry } from './inference_feature_registry';
 import type { ResolvedInferenceEndpoints } from './types';
 import { getConnectorNameFromEndpoint } from './utils/in_memory_connectors';
+
+const DEFAULT_KIBANA_ENDPOINT_ID = defaultInferenceEndpoints.KIBANA_DEFAULT_CHAT_COMPLETION;
 
 /**
  * Returns the resolved inference endpoints for a feature.
@@ -33,24 +39,39 @@ export const getForFeature = async (
   esClient: ElasticsearchClient,
   featureId: string
 ): Promise<ResolvedInferenceEndpoints> => {
-  const { ids, warnings: resolveWarnings } = await resolveEndpointIds(
-    registry,
-    soClient,
-    featureId
-  );
+  const {
+    ids,
+    warnings: resolveWarnings,
+    isFromRecommendation,
+    soEntryFound,
+  } = await resolveEndpointIds(registry, soClient, featureId);
   if (ids.length === 0) {
-    return { endpoints: [], warnings: resolveWarnings };
+    if (soEntryFound) {
+      // SO explicitly lists an empty array — admin opted out of endpoints for this feature.
+      return { endpoints: [], warnings: resolveWarnings, isFromRecommendation: false };
+    }
+    // No SO and no recommended endpoints — try the default Kibana endpoint.
+    const defaultResult = await fetchEndpoints(esClient, [DEFAULT_KIBANA_ENDPOINT_ID]);
+    return {
+      endpoints: defaultResult.endpoints,
+      warnings: [...resolveWarnings, ...defaultResult.warnings],
+      isFromRecommendation: defaultResult.endpoints.length > 0,
+    };
   }
   const result = await fetchEndpoints(esClient, ids);
   return {
     endpoints: result.endpoints,
     warnings: [...resolveWarnings, ...result.warnings],
+    isFromRecommendation,
   };
 };
 
 interface ResolvedEndpointIds {
   ids: string[];
   warnings: string[];
+  isFromRecommendation: boolean;
+  /** True when an SO entry was found for the feature (even if it had an empty endpoints list). */
+  soEntryFound: boolean;
 }
 
 const resolveEndpointIds = async (
@@ -83,7 +104,15 @@ const resolveEndpointIds = async (
 
   const initialSoEntry = soFeaturesMap.get(currentId);
   if (initialSoEntry && initialSoEntry.endpoints.length > 0) {
-    return { ids: initialSoEntry.endpoints.map((e) => e.id), warnings: [] };
+    return {
+      ids: initialSoEntry.endpoints.map((e) => e.id),
+      warnings: [],
+      isFromRecommendation: false,
+      soEntryFound: true,
+    };
+  }
+  if (initialSoEntry && initialSoEntry.endpoints.length === 0) {
+    return { ids: [], warnings: [], isFromRecommendation: false, soEntryFound: true };
   }
 
   visited.add(currentId);
@@ -101,6 +130,8 @@ const resolveEndpointIds = async (
               values: { featureId, currentId },
             }),
           ],
+          isFromRecommendation: false,
+          soEntryFound: false,
         };
       }
 
@@ -118,7 +149,15 @@ const resolveEndpointIds = async (
 
       const soEntry = soFeaturesMap.get(currentId);
       if (soEntry && soEntry.endpoints.length > 0) {
-        return { ids: soEntry.endpoints.map((e) => e.id), warnings: [] };
+        return {
+          ids: soEntry.endpoints.map((e) => e.id),
+          warnings: [],
+          isFromRecommendation: false,
+          soEntryFound: true,
+        };
+      }
+      if (soEntry && soEntry.endpoints.length === 0) {
+        return { ids: [], warnings: [], isFromRecommendation: false, soEntryFound: true };
       }
 
       if (current.parentFeatureId) {
@@ -132,6 +171,8 @@ const resolveEndpointIds = async (
   return {
     ids: recEntry?.recommendedEndpoints ?? [],
     warnings: [],
+    isFromRecommendation: !!recEntry,
+    soEntryFound: false,
   };
 };
 
@@ -143,7 +184,7 @@ const resolveEndpointIds = async (
 const fetchEndpoints = async (
   esClient: ElasticsearchClient,
   ids: string[]
-): Promise<ResolvedInferenceEndpoints> => {
+): Promise<Omit<ResolvedInferenceEndpoints, 'isFromRecommendation'>> => {
   const endpoints: InferenceConnector[] = [];
   const warnings: string[] = [];
 

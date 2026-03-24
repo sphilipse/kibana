@@ -56,13 +56,21 @@ export const defineInferenceConnectorsRoute = ({
         const { featureId } = request.query;
 
         const featureResult = await getForFeature(featureId);
+        const connectors = await getConnectorList(request);
 
         if (featureResult.endpoints.length > 0) {
-          return response.ok({ body: { connectors: featureResult.endpoints } });
+          return response.ok({
+            body: {
+              connectors: featureResult.endpoints,
+              allConnectors: connectors,
+              isFromRecommendation: featureResult.isFromRecommendation,
+            },
+          });
         }
 
-        const connectors = await getConnectorList(request);
-        return response.ok({ body: { connectors } });
+        return response.ok({
+          body: { connectors, allConnectors: connectors, isFromRecommendation: false },
+        });
       })
     );
 };

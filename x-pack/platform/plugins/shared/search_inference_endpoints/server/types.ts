@@ -41,6 +41,8 @@ export interface SearchInferenceEndpointsPluginSetup {
 export interface ResolvedInferenceEndpoints {
   endpoints: InferenceConnector[];
   warnings: string[];
+  /** When true, `endpoints` is a prioritized subset (registry recommendations or platform default), not an admin SO list. */
+  isFromRecommendation: boolean;
 }
 
 export interface InferenceEndpointsContract {
