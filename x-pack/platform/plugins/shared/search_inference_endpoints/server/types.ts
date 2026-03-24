@@ -7,6 +7,7 @@
 
 import type { PluginStartContract as ActionsPluginStartContract } from '@kbn/actions-plugin/server';
 import type { FeaturesPluginSetup } from '@kbn/features-plugin/server';
+import type { InferenceServerStart } from '@kbn/inference-plugin/server';
 import type { InferenceTaskType } from '@elastic/elasticsearch/lib/api/types';
 import type { InferenceConnector } from '@kbn/inference-common';
 
@@ -53,6 +54,7 @@ export interface SearchInferenceEndpointsPluginStart {
 
 export interface SearchInferenceEndpointsPluginStartDependencies {
   actions: ActionsPluginStartContract;
+  inference: InferenceServerStart;
 }
 
 export interface SearchInferenceEndpointsPluginSetupDependencies {

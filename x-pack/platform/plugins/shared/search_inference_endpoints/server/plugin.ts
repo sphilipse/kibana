@@ -8,6 +8,7 @@
 import type {
   CoreSetup,
   CoreStart,
+  KibanaRequest,
   Logger,
   Plugin,
   PluginInitializerContext,
@@ -19,7 +20,7 @@ import type { SearchInferenceEndpointsConfig } from './config';
 import { DynamicConnectorsPoller } from './lib/dynamic_connectors';
 import { defineRoutes } from './routes';
 import { InferenceFeatureRegistry } from './inference_feature_registry';
-import { getForFeature } from './inference_endpoints';
+import { getForFeature as getForFeatureFn } from './inference_endpoints';
 import { createInferenceSettingsSavedObjectType } from './saved_objects/inference_settings';
 import type {
   SearchInferenceEndpointsPluginSetup,
@@ -69,7 +70,27 @@ export class SearchInferenceEndpointsPlugin
 
     core.savedObjects.registerType(createInferenceSettingsSavedObjectType());
 
-    defineRoutes({ logger: this.logger, router, featureRegistry: this.featureRegistry });
+    const featureRegistry = this.featureRegistry;
+
+    const getForFeature = async (featureId: string) => {
+      const [coreStart] = await core.getStartServices();
+      const esClient = coreStart.elasticsearch.client.asInternalUser;
+      const soClient = coreStart.savedObjects.createInternalRepository([INFERENCE_SETTINGS_SO_TYPE]);
+      return getForFeatureFn(featureRegistry, soClient, esClient, featureId);
+    };
+
+    const getConnectorList = async (request: KibanaRequest) => {
+      const [, pluginsStart] = await core.getStartServices();
+      return pluginsStart.inference.getConnectorList(request);
+    };
+
+    defineRoutes({
+      logger: this.logger,
+      router,
+      featureRegistry: this.featureRegistry,
+      getForFeature,
+      getConnectorList,
+    });
 
     plugins.features.registerKibanaFeature({
       id: PLUGIN_ID,
@@ -147,7 +168,7 @@ export class SearchInferenceEndpointsPlugin
         getForFeature: (featureId: string) => {
           const esClient = core.elasticsearch.client.asInternalUser;
           const soClient = core.savedObjects.createInternalRepository([INFERENCE_SETTINGS_SO_TYPE]);
-          return getForFeature(featureRegistry, soClient, esClient, featureId);
+          return getForFeatureFn(featureRegistry, soClient, esClient, featureId);
         },
       },
     };

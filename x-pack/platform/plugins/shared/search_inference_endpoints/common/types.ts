@@ -14,6 +14,7 @@ export enum APIRoutes {
   GET_INFERENCE_SETTINGS = '/internal/search_inference_endpoints/settings',
   PUT_INFERENCE_SETTINGS = '/internal/search_inference_endpoints/settings',
   GET_INFERENCE_FEATURES = '/internal/search_inference_endpoints/features',
+  GET_INFERENCE_CONNECTORS = '/internal/search_inference_endpoints/connectors',
 }
 
 export interface SearchInferenceEndpointsConfigType {

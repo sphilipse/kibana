@@ -19,7 +19,7 @@ import {
 import { i18n } from '@kbn/i18n';
 import type { AIConnector } from './types';
 
-const INFERENCE_CONNECTORS_PATH = '/internal/inference/connectors';
+const INFERENCE_CONNECTORS_PATH = '/internal/search_inference_endpoints/connectors';
 const QUERY_KEY = ['kbn-inference-connectors', 'load-connectors'];
 
 export interface UseLoadConnectorsProps {
@@ -27,7 +27,7 @@ export interface UseLoadConnectorsProps {
   toasts?: IToasts;
   /**
    * Feature identifier used to scope which inference endpoints are relevant.
-   * Reserved for future filtering logic.
+   * Passed to the search_inference_endpoints API to resolve feature-specific endpoints.
    */
   featureId: string;
   settings: SettingsStart;
@@ -68,9 +68,16 @@ const applyConnectorSettings = <T extends { id: string }>(
   return allConnectors;
 };
 
-const fetchAllConnectors = async (http: HttpSetup): Promise<InferenceConnector[]> => {
+const fetchConnectorsForFeature = async (
+  http: HttpSetup,
+  featureId: string
+): Promise<InferenceConnector[]> => {
   const { connectors } = await http.get<{ connectors: InferenceConnector[] }>(
-    INFERENCE_CONNECTORS_PATH
+    INFERENCE_CONNECTORS_PATH,
+    {
+      query: { featureId },
+      version: '1',
+    }
   );
   return connectors;
 };
@@ -84,7 +91,7 @@ export const useLoadConnectors = ({
   return useQuery(
     [...QUERY_KEY, featureId],
     async () => {
-      const connectors = await fetchAllConnectors(http);
+      const connectors = await fetchConnectorsForFeature(http, featureId);
       return applyConnectorSettings(connectors.map(toAIConnector), settings);
     },
     {
