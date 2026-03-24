@@ -10,9 +10,11 @@ import { SavedObjectsErrorHelpers } from '@kbn/core/server';
 import { i18n } from '@kbn/i18n';
 import { type InferenceConnector, InferenceConnectorType } from '@kbn/inference-common';
 import { INFERENCE_SETTINGS_SO_TYPE, INFERENCE_SETTINGS_ID } from '../common/constants';
+import { isInferenceEndpointWithDisplayNameMetadata } from '../common/type_guards';
 import type { InferenceSettingsAttributes } from '../common/types';
 import type { InferenceFeatureRegistry } from './inference_feature_registry';
 import type { ResolvedInferenceEndpoints } from './types';
+import { getConnectorNameFromEndpoint } from './utils/in_memory_connectors';
 
 /**
  * Returns the resolved inference endpoints for a feature.
@@ -164,7 +166,7 @@ const fetchEndpoints = async (
       const serviceSettings = endpoint.service_settings as Record<string, unknown> | undefined;
       const connector: InferenceConnector = {
         type: InferenceConnectorType.Inference,
-        name: endpoint.inference_id,
+        name: getConnectorNameFromEndpoint(endpoint),
         connectorId: endpoint.inference_id,
         config: {
           inferenceId: endpoint.inference_id,
@@ -176,7 +178,7 @@ const fetchEndpoints = async (
           serviceSettings,
         },
         capabilities: {},
-        isPreconfigured: false,
+        isPreconfigured: isInferenceEndpointWithDisplayNameMetadata(endpoint),
         isInferenceEndpoint: true,
       };
       endpoints.push(connector);
