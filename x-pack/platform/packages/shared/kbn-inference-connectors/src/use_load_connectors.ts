@@ -11,12 +11,13 @@ import type { IHttpFetchError, HttpSetup } from '@kbn/core-http-browser';
 import type { IToasts } from '@kbn/core-notifications-browser';
 import type { OpenAiProviderType } from '@kbn/connector-schemas/openai';
 import type { SettingsStart } from '@kbn/core-ui-settings-browser';
-import { type InferenceConnector, defaultInferenceEndpoints } from '@kbn/inference-common';
+import type { InferenceConnector } from '@kbn/inference-common';
 import {
   GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR,
   GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR_DEFAULT_ONLY,
 } from '@kbn/management-settings-ids';
 import { i18n } from '@kbn/i18n';
+import { mergeConnectorsFromApiResponse } from './merge_connectors_from_api_response';
 import type { AIConnector } from './types';
 
 const INFERENCE_CONNECTORS_PATH = '/internal/search_inference_endpoints/connectors';
@@ -76,8 +77,6 @@ interface FetchConnectorsResponse {
   isFromRecommendation: boolean;
 }
 
-const DEFAULT_KIBANA_ENDPOINT_ID = defaultInferenceEndpoints.KIBANA_DEFAULT_CHAT_COMPLETION;
-
 const fetchConnectorsForFeature = async (
   http: HttpSetup,
   featureId: string
@@ -88,22 +87,7 @@ const fetchConnectorsForFeature = async (
       version: '1',
     });
 
-  if (isFromRecommendation) {
-    const recommendedIds = new Set(connectors.map((c) => c.connectorId));
-    const otherConnectors = allConnectors.filter((c) => !recommendedIds.has(c.connectorId));
-    return [...connectors, ...otherConnectors];
-  }
-
-  // No recommendations — return full list with default endpoint first if present.
-  const defaultIndex = connectors.findIndex((c) => c.connectorId === DEFAULT_KIBANA_ENDPOINT_ID);
-  if (defaultIndex > 0) {
-    const reordered = [...connectors];
-    const [defaultConnector] = reordered.splice(defaultIndex, 1);
-    reordered.unshift(defaultConnector);
-    return reordered;
-  }
-
-  return connectors;
+  return mergeConnectorsFromApiResponse(connectors, allConnectors, isFromRecommendation);
 };
 
 export const useLoadConnectors = ({
