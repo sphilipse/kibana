@@ -68,6 +68,16 @@ export const defineInferenceConnectorsRoute = ({
           });
         }
 
+        if (featureResult.endpoints.length === 0 && featureResult.isFromRecommendation === false) {
+          return response.ok({
+            body: {
+              connectors: featureResult.endpoints,
+              allConnectors: connectors,
+              isFromRecommendation: false,
+            },
+          });
+        }
+
         return response.ok({
           body: { connectors, allConnectors: connectors, isFromRecommendation: false },
         });

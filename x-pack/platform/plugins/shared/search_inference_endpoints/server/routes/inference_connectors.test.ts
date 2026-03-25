@@ -93,7 +93,27 @@ describe('GET /internal/search_inference_endpoints/connectors', () => {
     });
   });
 
-  it('returns the full catalog as connectors when the feature resolves to no endpoints', async () => {
+  it('falls back to the full catalog when recommendations resolved to no endpoints', async () => {
+    const fullCatalog = [inferenceConnector('a'), inferenceConnector('b')];
+    getForFeature.mockResolvedValue({
+      endpoints: [],
+      warnings: [],
+      isFromRecommendation: true,
+    });
+    getConnectorList.mockResolvedValue(fullCatalog);
+
+    await mockRouter.callRoute({ query: { featureId: 'my_feature' } });
+
+    expect(mockRouter.response.ok).toHaveBeenCalledWith({
+      body: {
+        connectors: fullCatalog,
+        allConnectors: fullCatalog,
+        isFromRecommendation: false,
+      },
+    });
+  });
+
+  it('returns empty connectors when admin SO selection resolved to no endpoints', async () => {
     const fullCatalog = [inferenceConnector('a'), inferenceConnector('b')];
     getForFeature.mockResolvedValue({
       endpoints: [],
@@ -106,7 +126,7 @@ describe('GET /internal/search_inference_endpoints/connectors', () => {
 
     expect(mockRouter.response.ok).toHaveBeenCalledWith({
       body: {
-        connectors: fullCatalog,
+        connectors: [],
         allConnectors: fullCatalog,
         isFromRecommendation: false,
       },
