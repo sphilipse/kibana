@@ -8,6 +8,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import { screen, fireEvent } from '@testing-library/react';
+import type { InferenceTaskType } from '@elastic/elasticsearch/lib/api/types';
 import type { InferenceAPIConfigResponse } from '@kbn/ml-trained-models-utils';
 import {
   Form,
@@ -92,26 +94,34 @@ jest.mock('../../../public/application/components/mappings_editor/mappings_state
 
 const mockResendRequest = jest.fn();
 
-const MockInferenceFlyoutWrapper = ({
-  onFlyoutClose,
-  onSubmitSuccess,
-}: {
-  onFlyoutClose: () => void;
-  onSubmitSuccess: (id: string) => void;
-  http?: unknown;
-  toasts?: unknown;
-  isEdit?: boolean;
-  enforceAdaptiveAllocations?: boolean;
-}) => (
-  <div data-test-subj="inference-flyout-wrapper">
-    <button data-test-subj="mock-flyout-close" onClick={onFlyoutClose}>
-      Close Flyout
-    </button>
-    <button data-test-subj="mock-flyout-submit" onClick={() => onSubmitSuccess('new-endpoint-id')}>
-      Submit
-    </button>
-  </div>
-);
+  const MockInferenceFlyoutWrapper = ({
+    onFlyoutClose,
+    onSubmitSuccess,
+    allowedTaskTypes,
+  }: {
+    onFlyoutClose: () => void;
+    onSubmitSuccess: (id: string) => void;
+    http?: unknown;
+    toasts?: unknown;
+    isEdit?: boolean;
+    enforceAdaptiveAllocations?: boolean;
+    allowedTaskTypes?: InferenceTaskType[];
+  }) => (
+    <div data-test-subj="inference-flyout-wrapper">
+      <button data-test-subj="mock-flyout-close" onClick={onFlyoutClose}>
+        Close Flyout
+      </button>
+      <button
+        data-test-subj="mock-flyout-submit"
+        onClick={() => onSubmitSuccess('new-endpoint-id')}
+      >
+        Submit
+      </button>
+      {allowedTaskTypes && (
+        <div data-test-subj="mock-allowed-task-types">{allowedTaskTypes.join(',')}</div>
+      )}
+    </div>
+  );
 
 jest.mock('@kbn/inference-endpoint-ui-common', () => ({
   __esModule: true,
@@ -359,6 +369,16 @@ describe('SelectInferenceId', () => {
       await actClick(await screen.findByTestId('createInferenceEndpointButton'));
 
       expect(await screen.findByTestId('inference-flyout-wrapper')).toBeInTheDocument();
+    });
+
+    it('SHOULD pass allowedTaskTypes to restrict endpoint creation to compatible types', async () => {
+      renderSelectInferenceId();
+
+      await user.click(await screen.findByTestId('inferenceIdButton'));
+      await user.click(await screen.findByTestId('createInferenceEndpointButton'));
+
+      const allowedTaskTypes = await screen.findByTestId('mock-allowed-task-types');
+      expect(allowedTaskTypes).toHaveTextContent('text_embedding,sparse_embedding');
     });
 
     describe('AND flyout close is triggered', () => {
