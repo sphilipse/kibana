@@ -14,7 +14,10 @@ import {
   defaultInferenceEndpoints,
 } from '@kbn/inference-common';
 import { INFERENCE_SETTINGS_SO_TYPE, INFERENCE_SETTINGS_ID } from '../common/constants';
-import { isInferenceEndpointWithDisplayNameMetadata } from '../common/type_guards';
+import {
+  isInferenceEndpointWithDisplayNameMetadata,
+  isInferenceEndpointWithKibanaConnectorHeuristic,
+} from '../common/type_guards';
 import type { InferenceSettingsAttributes } from '../common/types';
 import type { InferenceFeatureRegistry } from './inference_feature_registry';
 import type { ResolvedInferenceEndpoints } from './types';
@@ -219,7 +222,9 @@ const fetchEndpoints = async (
           serviceSettings,
         },
         capabilities: {},
-        isPreconfigured: isInferenceEndpointWithDisplayNameMetadata(endpoint),
+        isPreconfigured:
+          isInferenceEndpointWithDisplayNameMetadata(endpoint) ||
+          isInferenceEndpointWithKibanaConnectorHeuristic(endpoint),
         isInferenceEndpoint: true,
       };
       endpoints.push(connector);

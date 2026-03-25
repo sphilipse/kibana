@@ -69,7 +69,7 @@ export const defineInferenceConnectorsRoute = ({
         }
 
         return response.ok({
-          body: { connectors, allConnectors: connectors, isFromRecommendation: false },
+          body: { connectors: [], allConnectors: connectors, isFromRecommendation: false },
         });
       })
     );
