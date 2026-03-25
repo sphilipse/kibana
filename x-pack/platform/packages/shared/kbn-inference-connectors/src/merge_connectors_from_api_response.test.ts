@@ -25,44 +25,64 @@ const inferenceConnector = (connectorId: string): InferenceConnector => ({
 const DEFAULT_CHAT_ID = defaultInferenceEndpoints.KIBANA_DEFAULT_CHAT_COMPLETION;
 
 describe('mergeConnectorsFromApiResponse', () => {
-  describe('when isFromRecommendation is true (prioritized subset from the server)', () => {
-    it('lists prioritized connectors first, then the rest of the catalog without duplicates', () => {
+  describe('when soEntryFound is true (admin SO override)', () => {
+    it('returns only the SO-configured connectors', () => {
+      const soA = inferenceConnector('so-a');
+      const soB = inferenceConnector('so-b');
+      const all = [soA, soB, inferenceConnector('other')];
+
+      const result = mergeConnectorsFromApiResponse([soA, soB], all, true);
+
+      expect(result).toEqual([soA, soB]);
+    });
+
+    it('returns empty array when SO explicitly lists no endpoints', () => {
+      const all = [inferenceConnector('a'), inferenceConnector('b')];
+
+      const result = mergeConnectorsFromApiResponse([], all, true);
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('when soEntryFound is false and connectors is non-empty (recommended endpoints)', () => {
+    it('lists recommended connectors first, then the rest of the catalog without duplicates', () => {
       const recA = inferenceConnector('rec-a');
       const recB = inferenceConnector('rec-b');
       const other = inferenceConnector('other');
       const all = [other, recA, recB, inferenceConnector('tail')];
 
-      const result = mergeConnectorsFromApiResponse([recA, recB], all, true);
+      const result = mergeConnectorsFromApiResponse([recA, recB], all, false);
 
       expect(result.map((c) => c.connectorId)).toEqual(['rec-a', 'rec-b', 'other', 'tail']);
     });
 
-    it('preserves server order within the prioritized list and within the trailing catalog', () => {
+    it('preserves server order within the recommended list and within the trailing catalog', () => {
       const first = inferenceConnector('z-first');
       const second = inferenceConnector('a-second');
       const all = [inferenceConnector('c'), inferenceConnector('b')];
 
-      const result = mergeConnectorsFromApiResponse([first, second], all, true);
+      const result = mergeConnectorsFromApiResponse([first, second], all, false);
 
       expect(result.map((c) => c.connectorId)).toEqual(['z-first', 'a-second', 'c', 'b']);
     });
 
-    it('returns only the prioritized list when allConnectors is empty', () => {
+    it('returns only the recommended list when allConnectors is empty', () => {
       const only = inferenceConnector('solo');
 
-      const result = mergeConnectorsFromApiResponse([only], [], true);
+      const result = mergeConnectorsFromApiResponse([only], [], false);
 
       expect(result).toEqual([only]);
     });
   });
 
-  describe('when isFromRecommendation is false (full catalog, no prioritized subset)', () => {
-    it('moves the platform default chat-completion inference id to the front when it appears later', () => {
+  describe('when soEntryFound is false and connectors is empty (no recommendations)', () => {
+    it('moves the platform default chat-completion endpoint to the front', () => {
       const a = inferenceConnector('a');
       const def = inferenceConnector(DEFAULT_CHAT_ID);
       const b = inferenceConnector('b');
 
-      const result = mergeConnectorsFromApiResponse([a, b, def], [a, b, def], false);
+      const result = mergeConnectorsFromApiResponse([], [a, b, def], false);
 
       expect(result[0].connectorId).toBe(DEFAULT_CHAT_ID);
       expect(result.map((c) => c.connectorId)).toEqual([DEFAULT_CHAT_ID, 'a', 'b']);
@@ -72,7 +92,7 @@ describe('mergeConnectorsFromApiResponse', () => {
       const def = inferenceConnector(DEFAULT_CHAT_ID);
       const rest = [inferenceConnector('x'), inferenceConnector('y')];
 
-      const result = mergeConnectorsFromApiResponse([def, ...rest], [...rest, def], false);
+      const result = mergeConnectorsFromApiResponse([], [def, ...rest], false);
 
       expect(result.map((c) => c.connectorId)).toEqual([DEFAULT_CHAT_ID, 'x', 'y']);
     });
@@ -80,15 +100,15 @@ describe('mergeConnectorsFromApiResponse', () => {
     it('leaves order unchanged when the default id is not in the list', () => {
       const list = [inferenceConnector('x'), inferenceConnector('y')];
 
-      const result = mergeConnectorsFromApiResponse(list, list, false);
+      const result = mergeConnectorsFromApiResponse([], list, false);
 
       expect(result).toEqual(list);
     });
 
-    it('does not reorder when the list is only the default endpoint', () => {
+    it('returns allConnectors as-is when list is only the default endpoint', () => {
       const def = inferenceConnector(DEFAULT_CHAT_ID);
 
-      const result = mergeConnectorsFromApiResponse([def], [def], false);
+      const result = mergeConnectorsFromApiResponse([], [def], false);
 
       expect(result).toEqual([def]);
     });

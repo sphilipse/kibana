@@ -24,13 +24,13 @@ const inferenceConnector = (connectorId: string): InferenceConnector => ({
 });
 
 describe('fetchConnectorsForFeature', () => {
-  it('calls the shared internal path with featureId and returns merged connectors', async () => {
+  it('calls the shared internal path with featureId and returns merged connectors with soEntryFound', async () => {
     const rec = inferenceConnector('rec');
     const other = inferenceConnector('other');
     const httpGet = jest.fn().mockResolvedValue({
       connectors: [rec],
       allConnectors: [other, rec],
-      isFromRecommendation: true,
+      soEntryFound: false,
     });
     const http = { get: httpGet } as unknown as HttpSetup;
 
@@ -41,21 +41,39 @@ describe('fetchConnectorsForFeature', () => {
       query: { featureId: 'my-feature' },
       version: '1',
     });
-    expect(result.map((c) => c.connectorId)).toEqual(['rec', 'other']);
+    expect(result.connectors.map((c) => c.connectorId)).toEqual(['rec', 'other']);
+    expect(result.soEntryFound).toBe(false);
   });
 
-  it('returns the full catalog unchanged when the server did not prioritize a subset', async () => {
+  it('returns SO-configured connectors unchanged when soEntryFound is true', async () => {
     const a = inferenceConnector('a');
     const b = inferenceConnector('b');
     const httpGet = jest.fn().mockResolvedValue({
-      connectors: [a, b],
+      connectors: [a],
       allConnectors: [a, b],
-      isFromRecommendation: false,
+      soEntryFound: true,
     });
     const http = { get: httpGet } as unknown as HttpSetup;
 
     const result = await fetchConnectorsForFeature(http, 'x');
 
-    expect(result).toEqual([a, b]);
+    expect(result.connectors).toEqual([a]);
+    expect(result.soEntryFound).toBe(true);
+  });
+
+  it('returns all connectors with default first when no SO and no recommendations', async () => {
+    const a = inferenceConnector('a');
+    const b = inferenceConnector('b');
+    const httpGet = jest.fn().mockResolvedValue({
+      connectors: [],
+      allConnectors: [a, b],
+      soEntryFound: false,
+    });
+    const http = { get: httpGet } as unknown as HttpSetup;
+
+    const result = await fetchConnectorsForFeature(http, 'x');
+
+    expect(result.connectors).toEqual([a, b]);
+    expect(result.soEntryFound).toBe(false);
   });
 });

@@ -5,6 +5,7 @@
  * 2.0.
  */
 
+import type { KibanaRequest } from '@kbn/core/server';
 import type { PluginStartContract as ActionsPluginStartContract } from '@kbn/actions-plugin/server';
 import type { FeaturesPluginSetup } from '@kbn/features-plugin/server';
 import type { InferenceServerStart } from '@kbn/inference-plugin/server';
@@ -41,12 +42,11 @@ export interface SearchInferenceEndpointsPluginSetup {
 export interface ResolvedInferenceEndpoints {
   endpoints: InferenceConnector[];
   warnings: string[];
-  /** When true, `endpoints` is a prioritized subset (registry recommendations or platform default), not an admin SO list. */
-  isFromRecommendation: boolean;
+  soEntryFound: boolean;
 }
 
 export interface InferenceEndpointsContract {
-  getForFeature: (featureId: string) => Promise<ResolvedInferenceEndpoints>;
+  getForFeature: (featureId: string, request: KibanaRequest) => Promise<ResolvedInferenceEndpoints>;
 }
 
 export interface SearchInferenceEndpointsPluginStart {

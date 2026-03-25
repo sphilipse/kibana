@@ -5,6 +5,7 @@
  * 2.0.
  */
 
+import { useState } from 'react';
 import type { UseQueryResult } from '@kbn/react-query';
 import { useQuery } from '@kbn/react-query';
 import type { IHttpFetchError, HttpSetup } from '@kbn/core-http-browser';
@@ -79,17 +80,23 @@ const applyConnectorSettings = <T extends { id: string }>(
   return allConnectors;
 };
 
+export type UseLoadConnectorsResult = UseQueryResult<AIConnector[], IHttpFetchError> & {
+  soEntryFound: boolean;
+};
+
 export const useLoadConnectors = ({
   http,
   toasts,
   featureId,
   settings,
-}: UseLoadConnectorsProps): UseQueryResult<AIConnector[], IHttpFetchError> => {
-  return useQuery(
+}: UseLoadConnectorsProps): UseLoadConnectorsResult => {
+  const [soEntryFound, setSoEntryFound] = useState(false);
+  const query = useQuery(
     [...QUERY_KEY, featureId],
     async () => {
-      const connectors = await fetchConnectorsForFeature(http, featureId);
-      return applyConnectorSettings(connectors.map(toAIConnector), settings);
+      const result = await fetchConnectorsForFeature(http, featureId);
+      setSoEntryFound(result.soEntryFound);
+      return applyConnectorSettings(result.connectors.map(toAIConnector), settings);
     },
     {
       retry: false,
@@ -110,4 +117,6 @@ export const useLoadConnectors = ({
       },
     }
   );
+
+  return { ...query, soEntryFound };
 };

@@ -72,13 +72,14 @@ export class SearchInferenceEndpointsPlugin
 
     const featureRegistry = this.featureRegistry;
 
-    const getForFeature = async (featureId: string) => {
-      const [coreStart] = await core.getStartServices();
-      const esClient = coreStart.elasticsearch.client.asInternalUser;
+    const getForFeature = async (featureId: string, request: KibanaRequest) => {
+      const [coreStart, pluginsStart] = await core.getStartServices();
       const soClient = coreStart.savedObjects.createInternalRepository([
         INFERENCE_SETTINGS_SO_TYPE,
       ]);
-      return getForFeatureFn(featureRegistry, soClient, esClient, featureId);
+      const getConnectorById = (id: string) =>
+        pluginsStart.inference.getConnectorById(id, request);
+      return getForFeatureFn(featureRegistry, soClient, getConnectorById, featureId, this.logger);
     };
 
     const getConnectorList = async (request: KibanaRequest) => {
@@ -167,10 +168,17 @@ export class SearchInferenceEndpointsPlugin
         register: featureRegistry.register.bind(featureRegistry),
       },
       endpoints: {
-        getForFeature: (featureId: string) => {
-          const esClient = core.elasticsearch.client.asInternalUser;
+        getForFeature: (featureId: string, request: KibanaRequest) => {
           const soClient = core.savedObjects.createInternalRepository([INFERENCE_SETTINGS_SO_TYPE]);
-          return getForFeatureFn(featureRegistry, soClient, esClient, featureId);
+          const getConnectorById = (id: string) =>
+            plugins.inference.getConnectorById(id, request);
+          return getForFeatureFn(
+            featureRegistry,
+            soClient,
+            getConnectorById,
+            featureId,
+            this.logger
+          );
         },
       },
     };

@@ -5,81 +5,80 @@
  * 2.0.
  */
 
-import type { ElasticsearchClient, ISavedObjectsRepository } from '@kbn/core/server';
+import type { ISavedObjectsRepository, Logger } from '@kbn/core/server';
 import { SavedObjectsErrorHelpers } from '@kbn/core/server';
 import { i18n } from '@kbn/i18n';
-import {
-  type InferenceConnector,
-  InferenceConnectorType,
-  defaultInferenceEndpoints,
-} from '@kbn/inference-common';
+import type { InferenceConnector } from '@kbn/inference-common';
 import { INFERENCE_SETTINGS_SO_TYPE, INFERENCE_SETTINGS_ID } from '../common/constants';
-import {
-  isInferenceEndpointWithDisplayNameMetadata,
-  isInferenceEndpointWithKibanaConnectorHeuristic,
-} from '../common/type_guards';
 import type { InferenceSettingsAttributes } from '../common/types';
 import type { InferenceFeatureRegistry } from './inference_feature_registry';
 import type { ResolvedInferenceEndpoints } from './types';
-import { getConnectorNameFromEndpoint } from './utils/in_memory_connectors';
-
-const DEFAULT_KIBANA_ENDPOINT_ID = defaultInferenceEndpoints.KIBANA_DEFAULT_CHAT_COMPLETION;
 
 /**
  * Returns the resolved inference endpoints for a feature.
  * Walks the fallback chain (admin SO override → recommendedEndpoints → parent feature)
- * and fetches full endpoint objects from Elasticsearch.
+ * and fetches the matching connectors by ID.
  *
  * @param registry - The feature registry to look up feature configs.
  * @param soClient - A scoped saved objects client.
- * @param esClient - A scoped Elasticsearch client.
+ * @param getConnectorById - Function that returns a connector by ID.
  * @param featureId - The feature to resolve endpoints for.
- * @throws If `featureId` is not registered.
+ * @param logger - Logger instance for warnings.
  */
 export const getForFeature = async (
   registry: InferenceFeatureRegistry,
   soClient: ISavedObjectsRepository,
-  esClient: ElasticsearchClient,
-  featureId: string
+  getConnectorById: (id: string) => Promise<InferenceConnector>,
+  featureId: string,
+  logger: Logger
 ): Promise<ResolvedInferenceEndpoints> => {
   const {
     ids,
     warnings: resolveWarnings,
-    isFromRecommendation,
     soEntryFound,
-  } = await resolveEndpointIds(registry, soClient, featureId);
+  } = await resolveEndpointIds(registry, soClient, featureId, logger);
   if (ids.length === 0) {
-    if (soEntryFound) {
-      // SO explicitly lists an empty array — admin opted out of endpoints for this feature.
-      return { endpoints: [], warnings: resolveWarnings, isFromRecommendation: false };
-    }
-
-    const feature = registry.get(featureId);
-    if (feature?.taskType === 'chat_completion') {
-      // No SO and no recommended endpoints — try the default Kibana chat completion endpoint.
-      const defaultResult = await fetchEndpoints(esClient, [DEFAULT_KIBANA_ENDPOINT_ID]);
-      return {
-        endpoints: defaultResult.endpoints,
-        warnings: [...resolveWarnings, ...defaultResult.warnings],
-        isFromRecommendation: defaultResult.endpoints.length > 0,
-      };
-    }
-
-    // Non-chat features should not fall back to the chat-only default endpoint.
-    return { endpoints: [], warnings: resolveWarnings, isFromRecommendation: false };
+    return { endpoints: [], warnings: resolveWarnings, soEntryFound };
   }
-  const result = await fetchEndpoints(esClient, ids);
+  const result = await fetchConnectorsByIds(getConnectorById, ids);
   return {
     endpoints: result.endpoints,
     warnings: [...resolveWarnings, ...result.warnings],
-    isFromRecommendation,
+    soEntryFound,
   };
+};
+
+/**
+ * Fetches connectors by their IDs using getConnectorById.
+ * Returns warnings for any IDs that were not found.
+ */
+const fetchConnectorsByIds = async (
+  getConnectorById: (id: string) => Promise<InferenceConnector>,
+  ids: string[]
+): Promise<Omit<ResolvedInferenceEndpoints, 'soEntryFound'>> => {
+  const endpoints: InferenceConnector[] = [];
+  const warnings: string[] = [];
+
+  for (const id of ids) {
+    try {
+      const connector = await getConnectorById(id);
+      endpoints.push(connector);
+    } catch (e) {
+      warnings.push(
+        i18n.translate('xpack.searchInferenceEndpoints.endpoints.endpointNotFound', {
+          defaultMessage: 'Inference endpoint "{endpointId}" was not found in Elasticsearch.',
+          values: { endpointId: id },
+        })
+      );
+    }
+  }
+
+  return { endpoints, warnings };
 };
 
 interface ResolvedEndpointIds {
   ids: string[];
   warnings: string[];
-  isFromRecommendation: boolean;
   /** True when an SO entry was found for the feature (even if it had an empty endpoints list). */
   soEntryFound: boolean;
 }
@@ -87,16 +86,18 @@ interface ResolvedEndpointIds {
 const resolveEndpointIds = async (
   registry: InferenceFeatureRegistry,
   soClient: ISavedObjectsRepository,
-  featureId: string
+  featureId: string,
+  logger: Logger
 ): Promise<ResolvedEndpointIds> => {
   let current = registry.get(featureId);
   if (!current) {
-    throw new Error(
+    logger.warn(
       i18n.translate('xpack.searchInferenceEndpoints.endpoints.featureNotFound', {
         defaultMessage: 'Feature with id "{featureId}" is not registered.',
         values: { featureId },
       })
     );
+    return { ids: [], warnings: [], soEntryFound: false };
   }
   let recEntry = current.recommendedEndpoints?.length
     ? { featureId: current.featureId, recommendedEndpoints: current.recommendedEndpoints }
@@ -117,12 +118,11 @@ const resolveEndpointIds = async (
     return {
       ids: initialSoEntry.endpoints.map((e) => e.id),
       warnings: [],
-      isFromRecommendation: false,
       soEntryFound: true,
     };
   }
   if (initialSoEntry && initialSoEntry.endpoints.length === 0) {
-    return { ids: [], warnings: [], isFromRecommendation: false, soEntryFound: true };
+    return { ids: [], warnings: [], soEntryFound: true };
   }
 
   visited.add(currentId);
@@ -140,7 +140,6 @@ const resolveEndpointIds = async (
               values: { featureId, currentId },
             }),
           ],
-          isFromRecommendation: false,
           soEntryFound: false,
         };
       }
@@ -162,12 +161,11 @@ const resolveEndpointIds = async (
         return {
           ids: soEntry.endpoints.map((e) => e.id),
           warnings: [],
-          isFromRecommendation: false,
           soEntryFound: true,
         };
       }
       if (soEntry && soEntry.endpoints.length === 0) {
-        return { ids: [], warnings: [], isFromRecommendation: false, soEntryFound: true };
+        return { ids: [], warnings: [], soEntryFound: true };
       }
 
       if (current.parentFeatureId) {
@@ -181,71 +179,8 @@ const resolveEndpointIds = async (
   return {
     ids: recEntry?.recommendedEndpoints ?? [],
     warnings: [],
-    isFromRecommendation: !!recEntry,
     soEntryFound: false,
   };
-};
-
-/**
- * Fetches full inference endpoint objects from Elasticsearch by their IDs.
- * Returns the successfully fetched endpoints as InferenceConnector and warnings for any that were not found (404).
- * Non-404 errors are propagated.
- */
-const fetchEndpoints = async (
-  esClient: ElasticsearchClient,
-  ids: string[]
-): Promise<Omit<ResolvedInferenceEndpoints, 'isFromRecommendation'>> => {
-  const endpoints: InferenceConnector[] = [];
-  const warnings: string[] = [];
-
-  const results = await Promise.all(
-    ids.map(async (id) => {
-      try {
-        const response = await esClient.inference.get({ inference_id: id });
-        return { id, endpoint: response.endpoints[0] ?? null };
-      } catch (e) {
-        if (e?.statusCode === 404) {
-          return { id, endpoint: null };
-        }
-        throw e;
-      }
-    })
-  );
-
-  for (const { id, endpoint } of results) {
-    if (endpoint) {
-      const serviceSettings = endpoint.service_settings as Record<string, unknown> | undefined;
-      const connector: InferenceConnector = {
-        type: InferenceConnectorType.Inference,
-        name: getConnectorNameFromEndpoint(endpoint),
-        connectorId: endpoint.inference_id,
-        config: {
-          inferenceId: endpoint.inference_id,
-          providerConfig: {
-            model_id: serviceSettings?.model_id,
-          },
-          taskType: endpoint.task_type,
-          service: endpoint.service,
-          serviceSettings,
-        },
-        capabilities: {},
-        isPreconfigured:
-          isInferenceEndpointWithDisplayNameMetadata(endpoint) ||
-          isInferenceEndpointWithKibanaConnectorHeuristic(endpoint),
-        isInferenceEndpoint: true,
-      };
-      endpoints.push(connector);
-    } else {
-      warnings.push(
-        i18n.translate('xpack.searchInferenceEndpoints.endpoints.endpointNotFound', {
-          defaultMessage: 'Inference endpoint "{endpointId}" was not found in Elasticsearch.',
-          values: { endpointId: id },
-        })
-      );
-    }
-  }
-
-  return { endpoints, warnings };
 };
 
 const readSettingsFeatures = async (

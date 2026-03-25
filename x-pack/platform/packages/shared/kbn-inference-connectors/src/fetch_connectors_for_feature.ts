@@ -13,15 +13,23 @@ import {
 } from '@kbn/inference-common';
 import { mergeConnectorsFromApiResponse } from './merge_connectors_from_api_response';
 
+export interface FetchConnectorsForFeatureResult {
+  connectors: InferenceConnector[];
+  soEntryFound: boolean;
+}
+
 export const fetchConnectorsForFeature = async (
   http: HttpSetup,
   featureId: string
-): Promise<InferenceConnector[]> => {
-  const { connectors, allConnectors, isFromRecommendation } =
+): Promise<FetchConnectorsForFeatureResult> => {
+  const { connectors, allConnectors, soEntryFound } =
     await http.get<InferenceConnectorsApiResponseBody>(INFERENCE_CONNECTORS_INTERNAL_API_PATH, {
       query: { featureId },
       version: '1',
     });
 
-  return mergeConnectorsFromApiResponse(connectors, allConnectors, isFromRecommendation);
+  return {
+    connectors: mergeConnectorsFromApiResponse(connectors, allConnectors, soEntryFound),
+    soEntryFound,
+  };
 };

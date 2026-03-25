@@ -30,7 +30,7 @@ export function defineRoutes({
   logger: Logger;
   router: IRouter;
   featureRegistry: InferenceFeatureRegistry;
-  getForFeature: (featureId: string) => Promise<ResolvedInferenceEndpoints>;
+  getForFeature: (featureId: string, request: KibanaRequest) => Promise<ResolvedInferenceEndpoints>;
   getConnectorList: (request: KibanaRequest) => Promise<InferenceConnector[]>;
 }) {
   defineInferenceSettingsRoutes({ logger, router });

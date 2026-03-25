@@ -20,5 +20,5 @@ export const INFERENCE_CONNECTORS_INTERNAL_API_PATH =
 export interface InferenceConnectorsApiResponseBody {
   connectors: InferenceConnector[];
   allConnectors: InferenceConnector[];
-  isFromRecommendation: boolean;
+  soEntryFound: boolean;
 }

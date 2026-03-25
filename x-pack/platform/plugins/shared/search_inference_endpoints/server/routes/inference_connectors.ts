@@ -21,7 +21,7 @@ export const defineInferenceConnectorsRoute = ({
 }: {
   logger: Logger;
   router: IRouter;
-  getForFeature: (featureId: string) => Promise<ResolvedInferenceEndpoints>;
+  getForFeature: (featureId: string, request: KibanaRequest) => Promise<ResolvedInferenceEndpoints>;
   getConnectorList: (request: KibanaRequest) => Promise<InferenceConnector[]>;
 }) => {
   router.versioned
@@ -46,7 +46,7 @@ export const defineInferenceConnectorsRoute = ({
         validate: {
           request: {
             query: schema.object({
-              featureId: schema.string(),
+              featureId: schema.string({ maxLength: 255}),
             }),
           },
         },
@@ -55,31 +55,27 @@ export const defineInferenceConnectorsRoute = ({
       errorHandler(logger)(async (_context, request, response) => {
         const { featureId } = request.query;
 
-        const featureResult = await getForFeature(featureId);
-        const connectors = await getConnectorList(request);
+        const featureResult = await getForFeature(featureId, request);
+        const allConnectors = await getConnectorList(request);
 
-        if (featureResult.endpoints.length > 0) {
+        if (featureResult.soEntryFound) {
+          // Admin SO override takes precedence — return only those endpoints.
           return response.ok({
             body: {
               connectors: featureResult.endpoints,
-              allConnectors: connectors,
-              isFromRecommendation: featureResult.isFromRecommendation,
+              allConnectors,
+              soEntryFound: true,
             },
           });
         }
 
-        if (featureResult.endpoints.length === 0 && featureResult.isFromRecommendation === false) {
-          return response.ok({
-            body: {
-              connectors: featureResult.endpoints,
-              allConnectors: connectors,
-              isFromRecommendation: false,
-            },
-          });
-        }
-
+        // No SO entry — return recommended endpoints (if any) with all connectors.
         return response.ok({
-          body: { connectors, allConnectors: connectors, isFromRecommendation: false },
+          body: {
+            connectors: featureResult.endpoints,
+            allConnectors,
+            soEntryFound: false,
+          },
         });
       })
     );
