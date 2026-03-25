@@ -214,7 +214,13 @@ describe('getForFeature', () => {
   it('handles SO 404 and falls through to recommended', async () => {
     registry.register(createValidFeature({ featureId: 'f1', recommendedEndpoints: ['rec1'] }));
     await expect(
-      getForFeature(registry, createSoClient('not_found'), createGetConnectorById(['rec1']), 'f1', logger)
+      getForFeature(
+        registry,
+        createSoClient('not_found'),
+        createGetConnectorById(['rec1']),
+        'f1',
+        logger
+      )
     ).resolves.toEqual({
       endpoints: [createConnector('rec1')],
       warnings: [],
@@ -283,7 +289,13 @@ describe('getForFeature', () => {
       createValidFeature({ featureId: 'b', parentFeatureId: 'a', taskType: 'text_embedding' })
     );
     (registry as any).features.get('a').parentFeatureId = 'b';
-    const result = await getForFeature(registry, createSoClient(), createGetConnectorById([]), 'a', logger);
+    const result = await getForFeature(
+      registry,
+      createSoClient(),
+      createGetConnectorById([]),
+      'a',
+      logger
+    );
     expect(result.endpoints).toEqual([]);
     expect(result.warnings).toHaveLength(1);
     expect(result.warnings[0]).toContain('Cyclic dependency');

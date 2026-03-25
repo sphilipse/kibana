@@ -77,8 +77,7 @@ export class SearchInferenceEndpointsPlugin
       const soClient = coreStart.savedObjects.createInternalRepository([
         INFERENCE_SETTINGS_SO_TYPE,
       ]);
-      const getConnectorById = (id: string) =>
-        pluginsStart.inference.getConnectorById(id, request);
+      const getConnectorById = (id: string) => pluginsStart.inference.getConnectorById(id, request);
       return getForFeatureFn(featureRegistry, soClient, getConnectorById, featureId, this.logger);
     };
 
@@ -170,8 +169,7 @@ export class SearchInferenceEndpointsPlugin
       endpoints: {
         getForFeature: (featureId: string, request: KibanaRequest) => {
           const soClient = core.savedObjects.createInternalRepository([INFERENCE_SETTINGS_SO_TYPE]);
-          const getConnectorById = (id: string) =>
-            plugins.inference.getConnectorById(id, request);
+          const getConnectorById = (id: string) => plugins.inference.getConnectorById(id, request);
           return getForFeatureFn(
             featureRegistry,
             soClient,

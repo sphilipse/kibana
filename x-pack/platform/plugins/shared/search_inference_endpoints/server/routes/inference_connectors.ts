@@ -46,7 +46,7 @@ export const defineInferenceConnectorsRoute = ({
         validate: {
           request: {
             query: schema.object({
-              featureId: schema.string({ maxLength: 255}),
+              featureId: schema.string({ maxLength: 255 }),
             }),
           },
         },
