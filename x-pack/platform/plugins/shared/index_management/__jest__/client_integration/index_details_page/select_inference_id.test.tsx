@@ -8,7 +8,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import { screen, fireEvent } from '@testing-library/react';
 import type { InferenceTaskType } from '@elastic/elasticsearch/lib/api/types';
 import type { InferenceAPIConfigResponse } from '@kbn/ml-trained-models-utils';
 import {
@@ -371,8 +370,8 @@ describe('SelectInferenceId', () => {
     it('SHOULD pass allowedTaskTypes to restrict endpoint creation to compatible types', async () => {
       renderSelectInferenceId();
 
-      await user.click(await screen.findByTestId('inferenceIdButton'));
-      await user.click(await screen.findByTestId('createInferenceEndpointButton'));
+      await actClick(await screen.findByTestId('inferenceIdButton'));
+      await actClick(await screen.findByTestId('createInferenceEndpointButton'));
 
       const allowedTaskTypes = await screen.findByTestId('mock-allowed-task-types');
       expect(allowedTaskTypes).toHaveTextContent('text_embedding,sparse_embedding');
