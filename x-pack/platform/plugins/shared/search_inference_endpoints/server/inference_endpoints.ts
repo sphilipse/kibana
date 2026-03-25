@@ -53,13 +53,20 @@ export const getForFeature = async (
       // SO explicitly lists an empty array — admin opted out of endpoints for this feature.
       return { endpoints: [], warnings: resolveWarnings, isFromRecommendation: false };
     }
-    // No SO and no recommended endpoints — try the default Kibana endpoint.
-    const defaultResult = await fetchEndpoints(esClient, [DEFAULT_KIBANA_ENDPOINT_ID]);
-    return {
-      endpoints: defaultResult.endpoints,
-      warnings: [...resolveWarnings, ...defaultResult.warnings],
-      isFromRecommendation: defaultResult.endpoints.length > 0,
-    };
+
+    const feature = registry.get(featureId);
+    if (feature?.taskType === 'chat_completion') {
+      // No SO and no recommended endpoints — try the default Kibana chat completion endpoint.
+      const defaultResult = await fetchEndpoints(esClient, [DEFAULT_KIBANA_ENDPOINT_ID]);
+      return {
+        endpoints: defaultResult.endpoints,
+        warnings: [...resolveWarnings, ...defaultResult.warnings],
+        isFromRecommendation: defaultResult.endpoints.length > 0,
+      };
+    }
+
+    // Non-chat features should not fall back to the chat-only default endpoint.
+    return { endpoints: [], warnings: resolveWarnings, isFromRecommendation: false };
   }
   const result = await fetchEndpoints(esClient, ids);
   return {

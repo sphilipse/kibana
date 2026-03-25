@@ -97,8 +97,8 @@ describe('getForFeature', () => {
     ).rejects.toThrow('not registered');
   });
 
-  it('returns default Kibana endpoint when no endpoints resolved and it exists', async () => {
-    registry.register(createValidFeature({ featureId: 'f1' }));
+  it('returns default Kibana endpoint for chat_completion features when no endpoints resolved and it exists', async () => {
+    registry.register(createValidFeature({ featureId: 'f1', taskType: 'chat_completion' }));
     const info = createEndpointInfo('.anthropic-claude-4.5-sonnet-chat_completion');
     const result = await getForFeature(
       registry,
@@ -112,12 +112,28 @@ describe('getForFeature', () => {
     expect(result.isFromRecommendation).toBe(true);
   });
 
-  it('returns empty result when no endpoints resolved and default endpoint does not exist', async () => {
-    registry.register(createValidFeature({ featureId: 'f1' }));
+  it('returns empty result for chat_completion features when no endpoints resolved and default endpoint does not exist', async () => {
+    registry.register(createValidFeature({ featureId: 'f1', taskType: 'chat_completion' }));
     const result = await getForFeature(
       registry,
       createSoClient(),
       createEsClient({ '.anthropic-claude-4.5-sonnet-chat_completion': 'not_found' }),
+      'f1'
+    );
+    expect(result.endpoints).toEqual([]);
+    expect(result.isFromRecommendation).toBe(false);
+  });
+
+  it('does not fall back to chat-only default endpoint for non-chat features', async () => {
+    registry.register(createValidFeature({ featureId: 'f1', taskType: 'text_embedding' }));
+    const result = await getForFeature(
+      registry,
+      createSoClient(),
+      createEsClient({
+        '.anthropic-claude-4.5-sonnet-chat_completion': createEndpointInfo(
+          '.anthropic-claude-4.5-sonnet-chat_completion'
+        ),
+      }),
       'f1'
     );
     expect(result.endpoints).toEqual([]);
@@ -280,9 +296,11 @@ describe('getForFeature', () => {
     );
   });
 
-  it('detects cycles and returns default endpoint with warning', async () => {
-    registry.register(createValidFeature({ featureId: 'a' }));
-    registry.register(createValidFeature({ featureId: 'b', parentFeatureId: 'a' }));
+  it('detects cycles and returns default endpoint with warning for chat_completion features', async () => {
+    registry.register(createValidFeature({ featureId: 'a', taskType: 'chat_completion' }));
+    registry.register(
+      createValidFeature({ featureId: 'b', parentFeatureId: 'a', taskType: 'chat_completion' })
+    );
     (registry as any).features.get('a').parentFeatureId = 'b';
     const defaultInfo = createEndpointInfo('.anthropic-claude-4.5-sonnet-chat_completion');
     const result = await getForFeature(
@@ -296,6 +314,19 @@ describe('getForFeature', () => {
     ]);
     expect(result.warnings).toHaveLength(1);
     expect(result.warnings[0]).toContain('Cyclic dependency');
+  });
+
+  it('detects cycles and returns empty endpoints for non-chat features', async () => {
+    registry.register(createValidFeature({ featureId: 'a', taskType: 'text_embedding' }));
+    registry.register(
+      createValidFeature({ featureId: 'b', parentFeatureId: 'a', taskType: 'text_embedding' })
+    );
+    (registry as any).features.get('a').parentFeatureId = 'b';
+    const result = await getForFeature(registry, createSoClient(), createEsClient(), 'a');
+    expect(result.endpoints).toEqual([]);
+    expect(result.warnings).toHaveLength(1);
+    expect(result.warnings[0]).toContain('Cyclic dependency');
+    expect(result.isFromRecommendation).toBe(false);
   });
 
   it('prefers child recommendedEndpoints over parent recommendedEndpoints', async () => {
