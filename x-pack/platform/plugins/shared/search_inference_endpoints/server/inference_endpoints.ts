@@ -102,7 +102,7 @@ const resolveEndpointIds = async (
   let recEntry = current.recommendedEndpoints?.length
     ? { featureId: current.featureId, recommendedEndpoints: current.recommendedEndpoints }
     : undefined;
-  const soFeatures = await readSettingsFeatures(soClient);
+  const soFeatures = await readSettingsFeatures(soClient, logger);
   const soFeaturesMap = new Map(soFeatures.map((f) => [f.feature_id, f]));
 
   // Walk the fallback chain for the feature:
@@ -184,7 +184,8 @@ const resolveEndpointIds = async (
 };
 
 const readSettingsFeatures = async (
-  soClient: ISavedObjectsRepository
+  soClient: ISavedObjectsRepository,
+  logger: Logger
 ): Promise<InferenceSettingsAttributes['features']> => {
   try {
     const so = await soClient.get<InferenceSettingsAttributes>(
@@ -196,6 +197,12 @@ const readSettingsFeatures = async (
     if (SavedObjectsErrorHelpers.isNotFoundError(e)) {
       return [];
     }
-    throw e;
+    logger.error(
+      i18n.translate('xpack.searchInferenceEndpoints.endpoints.soReadError', {
+        defaultMessage: 'Failed to read inference settings: {message}',
+        values: { message: e instanceof Error ? e.message : String(e) },
+      })
+    );
+    return [];
   }
 };

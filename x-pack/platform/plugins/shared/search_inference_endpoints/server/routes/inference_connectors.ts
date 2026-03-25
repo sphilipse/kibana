@@ -55,26 +55,22 @@ export const defineInferenceConnectorsRoute = ({
       errorHandler(logger)(async (_context, request, response) => {
         const { featureId } = request.query;
 
-        const featureResult = await getForFeature(featureId, request);
-        const allConnectors = await getConnectorList(request);
+        const [featureResult, allConnectors] = await Promise.all([
+          getForFeature(featureId, request).catch((e): ResolvedInferenceEndpoints => {
+            logger.error(`Failed to resolve endpoints for feature "${featureId}": ${e.message}`);
+            return { endpoints: [], warnings: [], soEntryFound: false };
+          }),
+          getConnectorList(request).catch((e): InferenceConnector[] => {
+            logger.error(`Failed to load connector list: ${e.message}`);
+            return [];
+          }),
+        ]);
 
-        if (featureResult.soEntryFound) {
-          // Admin SO override takes precedence — return only those endpoints.
-          return response.ok({
-            body: {
-              connectors: featureResult.endpoints,
-              allConnectors,
-              soEntryFound: true,
-            },
-          });
-        }
-
-        // No SO entry — return recommended endpoints (if any) with all connectors.
         return response.ok({
           body: {
             connectors: featureResult.endpoints,
             allConnectors,
-            soEntryFound: false,
+            soEntryFound: featureResult.soEntryFound,
           },
         });
       })

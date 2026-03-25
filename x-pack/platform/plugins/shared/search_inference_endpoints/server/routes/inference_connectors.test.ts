@@ -132,4 +132,55 @@ describe('GET /internal/search_inference_endpoints/connectors', () => {
       },
     });
   });
+
+  it('returns allConnectors when getForFeature fails', async () => {
+    const fullCatalog = [inferenceConnector('a'), inferenceConnector('b')];
+    getForFeature.mockRejectedValue(new Error('SO unavailable'));
+    getConnectorList.mockResolvedValue(fullCatalog);
+
+    await mockRouter.callRoute({ query: { featureId: 'my_feature' } });
+
+    expect(mockRouter.response.ok).toHaveBeenCalledWith({
+      body: {
+        connectors: [],
+        allConnectors: fullCatalog,
+        soEntryFound: false,
+      },
+    });
+  });
+
+  it('returns feature endpoints when getConnectorList fails', async () => {
+    const resolved = inferenceConnector('feature-ep');
+    getForFeature.mockResolvedValue({
+      endpoints: [resolved],
+      warnings: [],
+      soEntryFound: true,
+    });
+    getConnectorList.mockRejectedValue(new Error('Inference API unavailable'));
+
+    await mockRouter.callRoute({ query: { featureId: 'my_feature' } });
+
+    expect(mockRouter.response.ok).toHaveBeenCalledWith({
+      body: {
+        connectors: [resolved],
+        allConnectors: [],
+        soEntryFound: true,
+      },
+    });
+  });
+
+  it('returns empty result when both getForFeature and getConnectorList fail', async () => {
+    getForFeature.mockRejectedValue(new Error('SO unavailable'));
+    getConnectorList.mockRejectedValue(new Error('Inference API unavailable'));
+
+    await mockRouter.callRoute({ query: { featureId: 'my_feature' } });
+
+    expect(mockRouter.response.ok).toHaveBeenCalledWith({
+      body: {
+        connectors: [],
+        allConnectors: [],
+        soEntryFound: false,
+      },
+    });
+  });
 });

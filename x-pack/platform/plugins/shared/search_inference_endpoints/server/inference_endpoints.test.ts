@@ -238,14 +238,24 @@ describe('getForFeature', () => {
     expect(result.warnings[0]).toContain('ep1');
   });
 
-  it('propagates non-404 SO errors', async () => {
-    registry.register(createValidFeature({ featureId: 'f1' }));
+  it('falls back to recommended endpoints when SO client fails with non-404 error', async () => {
+    registry.register(createValidFeature({ featureId: 'f1', recommendedEndpoints: ['rec1'] }));
     const soClient = {
       get: jest.fn().mockRejectedValue(new Error('Connection refused')),
     } as unknown as ISavedObjectsRepository;
-    await expect(getForFeature(registry, soClient, createGetConnectorById([]), 'f1', logger)).rejects.toThrow(
-      'Connection refused'
+    const result = await getForFeature(
+      registry,
+      soClient,
+      createGetConnectorById(['rec1']),
+      'f1',
+      logger
     );
+    expect(result).toEqual({
+      endpoints: [createConnector('rec1')],
+      warnings: [],
+      soEntryFound: false,
+    });
+    expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Connection refused'));
   });
 
   it('detects cycles and returns empty endpoints with warning', async () => {
