@@ -94,34 +94,31 @@ jest.mock('../../../public/application/components/mappings_editor/mappings_state
 
 const mockResendRequest = jest.fn();
 
-  const MockInferenceFlyoutWrapper = ({
-    onFlyoutClose,
-    onSubmitSuccess,
-    allowedTaskTypes,
-  }: {
-    onFlyoutClose: () => void;
-    onSubmitSuccess: (id: string) => void;
-    http?: unknown;
-    toasts?: unknown;
-    isEdit?: boolean;
-    enforceAdaptiveAllocations?: boolean;
-    allowedTaskTypes?: InferenceTaskType[];
-  }) => (
-    <div data-test-subj="inference-flyout-wrapper">
-      <button data-test-subj="mock-flyout-close" onClick={onFlyoutClose}>
-        Close Flyout
-      </button>
-      <button
-        data-test-subj="mock-flyout-submit"
-        onClick={() => onSubmitSuccess('new-endpoint-id')}
-      >
-        Submit
-      </button>
-      {allowedTaskTypes && (
-        <div data-test-subj="mock-allowed-task-types">{allowedTaskTypes.join(',')}</div>
-      )}
-    </div>
-  );
+const MockInferenceFlyoutWrapper = ({
+  onFlyoutClose,
+  onSubmitSuccess,
+  allowedTaskTypes,
+}: {
+  onFlyoutClose: () => void;
+  onSubmitSuccess: (id: string) => void;
+  http?: unknown;
+  toasts?: unknown;
+  isEdit?: boolean;
+  enforceAdaptiveAllocations?: boolean;
+  allowedTaskTypes?: InferenceTaskType[];
+}) => (
+  <div data-test-subj="inference-flyout-wrapper">
+    <button data-test-subj="mock-flyout-close" onClick={onFlyoutClose}>
+      Close Flyout
+    </button>
+    <button data-test-subj="mock-flyout-submit" onClick={() => onSubmitSuccess('new-endpoint-id')}>
+      Submit
+    </button>
+    {allowedTaskTypes && (
+      <div data-test-subj="mock-allowed-task-types">{allowedTaskTypes.join(',')}</div>
+    )}
+  </div>
+);
 
 jest.mock('@kbn/inference-endpoint-ui-common', () => ({
   __esModule: true,
