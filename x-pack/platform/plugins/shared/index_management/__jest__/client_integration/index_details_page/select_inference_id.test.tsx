@@ -368,7 +368,11 @@ describe('SelectInferenceId', () => {
     });
 
     it('SHOULD pass allowedTaskTypes to restrict endpoint creation to compatible types', async () => {
-      renderSelectInferenceId();
+      render(
+        <TestFormWrapper>
+          <SelectInferenceId {...defaultProps} />
+        </TestFormWrapper>
+      );
 
       await actClick(await screen.findByTestId('inferenceIdButton'));
       await actClick(await screen.findByTestId('createInferenceEndpointButton'));
