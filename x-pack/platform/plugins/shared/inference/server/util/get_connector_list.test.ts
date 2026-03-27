@@ -83,7 +83,8 @@ describe('getConnectorList', () => {
       name: 'My Preconfigured Endpoint',
       type: InferenceConnectorType.Inference,
       isInferenceEndpoint: true,
-      isPreconfigured: true,
+      isPreconfigured: false,
+      isEis: true,
     });
   });
 
@@ -120,6 +121,7 @@ describe('getConnectorList', () => {
       name: 'My Named Connector',
       isInferenceEndpoint: true,
       isPreconfigured: false,
+      isEis: false,
     });
   });
 

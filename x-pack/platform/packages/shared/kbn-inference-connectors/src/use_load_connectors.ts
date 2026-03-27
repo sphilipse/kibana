@@ -50,6 +50,7 @@ const toAIConnector = (connector: InferenceConnectorFromApi): AIConnector => ({
   config: connector.config,
   secrets: {},
   isPreconfigured: connector.isPreconfigured,
+  isEis: connector.isEis,
   isSystemAction: false,
   isDeprecated: connector.isDeprecated ?? false,
   isConnectorTypeDeprecated: connector.isConnectorTypeDeprecated ?? false,
