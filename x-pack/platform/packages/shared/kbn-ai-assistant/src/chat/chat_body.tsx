@@ -416,8 +416,7 @@ export function ChatBody({
 
   const showElasticLlmCalloutInChat =
     (connectors.connectors || []).some(
-      (connector) =>
-        connector.connectorId === connectors.selectedConnector && connector.isEis
+      (connector) => connector.connectorId === connectors.selectedConnector && connector.isEis
     ) && !conversationCalloutDismissed;
 
   const showKnowledgeBaseReIndexingCallout =
