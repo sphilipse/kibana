@@ -12,7 +12,7 @@ import type { RuleExecutorOptions } from '@kbn/alerting-plugin/server';
 import { AlertsClientError } from '@kbn/alerting-plugin/server';
 import { alertsMock } from '@kbn/alerting-plugin/server/mocks';
 import { analyticsServiceMock } from '@kbn/core/server/mocks';
-import { InferenceConnectorType } from '@kbn/inference-common';
+import type { InferenceConnectorType } from '@kbn/inference-common';
 import { inferenceMock } from '@kbn/inference-plugin/server/mocks';
 import { createTaskRunError, TaskErrorSource } from '@kbn/task-manager-plugin/server';
 import {
