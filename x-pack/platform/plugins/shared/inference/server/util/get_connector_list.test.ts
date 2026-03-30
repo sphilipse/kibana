@@ -83,8 +83,8 @@ describe('getConnectorList', () => {
       name: 'My Preconfigured Endpoint',
       type: InferenceConnectorType.Inference,
       isInferenceEndpoint: true,
-      isPreconfigured: false,
-      isEis: true,
+      isPreconfigured: true,
+      isEis: false,
     });
   });
 
