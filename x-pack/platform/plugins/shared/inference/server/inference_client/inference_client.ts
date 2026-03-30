@@ -7,7 +7,6 @@
 
 import type { Logger } from '@kbn/logging';
 import type { KibanaRequest } from '@kbn/core-http-server';
-import type { ActionsClientProvider } from '../types';
 import type {
   BoundOptions,
   InferenceClient,
@@ -15,6 +14,7 @@ import type {
   InferenceCallbacks,
 } from '@kbn/inference-common';
 import type { ElasticsearchClient } from '@kbn/core/server';
+import type { ActionsClientProvider } from '../types';
 import { createChatCompleteApi } from '../chat_complete';
 import { createOutputApi } from '../../common/output/create_output_api';
 import { bindClient } from '../../common/inference_client/bind_client';

@@ -5,7 +5,6 @@
  * 2.0.
  */
 
-import type { ActionsClientProvider } from '../types';
 import type { KibanaRequest } from '@kbn/core-http-server';
 import type { ChatCompleteOptions, AnonymizationRule, Model } from '@kbn/inference-common';
 import {
@@ -22,6 +21,7 @@ import { defer, forkJoin, from, identity, share, switchMap, catchError, throwErr
 import { withChatCompleteSpan } from '@kbn/inference-tracing';
 import type { ElasticsearchClient } from '@kbn/core/server';
 import { omit } from 'lodash';
+import type { ActionsClientProvider } from '../types';
 import type {
   InferenceAdapterChatCompleteOptions,
   InferenceConnectorAdapterChatCompleteEvent,

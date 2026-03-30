@@ -7,9 +7,9 @@
 
 import type { KibanaRequest } from '@kbn/core-http-server';
 import type { ActionTypeExecutorResult } from '@kbn/actions-plugin/common';
-import type { ActionsClientProvider } from '../../types';
 import type { ElasticsearchClient, Logger } from '@kbn/core/server';
 import type { InferenceConnector } from '@kbn/inference-common';
+import type { ActionsClientProvider } from '../../types';
 import { getConnectorById } from '../../util/get_connector_by_id';
 
 export interface InferenceInvokeOptions {

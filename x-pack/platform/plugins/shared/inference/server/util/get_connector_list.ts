@@ -8,13 +8,13 @@
 import type { KibanaRequest, ElasticsearchClient, Logger } from '@kbn/core/server';
 import type { ActionsClient } from '@kbn/actions-plugin/server';
 import type { PublicMethodsOf } from '@kbn/utility-types';
-import type { ActionsClientProvider } from '../types';
 import type { InferenceConnector } from '@kbn/inference-common';
 import {
   isSupportedConnector,
   connectorToInference,
   InferenceConnectorType,
 } from '@kbn/inference-common';
+import type { ActionsClientProvider } from '../types';
 import { getInferenceEndpoints } from './get_inference_endpoints';
 
 interface GetConnectorListWithRequestOptions {

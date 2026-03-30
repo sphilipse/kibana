@@ -6,8 +6,8 @@
  */
 
 import type { KibanaRequest, ElasticsearchClient, Logger } from '@kbn/core/server';
-import type { ActionsClientProvider } from '../types';
 import type { InferenceConnector } from '@kbn/inference-common';
+import type { ActionsClientProvider } from '../types';
 import { getDefaultConnector } from '../../common/utils/get_default_connector';
 import { getConnectorList } from './get_connector_list';
 
