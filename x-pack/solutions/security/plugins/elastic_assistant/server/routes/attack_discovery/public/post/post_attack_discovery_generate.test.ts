@@ -104,7 +104,7 @@ describe('postAttackDiscoveryGenerateRoute', () => {
     context.elasticAssistant.getCurrentUser.mockResolvedValue(mockUser);
     context.elasticAssistant.getAttackDiscoveryDataClient.mockResolvedValue(mockDataClient);
     context.elasticAssistant.actions = actionsMock.createStart();
-    context.elasticAssistant.inference.getConnectorById.mockResolvedValue({
+    (context.elasticAssistant.inference.getConnectorById as jest.Mock).mockResolvedValue({
       type: mockApiConfig.actionTypeId,
       connectorId: mockApiConfig.connectorId,
       name: 'test connector',
