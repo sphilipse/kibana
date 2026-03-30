@@ -7,7 +7,7 @@
 
 import type { Logger } from '@kbn/logging';
 import type { KibanaRequest } from '@kbn/core-http-server';
-import type { PluginStartContract as ActionsPluginStart } from '@kbn/actions-plugin/server';
+import type { ActionsClientProvider } from '../types';
 import type {
   BoundOptions,
   InferenceClient,
@@ -43,7 +43,7 @@ export function createInferenceClient({
   request: KibanaRequest;
   namespace: string;
   logger: Logger;
-  actions: ActionsPluginStart;
+  actions: ActionsClientProvider;
   anonymizationRulesPromise: Promise<AnonymizationRule[]>;
   regexWorker: RegexWorkerService;
   esClient: ElasticsearchClient;

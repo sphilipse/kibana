@@ -14,6 +14,15 @@ import type { InferenceTaskType } from '@elastic/elasticsearch/lib/api/types';
 import type { KibanaRequest } from '@kbn/core-http-server';
 import type { ElasticsearchClient } from '@kbn/core/server';
 import type { PublicMethodsOf } from '@kbn/utility-types';
+
+/**
+ * Narrow interface for the actions plugin dependency used internally by the
+ * inference plugin. Only the `getActionsClientWithRequest` method is needed,
+ * so consumers don't have to depend on the full {@link ActionsPluginStart}.
+ */
+export interface ActionsClientProvider {
+  getActionsClientWithRequest(request: KibanaRequest): Promise<PublicMethodsOf<ActionsClient>>;
+}
 import type {
   BoundInferenceClient,
   BoundOptions,

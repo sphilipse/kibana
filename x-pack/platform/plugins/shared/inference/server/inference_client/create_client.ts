@@ -7,10 +7,7 @@
 
 import type { Logger } from '@kbn/logging';
 import type { KibanaRequest } from '@kbn/core-http-server';
-import type {
-  PluginStartContract as ActionsPluginStart,
-  ActionsClient,
-} from '@kbn/actions-plugin/server';
+import type { ActionsClient } from '@kbn/actions-plugin/server';
 import type {
   BoundOptions,
   BoundInferenceClient,
@@ -20,6 +17,7 @@ import type {
 } from '@kbn/inference-common';
 import type { ElasticsearchClient } from '@kbn/core/server';
 import type { PublicMethodsOf } from '@kbn/utility-types';
+import type { ActionsClientProvider } from '../types';
 import { createInferenceClient } from './inference_client';
 import { bindClient } from '../../common/inference_client/bind_client';
 import type { RegexWorkerService } from '../chat_complete/anonymization/regex_worker_service';
@@ -29,7 +27,7 @@ import type { InferenceEndpointIdCache } from '../util/inference_endpoint_id_cac
 interface CreateClientOptions {
   request: KibanaRequest;
   namespace?: string;
-  actions: ActionsPluginStart;
+  actions: ActionsClientProvider;
   logger: Logger;
   anonymizationRulesPromise: Promise<AnonymizationRule[]>;
   regexWorker: RegexWorkerService;
@@ -107,9 +105,9 @@ export const createClientWithoutRequest = ({
 }: CreateClientWithoutRequestOptions): InferenceClient => {
   // Wrap the pre-scoped actionsClient so that any internal code calling
   // actions.getActionsClientWithRequest() receives this client directly.
-  const actions = {
+  const actions: ActionsClientProvider = {
     getActionsClientWithRequest: () => Promise.resolve(actionsClient),
-  } as unknown as ActionsPluginStart;
+  };
 
   return createInferenceClient({
     request: {} as KibanaRequest,

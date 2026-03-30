@@ -5,13 +5,11 @@
  * 2.0.
  */
 
-import type {
-  PluginStartContract as ActionsPluginStart,
-  ActionsClient,
-} from '@kbn/actions-plugin/server';
+import type { ActionsClient } from '@kbn/actions-plugin/server';
 import type { KibanaRequest, ElasticsearchClient, Logger } from '@kbn/core/server';
 import type { PublicMethodsOf } from '@kbn/utility-types';
 import type { RawConnector } from '@kbn/inference-common';
+import type { ActionsClientProvider } from '../types';
 import {
   createInferenceRequestError,
   InferenceConnectorType,
@@ -67,7 +65,7 @@ export const getConnectorById = async ({
   esClient,
   logger,
 }: {
-  actions: ActionsPluginStart;
+  actions: ActionsClientProvider;
   request: KibanaRequest;
   connectorId: string;
   esClient: ElasticsearchClient;
