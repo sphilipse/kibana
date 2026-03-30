@@ -101,6 +101,8 @@ export const postAttackDiscoveryGenerateRoute = (
           // get the actions plugin start contract from the request context:
           const actions = (await context.elasticAssistant).actions;
           const actionsClient = await actions.getActionsClientWithRequest(request);
+          const inference = (await context.elasticAssistant).inference;
+          const inferenceClient = inference.getClient({ request });
           const dataClient = await assistantContext.getAttackDiscoveryDataClient();
           const authenticatedUser = await assistantContext.getCurrentUser();
 
@@ -182,6 +184,7 @@ export const postAttackDiscoveryGenerateRoute = (
             config: request.body,
             dataClient,
             esClient,
+            inferenceClient,
             logger,
             savedObjectsClient,
             telemetry,
