@@ -92,7 +92,7 @@ export const useAttackDiscovery = ({
 
         const bodyWithOverrides = {
           ...effectiveRequestBody,
-          connectorName: connectorName,
+          connectorName,
           end: effectiveEnd,
           filter: effectiveFilter,
           size: effectiveSize,

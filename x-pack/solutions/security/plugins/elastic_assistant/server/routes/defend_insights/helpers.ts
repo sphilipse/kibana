@@ -27,7 +27,11 @@ import type { AnonymizationFieldResponse } from '@kbn/elastic-assistant-common/i
 import type { ActionsClient } from '@kbn/actions-plugin/server';
 import type { Moment } from 'moment';
 import type { PublicMethodsOf } from '@kbn/utility-types';
-import type { InferenceClient, InferenceConnector, InferenceConnectorType } from '@kbn/inference-common';
+import type {
+  InferenceClient,
+  InferenceConnector,
+  InferenceConnectorType,
+} from '@kbn/inference-common';
 import moment from 'moment';
 import { ActionsClientLlm } from '@kbn/langchain/server';
 import { getLangSmithTracer } from '@kbn/langchain/server/tracers/langsmith';
