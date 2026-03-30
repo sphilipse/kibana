@@ -26,6 +26,7 @@ interface FetchAttackDiscoveriesOptions {
   end?: string;
   filter?: Record<string, unknown>;
   overrideConnectorId?: string;
+  overrideConnectorName?: string;
   overrideEnd?: string;
   overrideFilter?: Record<string, unknown>;
   overrideSize?: number;
@@ -114,7 +115,9 @@ export const useAttackDiscovery = ({
 
         toasts?.addSuccess({
           title: i18n.GENERATION_STARTED_TITLE,
-          text: i18n.GENERATION_STARTED_TEXT(connectorName),
+          text: i18n.GENERATION_STARTED_TEXT(
+            options?.overrideConnectorName ?? connectorName
+          ),
         });
       } catch (error) {
         setIsLoading(false);
