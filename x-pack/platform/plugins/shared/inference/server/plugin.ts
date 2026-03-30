@@ -16,9 +16,12 @@ import type {
 } from '@kbn/inference-common';
 import { aiAnonymizationSettings } from '@kbn/inference-common';
 import type { KibanaRequest } from '@kbn/core-http-server';
-import type { PluginStartContract as ActionsPluginStart } from '@kbn/actions-plugin/server';
 import type { InferenceTaskType } from '@elastic/elasticsearch/lib/api/types';
-import { createClient as createInferenceClient, createChatModel } from './inference_client';
+import {
+  createClient as createInferenceClient,
+  createClientWithoutRequest,
+  createChatModel,
+} from './inference_client';
 import { RegexWorkerService } from './chat_complete/anonymization/regex_worker_service';
 import { registerRoutes } from './routes';
 import type { InferenceConfig } from './config';
@@ -269,15 +272,9 @@ export class InferencePlugin
         });
       },
       getClientWithoutRequest: (actionsClient, esClient) => {
-        return createInferenceClient({
-          request: {} as KibanaRequest, // not used for inference endpoint resolution
-          namespace: 'default',
-          actions: {
-            ...pluginsStart.actions,
-            getActionsClientWithRequest: () => Promise.resolve(actionsClient),
-          } as ActionsPluginStart,
-          logger: this.logger.get('client'),
-          anonymizationRulesPromise: Promise.resolve([]),
+        return createClientWithoutRequest({
+          actionsClient,
+          logger: this.logger,
           regexWorker: this.regexWorker!,
           esClient,
           endpointIdCache: this.endpointIdCache,
