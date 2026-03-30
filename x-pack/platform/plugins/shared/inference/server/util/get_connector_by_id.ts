@@ -78,7 +78,11 @@ export const getConnectorById = async ({
   const actionClient = await actions.getActionsClientWithRequest(request);
   const allStackConnectors = await actionClient.getAll({ includeSystemActions: false });
 
-  const result = findConnectorById({ connectorId, connectors, rawStackConnectors: allStackConnectors });
+  const result = findConnectorById({
+    connectorId,
+    connectors,
+    rawStackConnectors: allStackConnectors,
+  });
   if (result) {
     return result;
   }
@@ -111,7 +115,11 @@ export const getConnectorByIdWithoutClientRequest = async ({
 
   const allStackConnectors = await actionsClient.getAll({ includeSystemActions: false });
 
-  const result = findConnectorById({ connectorId, connectors, rawStackConnectors: allStackConnectors });
+  const result = findConnectorById({
+    connectorId,
+    connectors,
+    rawStackConnectors: allStackConnectors,
+  });
   if (result) {
     return result;
   }

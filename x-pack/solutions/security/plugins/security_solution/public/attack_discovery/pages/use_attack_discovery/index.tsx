@@ -115,9 +115,7 @@ export const useAttackDiscovery = ({
 
         toasts?.addSuccess({
           title: i18n.GENERATION_STARTED_TITLE,
-          text: i18n.GENERATION_STARTED_TEXT(
-            options?.overrideConnectorName ?? connectorName
-          ),
+          text: i18n.GENERATION_STARTED_TEXT(options?.overrideConnectorName ?? connectorName),
         });
       } catch (error) {
         setIsLoading(false);
