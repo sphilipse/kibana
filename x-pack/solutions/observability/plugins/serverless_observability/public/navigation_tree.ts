@@ -532,6 +532,21 @@ export const createNavigationTree = ({
             overviewAvailable
           ),
           {
+            id: 'model_management',
+            title: i18n.translate(
+              'xpack.serverlessObservability.nav.projectSettings.modelManagement',
+              {
+                defaultMessage: 'Model Management',
+              }
+            ),
+            breadcrumbStatus: 'hidden',
+            children: [
+              { link: 'management:elastic_inference_service' },
+              { link: 'management:inference_endpoints' },
+              { link: 'management:model_settings' },
+            ],
+          },
+          {
             title: i18n.translate('xpack.serverlessObservability.nav.projectSettings.ai', {
               defaultMessage: 'AI',
             }),

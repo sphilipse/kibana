@@ -138,7 +138,7 @@ export const i18nStrings = {
       }),
       trainedModels: i18n.translate(
         'securitySolutionPackages.navLinks.ml.modelManagement.trainedModels',
-        { defaultMessage: 'Trained models' }
+        { defaultMessage: 'Local Models' }
       ),
     },
     aiopsLabs: {
@@ -158,6 +158,11 @@ export const i18nStrings = {
         { defaultMessage: 'Change point detection' }
       ),
     },
+  },
+  modelManagement: {
+    title: i18n.translate('securitySolutionPackages.navLinks.modelManagement', {
+      defaultMessage: 'Model Management',
+    }),
   },
   entityRiskScore: i18n.translate('securitySolutionPackages.navLinks.entityRiskScore', {
     defaultMessage: 'Entity risk score',

@@ -12,11 +12,10 @@ import type { ManagementApp, ManagementAppMountParams } from '@kbn/management-pl
 import {
   ELASTIC_INFERENCE_SERVICE_APP_ID,
   ELASTIC_INFERENCE_SERVICE_TITLE,
+  EXTERNAL_INFERENCE_TITLE,
   INFERENCE_ENDPOINTS_APP_ID,
   MODEL_SETTINGS_APP_ID,
   MODEL_SETTINGS_SECTION_TITLE,
-  PLUGIN_TITLE,
-  EXTERNAL_INFERENCE_TITLE,
 } from '../common/constants';
 import { docLinks } from '../common/doc_links';
 import type {
@@ -52,9 +51,9 @@ export class SearchInferenceEndpointsPlugin
     const eisEnabled = isElasticInferenceServiceEnabled(core.uiSettings);
 
     this.registerInferenceEndpoints =
-      plugins.management.sections.section.machineLearning.registerApp({
+      plugins.management.sections.section.modelManagement.registerApp({
         id: INFERENCE_ENDPOINTS_APP_ID,
-        title: eisEnabled ? EXTERNAL_INFERENCE_TITLE : PLUGIN_TITLE,
+        title: EXTERNAL_INFERENCE_TITLE,
         order: 2,
         async mount({ element, history }: ManagementAppMountParams) {
           const { renderInferenceEndpointsMgmtApp } = await import('./application');
@@ -69,7 +68,7 @@ export class SearchInferenceEndpointsPlugin
       });
 
     if (isModelSettingsEnabled(core.uiSettings)) {
-      this.registerModelSettings = plugins.management.sections.section.machineLearning.registerApp({
+      this.registerModelSettings = plugins.management.sections.section.modelManagement.registerApp({
         id: MODEL_SETTINGS_APP_ID,
         title: MODEL_SETTINGS_SECTION_TITLE,
         order: 3,
@@ -88,7 +87,7 @@ export class SearchInferenceEndpointsPlugin
 
     if (eisEnabled) {
       this.registerElasticInferenceService =
-        plugins.management.sections.section.machineLearning.registerApp({
+        plugins.management.sections.section.modelManagement.registerApp({
           id: ELASTIC_INFERENCE_SERVICE_APP_ID,
           title: ELASTIC_INFERENCE_SERVICE_TITLE,
           order: 4,
@@ -122,7 +121,8 @@ export class SearchInferenceEndpointsPlugin
 
     this.licenseSubscription = licensing.license$.subscribe((license) => {
       const hasEnterpriseLicense = license?.hasAtLeast('enterprise');
-      const hasAccess = core.application.capabilities.management?.ml?.inference_endpoints === true;
+      const hasAccess =
+        core.application.capabilities.management?.modelManagement?.inference_endpoints === true;
 
       if (hasEnterpriseLicense && hasAccess) {
         this.registerInferenceEndpoints?.enable();

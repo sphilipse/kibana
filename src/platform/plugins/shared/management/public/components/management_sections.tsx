@@ -39,7 +39,7 @@ const machineLearningTitle = i18n.translate('management.sections.machineLearning
 });
 
 const machineLearningTip = i18n.translate('management.sections.machineLearningTip', {
-  defaultMessage: 'Manage your Machine Learning jobs and trained models',
+  defaultMessage: 'Manage your Machine Learning jobs and Local Models',
 });
 
 const sectionTitle = i18n.translate('management.sections.section.title', {
@@ -98,6 +98,21 @@ export const MachineLearningSection = {
   order: 4,
 };
 
+const modelManagementTitle = i18n.translate('management.sections.modelManagementTitle', {
+  defaultMessage: 'Model Management',
+});
+
+const modelManagementTip = i18n.translate('management.sections.modelManagementTip', {
+  defaultMessage: 'Manage your inference models and endpoints',
+});
+
+export const ModelManagementSection = {
+  id: ManagementSectionId.ModelManagement,
+  title: modelManagementTitle,
+  tip: modelManagementTip,
+  order: 4,
+};
+
 export const SecuritySection = {
   id: 'security',
   title: sectionTitle,
@@ -130,6 +145,7 @@ export const managementSections = [
   DataSection,
   InsightsAndAlertingSection,
   MachineLearningSection,
+  ModelManagementSection,
   SecuritySection,
   KibanaSection,
   AISection,

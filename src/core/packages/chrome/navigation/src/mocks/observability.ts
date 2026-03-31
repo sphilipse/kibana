@@ -381,8 +381,29 @@ export const PRIMARY_MENU_FOOTER_ITEMS: MenuItem[] = [
           },
           {
             id: 'ml-trained-models',
-            label: 'Trained models',
+            label: 'Local Models',
             href: '/settings/ml/trained-models',
+          },
+        ],
+      },
+      {
+        id: 'model_management',
+        label: 'Model Management',
+        items: [
+          {
+            id: 'elastic-inference',
+            label: 'Elastic Inference',
+            href: '/settings/model-management/elastic-inference',
+          },
+          {
+            id: 'external-inference',
+            label: 'External Inference',
+            href: '/settings/model-management/external-inference',
+          },
+          {
+            id: 'feature-settings',
+            label: 'Feature Settings',
+            href: '/settings/model-management/feature-settings',
           },
         ],
       },
