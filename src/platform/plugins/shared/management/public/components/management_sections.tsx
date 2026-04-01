@@ -110,7 +110,7 @@ export const ModelManagementSection = {
   id: ManagementSectionId.ModelManagement,
   title: modelManagementTitle,
   tip: modelManagementTip,
-  order: 4,
+  order: 5,
 };
 
 export const SecuritySection = {
@@ -124,20 +124,20 @@ export const KibanaSection = {
   id: ManagementSectionId.Kibana,
   title: kibanaTitle,
   tip: kibanaTip,
-  order: 4,
+  order: 6,
 };
 
 export const AISection = {
   id: ManagementSectionId.AI,
   title: aiTitle,
-  order: 4,
+  order: 7,
 };
 
 export const StackSection = {
   id: ManagementSectionId.Stack,
   title: stackTitle,
   tip: stackTip,
-  order: 4,
+  order: 8,
 };
 
 export const managementSections = [
