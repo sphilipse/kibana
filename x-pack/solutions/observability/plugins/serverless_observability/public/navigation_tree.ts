@@ -539,7 +539,6 @@ export const createNavigationTree = ({
                 defaultMessage: 'Model Management',
               }
             ),
-            breadcrumbStatus: 'hidden',
             children: [
               { link: 'management:elastic_inference_service' },
               { link: 'management:inference_endpoints' },

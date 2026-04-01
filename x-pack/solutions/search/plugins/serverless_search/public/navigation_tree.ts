@@ -273,17 +273,14 @@ export function createNavigationTree({
               {
                 id: 'searchInferenceEndpointsElasticInferenceService',
                 link: 'management:elastic_inference_service',
-                breadcrumbStatus: 'hidden',
               },
               {
                 id: 'searchInferenceEndpoints',
                 link: 'management:inference_endpoints',
-                breadcrumbStatus: 'hidden',
               },
               {
                 id: 'searchInferenceEndpointsModelSettings',
                 link: 'management:model_settings',
-                breadcrumbStatus: 'hidden',
               },
             ],
           },
