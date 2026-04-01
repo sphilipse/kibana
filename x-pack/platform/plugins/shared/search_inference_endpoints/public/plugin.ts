@@ -16,6 +16,7 @@ import {
   INFERENCE_ENDPOINTS_APP_ID,
   MODEL_SETTINGS_APP_ID,
   MODEL_SETTINGS_SECTION_TITLE,
+  PLUGIN_TITLE,
 } from '../common/constants';
 import { docLinks } from '../common/doc_links';
 import type {
@@ -53,7 +54,7 @@ export class SearchInferenceEndpointsPlugin
     this.registerInferenceEndpoints =
       plugins.management.sections.section.modelManagement.registerApp({
         id: INFERENCE_ENDPOINTS_APP_ID,
-        title: EXTERNAL_INFERENCE_TITLE,
+        title: eisEnabled ? EXTERNAL_INFERENCE_TITLE : PLUGIN_TITLE,
         order: 2,
         async mount({ element, history }: ManagementAppMountParams) {
           const { renderInferenceEndpointsMgmtApp } = await import('./application');
@@ -90,7 +91,7 @@ export class SearchInferenceEndpointsPlugin
         plugins.management.sections.section.modelManagement.registerApp({
           id: ELASTIC_INFERENCE_SERVICE_APP_ID,
           title: ELASTIC_INFERENCE_SERVICE_TITLE,
-          order: 4,
+          order: 1,
           async mount({ element, history }: ManagementAppMountParams) {
             const { renderElasticInferenceServiceApp } = await import(
               './elastic_inference_service_application'
