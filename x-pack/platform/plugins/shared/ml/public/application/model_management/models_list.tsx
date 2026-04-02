@@ -226,7 +226,7 @@ export const ModelsList: FC<Props> = ({
         show: true,
         value: existingModels.length,
         label: i18n.translate('xpack.ml.trainedModels.modelsList.totalAmountLabel', {
-          defaultMessage: 'Total trained models',
+          defaultMessage: 'Total local models',
         }),
       },
     };
