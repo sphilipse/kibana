@@ -624,7 +624,7 @@ export const ModelsList: FC<Props> = ({
             >
               <FormattedMessage
                 id="xpack.ml.trainedModels.modelsList.addModelButtonLabel"
-                defaultMessage="Add trained model"
+                defaultMessage="Add local model"
               />
             </EuiButton>
           </EuiFlexItem>
