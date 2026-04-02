@@ -258,7 +258,7 @@ export const PRIMARY_MENU_FOOTER_ITEMS: MenuItem[] = [
           },
           {
             id: 'ml-trained-models',
-            label: 'Trained Models',
+            label: 'Trained models',
             href: '/settings/ml/trained-models',
           },
         ],

@@ -138,7 +138,7 @@ export const i18nStrings = {
       }),
       trainedModels: i18n.translate(
         'securitySolutionPackages.navLinks.ml.modelManagement.trainedModels',
-        { defaultMessage: 'Trained Models' }
+        { defaultMessage: 'Trained models' }
       ),
     },
     aiopsLabs: {
