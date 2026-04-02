@@ -30,7 +30,7 @@ export const EXTERNAL_INFERENCE_TITLE = i18n.translate(
 export const MODEL_SETTINGS_SECTION_TITLE = i18n.translate(
   'xpack.searchInferenceEndpoints.modelSettingsTitle',
   {
-    defaultMessage: 'Feature Settings',
+    defaultMessage: 'Model Settings',
   }
 );
 
@@ -39,7 +39,7 @@ export const ELASTIC_INFERENCE_SERVICE_APP_ID = 'elastic_inference_service';
 export const ELASTIC_INFERENCE_SERVICE_TITLE = i18n.translate(
   'xpack.searchInferenceEndpoints.elasticInferenceServiceTitle',
   {
-    defaultMessage: 'Elastic Inference',
+    defaultMessage: 'Elastic Inference Service',
   }
 );
 
