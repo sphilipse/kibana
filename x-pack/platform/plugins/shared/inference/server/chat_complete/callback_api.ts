@@ -11,6 +11,7 @@ import {
   createInferenceRequestError,
   getConnectorFamily,
   getConnectorProvider,
+  getConnectorPlatform,
   getConnectorDefaultModel,
   type ChatCompleteCompositeResponse,
   MessageRole,
@@ -46,6 +47,8 @@ import type { RegexWorkerService } from './anonymization/regex_worker_service';
 import type { InferenceAnonymizationOptions } from '../inference_client/anonymization_options';
 import type { InferenceEndpointIdCache } from '../util/inference_endpoint_id_cache';
 import { prepareAnonymization } from './prepare_anonymization';
+import type { TokenUsageLogger } from '../token_usage';
+import { handleTokenUsageLogging, buildTokenUsageContext } from '../token_usage';
 
 interface CreateChatCompleteApiOptions {
   request: KibanaRequest;
@@ -58,6 +61,7 @@ interface CreateChatCompleteApiOptions {
   anonymization?: InferenceAnonymizationOptions;
   endpointIdCache: InferenceEndpointIdCache;
   callbackManager?: InferenceCallbackManager;
+  tokenUsageLogger?: TokenUsageLogger;
 }
 
 type CreateChatCompleteApiOptionsKey =
@@ -111,6 +115,7 @@ export function createChatCompleteCallbackApi({
   anonymization,
   endpointIdCache,
   callbackManager,
+  tokenUsageLogger,
 }: CreateChatCompleteApiOptions) {
   return (
     {
@@ -137,6 +142,7 @@ export function createChatCompleteCallbackApi({
         stream,
         namespace,
         anonymization,
+        tokenUsageLogger,
       })
     ).pipe(
       retryWithExponentialBackoff({
@@ -168,6 +174,8 @@ function createChatCompletePipeline({
   stream,
   namespace,
   anonymization,
+  connectorId,
+  tokenUsageLogger,
 }: {
   resolve: () => Promise<ResolvedPipelineContext>;
   esClient: ElasticsearchClient;
@@ -179,6 +187,8 @@ function createChatCompletePipeline({
   stream?: boolean;
   namespace: string;
   anonymization?: InferenceAnonymizationOptions;
+  connectorId: string;
+  tokenUsageLogger?: TokenUsageLogger;
 }) {
   return forkJoin({
     context: from(resolve()),
@@ -256,7 +266,21 @@ function createChatCompletePipeline({
               }).pipe(chunksIntoMessage({ toolOptions: { toolChoice, tools }, logger }));
             }
           ).pipe(deanonymizeMessage({ ...preparedAnonymization, replacementsId }));
-        })
+        }),
+        tokenUsageLogger
+          ? handleTokenUsageLogging({
+              tokenUsageLogger,
+              getContext: () =>
+                buildTokenUsageContext({
+                  connectorId,
+                  model: callbackContext.model,
+                  modelName,
+                  featureId: metadata?.connectorTelemetry?.pluginId,
+                  parentFeatureId: metadata?.connectorTelemetry?.aggregateBy,
+                }),
+              logger,
+            })
+          : identity
       );
     })
   );
@@ -276,6 +300,7 @@ function resolveAndCreatePipeline({
   stream,
   namespace,
   anonymization,
+  tokenUsageLogger,
 }: {
   connectorId: string;
   endpointIdCache: InferenceEndpointIdCache;
@@ -290,6 +315,7 @@ function resolveAndCreatePipeline({
   stream?: boolean;
   namespace: string;
   anonymization?: InferenceAnonymizationOptions;
+  tokenUsageLogger?: TokenUsageLogger;
 }) {
   return from(endpointIdCache.has(connectorId)).pipe(
     switchMap((isInferenceEndpoint) => {
@@ -375,6 +401,7 @@ function resolveAndCreatePipeline({
                   family: getConnectorFamily(connector),
                   provider: getConnectorProvider(connector),
                   id: getConnectorDefaultModel(connector),
+                  platform: getConnectorPlatform(connector),
                 },
               },
               getSpanModel: (modelName) => ({
@@ -397,6 +424,8 @@ function resolveAndCreatePipeline({
         stream,
         namespace,
         anonymization,
+        connectorId,
+        tokenUsageLogger,
       }).pipe(
         catchError((error) => {
           if (error?.meta?.status === 404 || error?.statusCode === 404) {

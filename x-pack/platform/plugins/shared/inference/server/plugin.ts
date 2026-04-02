@@ -6,6 +6,7 @@
  */
 
 import type { CoreSetup, CoreStart, Plugin, PluginInitializerContext } from '@kbn/core/server';
+import { SavedObjectsClient } from '@kbn/core/server';
 import type { Logger } from '@kbn/logging';
 import type {
   BoundInferenceClient,
@@ -40,6 +41,8 @@ import { getConnectorById, getConnectorByIdWithoutClientRequest } from './util/g
 import { getInferenceEndpoints } from './util/get_inference_endpoints';
 import { getInferenceEndpointById } from './util/get_inference_endpoint_by_id';
 import { InferenceEndpointIdCache } from './util/inference_endpoint_id_cache';
+import { TokenUsageLogger } from './token_usage';
+import { installTokenUsageDashboard } from './dashboard';
 
 const parseLegacyAnonymizationRules = (value: unknown): AnonymizationRule[] => {
   let parsed: unknown = value;
@@ -96,11 +99,13 @@ export class InferencePlugin
   private config: InferenceConfig;
   private regexWorker?: RegexWorkerService;
   private endpointIdCache: InferenceEndpointIdCache;
+  private tokenUsageLogger: TokenUsageLogger;
 
   constructor(context: PluginInitializerContext<InferenceConfig>) {
     this.logger = context.logger.get();
     this.config = context.config.get<InferenceConfig>();
     this.endpointIdCache = new InferenceEndpointIdCache();
+    this.tokenUsageLogger = new TokenUsageLogger(this.logger);
   }
   setup(
     coreSetup: CoreSetup<InferenceStartDependencies, InferenceServerStart>,
@@ -122,6 +127,14 @@ export class InferencePlugin
   start(core: CoreStart, pluginsStart: InferenceStartDependencies): InferenceServerStart {
     const anonymizationEnabled = pluginsStart.anonymization?.isEnabled() ?? false;
     this.endpointIdCache.setEsClient(core.elasticsearch.client.asInternalUser);
+    this.tokenUsageLogger.setEsClient(core.elasticsearch.client.asInternalUser);
+
+    const internalRepository = core.savedObjects.createInternalRepository();
+    const internalClient = new SavedObjectsClient(internalRepository);
+    const savedObjectsImporter = core.savedObjects.createImporter(internalClient);
+    installTokenUsageDashboard(savedObjectsImporter, this.logger).catch((e) => {
+      this.logger.error(`Failed to install token usage dashboard: ${e.message}`);
+    });
 
     if (anonymizationEnabled) {
       this.logger.info(
@@ -224,6 +237,7 @@ export class InferencePlugin
           logger: this.logger.get('client'),
           esClient: core.elasticsearch.client.asScoped(options.request).asCurrentUser,
           endpointIdCache: this.endpointIdCache,
+          tokenUsageLogger: this.tokenUsageLogger,
         }) as T extends InferenceBoundClientCreateOptions ? BoundInferenceClient : InferenceClient;
       },
 
@@ -240,6 +254,7 @@ export class InferencePlugin
           esClient: core.elasticsearch.client.asScoped(options.request).asCurrentUser,
           endpointIdCache: this.endpointIdCache,
           logger: this.logger,
+          tokenUsageLogger: this.tokenUsageLogger,
         });
       },
 

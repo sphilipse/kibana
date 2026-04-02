@@ -78,12 +78,14 @@ export const getConnectorList = async (
       .map((c) => [c.config?.inferenceId as string, c])
   );
 
-  const inferenceEndpointConnectors: InferenceConnector[] = endpoints.map((ep) => ({
+  const inferenceEndpointConnectors: (InferenceConnector & { creator?: string })[] = endpoints.map((ep) => ({
+    ...ep,
     type: InferenceConnectorType.Inference,
     name:
       ep.metadata.display?.name ??
       stackConnectorByInferenceId.get(ep.inferenceId)?.name ??
       ep.inferenceId,
+    creator: ep.metadata.display?.creator,
     connectorId: ep.inferenceId,
     config: {
       inferenceId: ep.inferenceId,
