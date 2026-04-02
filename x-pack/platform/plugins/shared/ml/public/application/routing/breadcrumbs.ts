@@ -53,7 +53,7 @@ export const DATA_FRAME_ANALYTICS_MANAGEMENT_BREADCRUMB: ManagementBreadcrumbTyp
 
 export const TRAINED_MODELS_MANAGEMENT_BREADCRUMB: ManagementBreadcrumbType = {
   text: i18n.translate('xpack.ml.trainedModelManagementLabel', {
-    defaultMessage: 'Local Models',
+    defaultMessage: 'Trained models',
   }),
   appId: 'trained_models',
   path: '',

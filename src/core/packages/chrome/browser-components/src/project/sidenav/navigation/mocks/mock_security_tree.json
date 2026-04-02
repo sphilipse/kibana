@@ -1204,7 +1204,7 @@
               "id": "management:trained_models",
               "href": "/jom/app/management/ml/trained_models",
               "path": "stack_management.node-2.management:trained_models",
-              "title": "Local Models",
+              "title": "Trained Models",
               "deepLink": {},
               "isExternalLink": false,
               "sideNavStatus": "visible"

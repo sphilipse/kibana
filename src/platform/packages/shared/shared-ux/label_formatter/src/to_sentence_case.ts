@@ -23,7 +23,7 @@ const TITLE_CASE_GLOSSARY = [
   'Content Connectors',
   'Stack Monitoring',
   'Maintenance Windows',
-  'Local Models',
+  'Trained Models',
   'Anomaly Detection Jobs',
   'Data Frame Analytics Jobs',
   'GenAI Settings',
