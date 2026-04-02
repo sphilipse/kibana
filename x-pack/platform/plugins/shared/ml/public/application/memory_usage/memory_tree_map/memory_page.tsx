@@ -18,7 +18,7 @@ export const MemoryPage: FC = () => {
       <EuiCallOut color="primary">
         <FormattedMessage
           id="xpack.ml.memoryUsage.treeMap.infoCallout"
-          defaultMessage="Memory usage for active machine learning jobs and local models."
+          defaultMessage="Memory usage for active machine learning jobs and trained models."
         />
       </EuiCallOut>
       <JobMemoryTreeMap />

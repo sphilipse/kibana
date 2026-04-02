@@ -116,9 +116,8 @@ function createDeepLinks(
       return {
         id: 'nodesOverview',
         title: i18n.translate('xpack.ml.deepLink.trainedModels', {
-          defaultMessage: 'Local Models',
+          defaultMessage: 'Trained Models',
         }),
-        keywords: ['trained models'],
         // TODO: Change redirect to management page once #213152 is resolved
         path: `/${ML_PAGES.TRAINED_MODELS_MANAGE}`,
       };

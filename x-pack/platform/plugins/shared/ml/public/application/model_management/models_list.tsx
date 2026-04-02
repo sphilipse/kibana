@@ -226,7 +226,7 @@ export const ModelsList: FC<Props> = ({
         show: true,
         value: existingModels.length,
         label: i18n.translate('xpack.ml.trainedModels.modelsList.totalAmountLabel', {
-          defaultMessage: 'Total local models',
+          defaultMessage: 'Total trained models',
         }),
       },
     };
@@ -624,7 +624,7 @@ export const ModelsList: FC<Props> = ({
             >
               <FormattedMessage
                 id="xpack.ml.trainedModels.modelsList.addModelButtonLabel"
-                defaultMessage="Add local model"
+                defaultMessage="Add trained model"
               />
             </EuiButton>
           </EuiFlexItem>
