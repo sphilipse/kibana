@@ -68,7 +68,7 @@ export const GenAiSettingsApp: React.FC<GenAiSettingsAppProps> = ({ setBreadcrum
 
   const isModelSettingsPageEnabled = services.settings?.client?.get<boolean>(
     MODEL_SETTINGS_FEATURE_FLAG_ID,
-    true
+    false
   );
 
   // Determine current chat experience (including unsaved changes)
