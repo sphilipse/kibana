@@ -41,6 +41,7 @@ export function getConnectorType(): InferenceConnector {
       }
     ),
     actionTypeTitle: CONNECTOR_NAME,
+    getHideInUi: () => true,
     validateParams: async (
       actionParams: InferenceActionParams
     ): Promise<GenericValidationResult<ValidationErrors>> => {
