@@ -31,7 +31,7 @@ describe('ConnectorMissingCallout', () => {
 
     expect(getByTestId(MISSING_CONNECTOR_CALLOUT_TEST_ID)).toHaveTextContent('Missing connector');
     expect(getByTestId(MISSING_CONNECTOR_CALLOUT_TEST_ID)).toHaveTextContent(
-      'Your default AI connector is invalid and may have been deleted. You may update the default AI connector via'
+      'Your default model is invalid and may have been deleted. You may update the default model via'
     );
     expect(getByTestId(MISSING_CONNECTOR_CALLOUT_LINK_TEST_ID)).toHaveTextContent(
       'Security Solution advanced settings'
