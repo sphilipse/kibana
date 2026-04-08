@@ -143,9 +143,7 @@ export const GenAiSettingsApp: React.FC<GenAiSettingsAppProps> = ({ setBreadcrum
                 >
                   <FormattedMessage
                     id="genAiSettings.manage.connectors"
-                    defaultMessage={
-                      'Manage models'
-                    }
+                    defaultMessage={'Manage models'}
                   />
                 </EuiLink>
               ),

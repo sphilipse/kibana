@@ -106,10 +106,7 @@ describe('GenerateSuggestionButton', () => {
 
       const link = screen.getByRole('link', { name: /enable ai assistant features/i });
       expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute(
-        'href',
-        '/test/app/management/modelManagement/model_settings'
-      );
+      expect(link).toHaveAttribute('href', '/test/app/management/modelManagement/model_settings');
     });
   });
 

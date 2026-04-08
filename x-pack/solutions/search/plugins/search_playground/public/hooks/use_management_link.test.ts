@@ -37,8 +37,7 @@ describe('useManagementLink Hook', () => {
   });
 
   it('generates the management link successfully', async () => {
-    const expectedUrl =
-      'http://localhost:5601/app/management/modelManagement/model_settings';
+    const expectedUrl = 'http://localhost:5601/app/management/modelManagement/model_settings';
     mockGetUrl.mockResolvedValue(expectedUrl);
     const connectorId = 'test-connector-id';
     const { result } = renderHook(() => useManagementLink(connectorId));
