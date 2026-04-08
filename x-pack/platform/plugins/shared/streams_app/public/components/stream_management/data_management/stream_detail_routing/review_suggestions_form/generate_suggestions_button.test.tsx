@@ -108,7 +108,7 @@ describe('GenerateSuggestionButton', () => {
       expect(link).toBeInTheDocument();
       expect(link).toHaveAttribute(
         'href',
-        '/test/app/management/insightsAndAlerting/triggersActionsConnectors/connectors'
+        '/test/app/management/modelManagement/model_settings'
       );
     });
   });

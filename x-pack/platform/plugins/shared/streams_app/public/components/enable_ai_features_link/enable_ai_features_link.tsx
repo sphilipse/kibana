@@ -18,14 +18,12 @@ export function EnableAIFeaturesLink() {
     <EuiToolTip
       content={i18n.translate('xpack.streams.enableAIFeaturesLink.tooltipContent', {
         defaultMessage:
-          'AI Assistant features are not enabled. To enable features, add an AI connector on the management page.',
+          'AI Assistant features are not enabled. To enable features, add a model on the management page.',
       })}
     >
       <EuiLink
         target="_blank"
-        href={http.basePath.prepend(
-          `/app/management/insightsAndAlerting/triggersActionsConnectors/connectors`
-        )}
+        href={http.basePath.prepend(`/app/management/modelManagement/model_settings`)}
       >
         {i18n.translate('xpack.streams.enableAIFeaturesLink.linkLabel', {
           defaultMessage: 'Enable AI Assistant features',

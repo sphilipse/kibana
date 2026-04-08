@@ -20,8 +20,8 @@ export const useManagementLink = (connectorId: string) => {
   useEffect(() => {
     const getLink = async () => {
       const link = await managementLocator?.getUrl({
-        sectionId: 'insightsAndAlerting',
-        appId: `triggersActionsConnectors/connectors/${connectorId}`,
+        sectionId: 'modelManagement',
+        appId: 'model_settings',
       });
       setManagementLink(link || '');
     };

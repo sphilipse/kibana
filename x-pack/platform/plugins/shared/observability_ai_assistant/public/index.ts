@@ -123,8 +123,8 @@ export const plugin: PluginInitializer<
   new ObservabilityAIAssistantPlugin(pluginInitializerContext);
 
 export {
-  getConnectorsManagementHref,
-  navigateToConnectorsManagementApp,
+  getModelManagementHref,
+  navigateToModelManagementApp,
 } from './utils/navigate_to_connectors';
 
 export { navigateToSettingsManagementApp } from './utils/navigate_to_settings';

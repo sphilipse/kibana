@@ -65,7 +65,7 @@ export const useLoadConnectors = ({
               : error,
             {
               title: i18n.translate('inferenceConnectors.useLoadConnectors.errorMessage', {
-                defaultMessage: 'Error loading connectors',
+                defaultMessage: 'Error loading models',
               }),
             }
           );
