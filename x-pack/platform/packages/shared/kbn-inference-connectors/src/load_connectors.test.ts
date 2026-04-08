@@ -160,35 +160,25 @@ describe('loadConnectors', () => {
     expect(result[0].id).toBe('c1');
   });
 
-  it('should fall back to feature connectors when default connector is not found', async () => {
+  it('should return empty array when defaultOnly is true but connector is not found', async () => {
     fetchConnectorByIdMock.mockResolvedValue(undefined);
-    const connector1 = createInferenceConnector({ connectorId: 'c1', name: 'Connector 1' });
-    fetchConnectorsForFeatureMock.mockResolvedValue({
-      connectors: [connector1],
-      soEntryFound: false,
-    });
     const settings = createSettings('missing', true);
 
     const result = await loadConnectors({ http, featureId: 'test', settings });
 
     expect(fetchConnectorByIdMock).toHaveBeenCalledWith(http, 'missing');
-    expect(fetchConnectorsForFeatureMock).toHaveBeenCalledWith(http, 'test');
-    expect(result).toHaveLength(1);
-    expect(result[0].id).toBe('c1');
+    expect(fetchConnectorsForFeatureMock).not.toHaveBeenCalled();
+    expect(result).toEqual([]);
   });
 
-  it('should return all feature connectors when no default connector is configured', async () => {
-    const connector1 = createInferenceConnector({ connectorId: 'c1', name: 'Connector 1' });
-    fetchConnectorsForFeatureMock.mockResolvedValue({
-      connectors: [connector1],
-      soEntryFound: false,
-    });
+  it('should return empty array when defaultOnly is true but no default connector is configured', async () => {
     const settings = createSettings(undefined, true);
 
     const result = await loadConnectors({ http, featureId: 'test', settings });
 
     expect(fetchConnectorByIdMock).not.toHaveBeenCalled();
-    expect(result).toHaveLength(1);
+    expect(fetchConnectorsForFeatureMock).not.toHaveBeenCalled();
+    expect(result).toEqual([]);
   });
 
   it('should return default connector first when no SO entry and default is configured', async () => {

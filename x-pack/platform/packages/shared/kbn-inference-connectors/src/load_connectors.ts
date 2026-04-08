@@ -63,10 +63,15 @@ export const loadConnectors = async ({
     false
   );
 
-  if (defaultConnectorOnly && defaultConnectorId) {
+  if (defaultConnectorOnly) {
+    if (!defaultConnectorId) {
+      return [];
+    }
     const connector = await fetchConnectorById(http, defaultConnectorId);
     if (connector) {
       return [connector];
+    } else {
+      return [];
     }
   }
 
