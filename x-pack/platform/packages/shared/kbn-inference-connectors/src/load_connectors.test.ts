@@ -191,6 +191,84 @@ describe('loadConnectors', () => {
     expect(result).toHaveLength(1);
   });
 
+  it('should return default connector first when no SO entry and default is configured', async () => {
+    const defaultAiConnector = {
+      id: 'default',
+      name: 'Default Connector',
+      actionTypeId: InferenceConnectorType.OpenAI,
+      config: {},
+      secrets: {},
+      isPreconfigured: false,
+      isSystemAction: false,
+      isDeprecated: false,
+      isConnectorTypeDeprecated: false,
+      isMissingSecrets: false,
+    };
+    fetchConnectorByIdMock.mockResolvedValue(defaultAiConnector as any);
+    const connector1 = createInferenceConnector({ connectorId: 'c1', name: 'Connector 1' });
+    const connectorDefault = createInferenceConnector({
+      connectorId: 'default',
+      name: 'Default Connector',
+    });
+    fetchConnectorsForFeatureMock.mockResolvedValue({
+      connectors: [connector1, connectorDefault],
+      soEntryFound: false,
+    });
+    const settings = createSettings('default');
+
+    const result = await loadConnectors({ http, featureId: 'test', settings });
+
+    expect(fetchConnectorByIdMock).toHaveBeenCalledWith(http, 'default');
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe('default');
+    expect(result[1].id).toBe('c1');
+  });
+
+  it('should prepend default connector even if not in the feature list', async () => {
+    const defaultAiConnector = {
+      id: 'external',
+      name: 'External Connector',
+      actionTypeId: InferenceConnectorType.OpenAI,
+      config: {},
+      secrets: {},
+      isPreconfigured: false,
+      isSystemAction: false,
+      isDeprecated: false,
+      isConnectorTypeDeprecated: false,
+      isMissingSecrets: false,
+    };
+    fetchConnectorByIdMock.mockResolvedValue(defaultAiConnector as any);
+    const connector1 = createInferenceConnector({ connectorId: 'c1', name: 'Connector 1' });
+    fetchConnectorsForFeatureMock.mockResolvedValue({
+      connectors: [connector1],
+      soEntryFound: false,
+    });
+    const settings = createSettings('external');
+
+    const result = await loadConnectors({ http, featureId: 'test', settings });
+
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe('external');
+    expect(result[1].id).toBe('c1');
+  });
+
+  it('should not reorder when connectors are set via saved object', async () => {
+    const connector1 = createInferenceConnector({ connectorId: 'c1', name: 'Connector 1' });
+    const connector2 = createInferenceConnector({ connectorId: 'c2', name: 'Connector 2' });
+    fetchConnectorsForFeatureMock.mockResolvedValue({
+      connectors: [connector1, connector2],
+      soEntryFound: true,
+    });
+    const settings = createSettings('c2');
+
+    const result = await loadConnectors({ http, featureId: 'test', settings });
+
+    expect(fetchConnectorByIdMock).not.toHaveBeenCalled();
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe('c1');
+    expect(result[1].id).toBe('c2');
+  });
+
   it('should return empty array when no connectors are available', async () => {
     fetchConnectorsForFeatureMock.mockResolvedValue({
       connectors: [],

@@ -72,7 +72,19 @@ export const useLoadConnectors = ({
 
       const result = await fetchConnectorsForFeature(http, featureId);
       setSoEntryFound(result.soEntryFound);
-      return result.connectors.map(toAIConnector);
+      const aiConnectors = result.connectors.map(toAIConnector);
+
+      if (!result.soEntryFound && defaultConnectorId) {
+        const defaultConnector = await fetchConnectorById(http, defaultConnectorId);
+        if (defaultConnector) {
+          return [
+            defaultConnector,
+            ...aiConnectors.filter((c) => c.id !== defaultConnectorId),
+          ];
+        }
+      }
+
+      return aiConnectors;
     },
     {
       retry: false,

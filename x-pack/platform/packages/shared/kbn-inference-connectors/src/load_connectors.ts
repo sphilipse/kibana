@@ -70,6 +70,15 @@ export const loadConnectors = async ({
     }
   }
 
-  const { connectors } = await fetchConnectorsForFeature(http, featureId);
-  return connectors.map(toAIConnector);
+  const { connectors, soEntryFound } = await fetchConnectorsForFeature(http, featureId);
+  const aiConnectors = connectors.map(toAIConnector);
+
+  if (!soEntryFound && defaultConnectorId) {
+    const defaultConnector = await fetchConnectorById(http, defaultConnectorId);
+    if (defaultConnector) {
+      return [defaultConnector, ...aiConnectors.filter((c) => c.id !== defaultConnectorId)];
+    }
+  }
+
+  return aiConnectors;
 };
