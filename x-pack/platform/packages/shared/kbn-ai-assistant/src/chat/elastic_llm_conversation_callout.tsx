@@ -11,7 +11,7 @@ import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { EuiCallOut, EuiLink, useEuiTheme } from '@elastic/eui';
 import {
-  getConnectorsManagementHref,
+  getModelManagementHref,
   useElasticLlmCalloutDismissed,
   ElasticLlmCalloutKey,
 } from '@kbn/observability-ai-assistant-plugin/public';
@@ -68,7 +68,7 @@ export const ElasticLlmConversationCallout = () => {
             ),
             connectorLink: (...chunks: React.ReactNode[]) => (
               <EuiLink
-                href={getConnectorsManagementHref(http!)}
+                href={getModelManagementHref(http!)}
                 target="_blank"
                 rel="noopener noreferrer"
                 external
