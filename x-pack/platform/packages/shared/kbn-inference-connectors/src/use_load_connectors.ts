@@ -55,9 +55,7 @@ export const useLoadConnectors = ({
   const query = useQuery(
     [...QUERY_KEY, featureId],
     async () => {
-      const defaultConnectorId = settings.client.get<string>(
-        GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR
-      );
+      const defaultConnectorId = settings.client.get<string>(GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR);
       const defaultConnectorOnly = settings.client.get<boolean>(
         GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR_DEFAULT_ONLY,
         false
@@ -82,10 +80,7 @@ export const useLoadConnectors = ({
       if (!result.soEntryFound && defaultConnectorId) {
         const defaultConnector = await fetchConnectorById(http, defaultConnectorId);
         if (defaultConnector) {
-          return [
-            defaultConnector,
-            ...aiConnectors.filter((c) => c.id !== defaultConnectorId),
-          ];
+          return [defaultConnector, ...aiConnectors.filter((c) => c.id !== defaultConnectorId)];
         }
       }
 

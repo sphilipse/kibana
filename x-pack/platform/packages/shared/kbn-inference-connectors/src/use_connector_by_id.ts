@@ -28,27 +28,23 @@ export const useConnectorById = ({
   connectorId,
   toasts,
 }: UseConnectorByIdProps): UseConnectorByIdResult => {
-  return useQuery(
-    [...QUERY_KEY, connectorId],
-    () => fetchConnectorById(http, connectorId!),
-    {
-      enabled: !!connectorId,
-      retry: false,
-      keepPreviousData: true,
-      onError: (error: IHttpFetchError) => {
-        if (error.name !== 'AbortError') {
-          toasts?.addError(
-            error.body && (error.body as { message?: string }).message
-              ? new Error((error.body as { message: string }).message)
-              : error,
-            {
-              title: i18n.translate('inferenceConnectors.useConnectorById.errorMessage', {
-                defaultMessage: 'Error loading connector',
-              }),
-            }
-          );
-        }
-      },
-    }
-  );
+  return useQuery([...QUERY_KEY, connectorId], () => fetchConnectorById(http, connectorId!), {
+    enabled: !!connectorId,
+    retry: false,
+    keepPreviousData: true,
+    onError: (error: IHttpFetchError) => {
+      if (error.name !== 'AbortError') {
+        toasts?.addError(
+          error.body && (error.body as { message?: string }).message
+            ? new Error((error.body as { message: string }).message)
+            : error,
+          {
+            title: i18n.translate('inferenceConnectors.useConnectorById.errorMessage', {
+              defaultMessage: 'Error loading connector',
+            }),
+          }
+        );
+      }
+    },
+  });
 };
