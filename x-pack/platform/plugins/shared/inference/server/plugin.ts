@@ -111,8 +111,7 @@ export class InferencePlugin
     coreSetup: CoreSetup<InferenceStartDependencies, InferenceServerStart>,
     pluginsSetup: InferenceSetupDependencies
   ): InferenceServerSetup {
-    const anonymizationEnabled = pluginsSetup.anonymization?.isEnabled() ?? false;
-    coreSetup.uiSettings.register(getUiSettings({ anonymizationEnabled }));
+    coreSetup.uiSettings.register(getUiSettings());
     const router = coreSetup.http.createRouter();
 
     registerRoutes({
