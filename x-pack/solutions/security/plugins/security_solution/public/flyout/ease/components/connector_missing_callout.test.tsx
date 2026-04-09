@@ -62,7 +62,7 @@ describe('ConnectorMissingCallout', () => {
     const { getByTestId } = render(<ConnectorMissingCallout canSeeAdvancedSettings={false} />);
 
     expect(getByTestId(MISSING_CONNECTOR_CALLOUT_TEST_ID)).toHaveTextContent(
-      'Your default AI connector is invalid and may have been deleted.'
+      'Your default model is invalid and may have been deleted.'
     );
   });
 });
