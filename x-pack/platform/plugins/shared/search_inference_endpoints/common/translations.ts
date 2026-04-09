@@ -344,8 +344,7 @@ export const SETTINGS_NO_MODELS_TITLE = i18n.translate(
 export const SETTINGS_NO_MODELS_DESCRIPTION = i18n.translate(
   'xpack.searchInferenceEndpoints.settings.noModels.description',
   {
-    defaultMessage:
-      'There are no inference models configured. Add models to get started.',
+    defaultMessage: 'There are no inference models configured. Add models to get started.',
   }
 );
 

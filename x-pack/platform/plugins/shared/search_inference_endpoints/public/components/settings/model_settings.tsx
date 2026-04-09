@@ -44,7 +44,7 @@ export const ModelSettings: React.FC = () => {
 
   const isDirty = isFeatureDirty || defaultModelSettings.isDirty;
   const isSaving = isFeatureSaving;
-  const hasNoModels = true //  !connectorsLoading && !connectors?.length;
+  const hasNoModels = true; //  !connectorsLoading && !connectors?.length;
 
   const history = useHistory();
   const unblockRef = useRef<(() => void) | null>(null);

@@ -26,49 +26,52 @@ export const NoModelsEmptyPrompt: React.FC = () => {
   const isCloudEnabled = cloud?.isCloudEnabled ?? false;
 
   return (
-    
-      <EuiPageTemplate.Section
-        paddingSize="none"
-        data-test-subj="modelSettingsContent"
-        restrictWidth={true}
-        alignment="center"
-        grow
-      >
-        <EuiEmptyPrompt
-          iconType="machineLearningApp"
-          title={<h2>{i18n.SETTINGS_NO_MODELS_TITLE}</h2>}
-          body={<p>{isCloudEnabled ? i18n.SETTINGS_NO_MODELS_DESCRIPTION : i18n.SETTINGS_NO_MODELS_NO_CLOUD_DESCRIPTION}</p>}
-          data-test-subj="settings-no-models"
-          actions={
-            <EuiFlexGroup gutterSize="s" justifyContent="center">
+    <EuiPageTemplate.Section
+      paddingSize="none"
+      data-test-subj="modelSettingsContent"
+      restrictWidth={true}
+      alignment="center"
+      grow
+    >
+      <EuiEmptyPrompt
+        iconType="machineLearningApp"
+        title={<h2>{i18n.SETTINGS_NO_MODELS_TITLE}</h2>}
+        body={
+          <p>
+            {isCloudEnabled
+              ? i18n.SETTINGS_NO_MODELS_DESCRIPTION
+              : i18n.SETTINGS_NO_MODELS_NO_CLOUD_DESCRIPTION}
+          </p>
+        }
+        data-test-subj="settings-no-models"
+        actions={
+          <EuiFlexGroup gutterSize="s" justifyContent="center">
+            <EuiFlexItem grow={false}>
+              <EuiButton
+                fill
+                onClick={() =>
+                  application.navigateToApp(MANAGEMENT_APP_ID, {
+                    path: `modelManagement/${INFERENCE_ENDPOINTS_APP_ID}`,
+                  })
+                }
+                data-test-subj="settings-no-models-add-models"
+              >
+                {i18n.SETTINGS_NO_MODELS_ADD_MODELS}
+              </EuiButton>
+            </EuiFlexItem>
+            {!isCloudEnabled && (
               <EuiFlexItem grow={false}>
                 <EuiButton
-                  fill
-                  onClick={() =>
-                    application.navigateToApp(MANAGEMENT_APP_ID, {
-                      path: `modelManagement/${INFERENCE_ENDPOINTS_APP_ID}`,
-                    })
-                  }
-                  data-test-subj="settings-no-models-add-models"
+                  onClick={() => application.navigateToApp(CLOUD_CONNECT_NAV_ID)}
+                  data-test-subj="settings-no-models-connect-eis"
                 >
-                  {i18n.SETTINGS_NO_MODELS_ADD_MODELS}
+                  {i18n.SETTINGS_NO_MODELS_CONNECT_EIS}
                 </EuiButton>
               </EuiFlexItem>
-              {!isCloudEnabled && (
-                <EuiFlexItem grow={false}>
-                  <EuiButton
-                    onClick={() =>
-                      application.navigateToApp(CLOUD_CONNECT_NAV_ID)
-                    }
-                    data-test-subj="settings-no-models-connect-eis"
-                  >
-                    {i18n.SETTINGS_NO_MODELS_CONNECT_EIS}
-                  </EuiButton>
-                </EuiFlexItem>
-              )}
-            </EuiFlexGroup>
-          }
-        />
-      </EuiPageTemplate.Section>
+            )}
+          </EuiFlexGroup>
+        }
+      />
+    </EuiPageTemplate.Section>
   );
 };
