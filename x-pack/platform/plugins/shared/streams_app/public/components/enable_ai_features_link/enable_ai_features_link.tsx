@@ -7,12 +7,14 @@
 import { EuiLink, EuiToolTip } from '@elastic/eui';
 import React from 'react';
 import { i18n } from '@kbn/i18n';
-import { useKibana } from '../../hooks/use_kibana';
+import { useModelSettingsUrl } from '../../hooks/use_model_settings_url';
 
 export function EnableAIFeaturesLink() {
-  const {
-    core: { http },
-  } = useKibana();
+  const modelSettingsUrl = useModelSettingsUrl();
+
+  if (!modelSettingsUrl) {
+    return null;
+  }
 
   return (
     <EuiToolTip
@@ -21,10 +23,14 @@ export function EnableAIFeaturesLink() {
           'AI Assistant features are not enabled. To enable features, add a model on the management page.',
       })}
     >
+<<<<<<< inference-move-connectors-management-to-feature-settings
       <EuiLink
         target="_blank"
         href={http.basePath.prepend(`/app/management/modelManagement/model_settings`)}
       >
+=======
+      <EuiLink target="_blank" href={modelSettingsUrl}>
+>>>>>>> main
         {i18n.translate('xpack.streams.enableAIFeaturesLink.linkLabel', {
           defaultMessage: 'Enable AI Assistant features',
         })}
