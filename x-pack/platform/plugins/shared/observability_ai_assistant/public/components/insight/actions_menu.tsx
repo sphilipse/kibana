@@ -78,12 +78,9 @@ export function ActionsMenu({
             size="xs"
             onClick={() => navigateToModelManagementApp(application!)}
           >
-            {i18n.translate(
-              'xpack.observabilityAiAssistant.insight.actions.model.manageModels',
-              {
-                defaultMessage: 'Manage models',
-              }
-            )}
+            {i18n.translate('xpack.observabilityAiAssistant.insight.actions.model.manageModels', {
+              defaultMessage: 'Manage models',
+            })}
           </EuiButtonEmpty>
         </EuiPanel>
       ),
