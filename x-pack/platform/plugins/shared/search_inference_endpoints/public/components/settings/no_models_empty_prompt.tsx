@@ -33,7 +33,7 @@ export const NoModelsEmptyPrompt: React.FC = () => {
       alignment="center"
       grow
     >
-      <EuiEmptyPrompt
+      <EuiEmptyPrompt color="plain"
         iconType="machineLearningApp"
         title={<h2>{i18n.SETTINGS_NO_MODELS_TITLE}</h2>}
         body={
@@ -46,9 +46,20 @@ export const NoModelsEmptyPrompt: React.FC = () => {
         data-test-subj="settings-no-models"
         actions={
           <EuiFlexGroup gutterSize="s" justifyContent="center">
+            {!isCloudEnabled && (
+              <EuiFlexItem grow={false}>
+                <EuiButton
+                  fill
+                  onClick={() => application.navigateToApp(CLOUD_CONNECT_NAV_ID)}
+                  data-test-subj="settings-no-models-connect-eis"
+                >
+                  {i18n.SETTINGS_NO_MODELS_CONNECT_EIS}
+                </EuiButton>
+              </EuiFlexItem>
+            )}
             <EuiFlexItem grow={false}>
               <EuiButton
-                fill
+                fill={isCloudEnabled}
                 onClick={() =>
                   application.navigateToApp(MANAGEMENT_APP_ID, {
                     path: `modelManagement/${INFERENCE_ENDPOINTS_APP_ID}`,
@@ -59,16 +70,7 @@ export const NoModelsEmptyPrompt: React.FC = () => {
                 {i18n.SETTINGS_NO_MODELS_ADD_MODELS}
               </EuiButton>
             </EuiFlexItem>
-            {!isCloudEnabled && (
-              <EuiFlexItem grow={false}>
-                <EuiButton
-                  onClick={() => application.navigateToApp(CLOUD_CONNECT_NAV_ID)}
-                  data-test-subj="settings-no-models-connect-eis"
-                >
-                  {i18n.SETTINGS_NO_MODELS_CONNECT_EIS}
-                </EuiButton>
-              </EuiFlexItem>
-            )}
+            
           </EuiFlexGroup>
         }
       />
