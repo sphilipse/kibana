@@ -66,7 +66,8 @@ export const useNavigation = () => {
   );
 
   const navigateToManageConnectors = useCallback(
-    () => application.navigateToApp(INFERENCE_MANAGEMENT_APP_ID, { path: INFERENCE_MANAGEMENT_PATH }),
+    () =>
+      application.navigateToApp(INFERENCE_MANAGEMENT_APP_ID, { path: INFERENCE_MANAGEMENT_PATH }),
     [application]
   );
 
