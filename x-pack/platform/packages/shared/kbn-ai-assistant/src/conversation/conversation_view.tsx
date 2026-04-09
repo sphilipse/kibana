@@ -188,7 +188,7 @@ export const ConversationView: React.FC<ConversationViewProps> = ({
             refreshConversations={refreshConversations}
             updateDisplayedConversation={updateDisplayedConversation}
             onConversationDuplicate={handleConversationDuplicate}
-            navigateToConnectorsManagementApp={navigateToModelManagementApp}
+            navigateToModelManagementApp={navigateToModelManagementApp}
           />
 
           <div className={sidebarContainerClass}>

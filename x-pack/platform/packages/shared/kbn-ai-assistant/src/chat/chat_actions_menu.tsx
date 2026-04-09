@@ -40,12 +40,12 @@ export function ChatActionsMenu({
   connectors,
   disabled,
   isConversationApp,
-  navigateToConnectorsManagementApp,
+  navigateToModelManagementApp,
 }: {
   connectors: UseGenAIConnectorsResult;
   disabled: boolean;
   isConversationApp: boolean;
-  navigateToConnectorsManagementApp: (application: ApplicationStart) => void;
+  navigateToModelManagementApp: (application: ApplicationStart) => void;
 }) {
   const { application, http, triggersActionsUi, docLinks } = useKibana().services;
   const knowledgeBase = useKnowledgeBase();
@@ -230,7 +230,7 @@ export function ChatActionsMenu({
                     }}
                     onManageConnectorsClick={() => {
                       toggleActionsMenu();
-                      navigateToConnectorsManagementApp(application!);
+                      navigateToModelManagementApp(application!);
                     }}
                   />
                 ),

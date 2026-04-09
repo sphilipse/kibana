@@ -72,7 +72,7 @@ export function ChatHeader({
   copyUrl,
   deleteConversation,
   handleArchiveConversation,
-  navigateToConnectorsManagementApp,
+  navigateToModelManagementApp,
 }: {
   connectors: UseGenAIConnectorsResult;
   conversationId?: string;
@@ -93,7 +93,7 @@ export function ChatHeader({
   copyConversationToClipboard: (conversation: Conversation) => void;
   copyUrl: (id: string) => void;
   handleArchiveConversation: (id: string, isArchived: boolean) => Promise<void>;
-  navigateToConnectorsManagementApp: (application: ApplicationStart) => void;
+  navigateToModelManagementApp: (application: ApplicationStart) => void;
 }) {
   const theme = useEuiTheme();
   const breakpoint = useCurrentEuiBreakpoint();
@@ -118,7 +118,7 @@ export function ChatHeader({
     <ChatActionsMenu
       connectors={connectors}
       disabled={licenseInvalid}
-      navigateToConnectorsManagementApp={navigateToConnectorsManagementApp}
+      navigateToModelManagementApp={navigateToModelManagementApp}
       isConversationApp={isConversationApp}
     />
   );

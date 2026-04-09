@@ -162,7 +162,7 @@ export function ChatFlyout({
     setConversationId(id || undefined);
   };
 
-  const navigateToConnectorsManagementAppHandler = (application: ApplicationStart) => {
+  const navigateToModelManagementAppHandler = (application: ApplicationStart) => {
     onClose();
     navigateToModelManagementApp(application);
   };
@@ -314,7 +314,7 @@ export function ChatFlyout({
               refreshConversations={refreshConversations}
               updateDisplayedConversation={updateDisplayedConversation}
               onConversationDuplicate={onConversationDuplicate}
-              navigateToConnectorsManagementApp={navigateToConnectorsManagementAppHandler}
+              navigateToModelManagementApp={navigateToModelManagementAppHandler}
             />
           </EuiFlexItem>
 
