@@ -23,14 +23,7 @@ export function EnableAIFeaturesLink() {
           'AI Assistant features are not enabled. To enable features, add a model on the management page.',
       })}
     >
-<<<<<<< inference-move-connectors-management-to-feature-settings
-      <EuiLink
-        target="_blank"
-        href={http.basePath.prepend(`/app/management/modelManagement/model_settings`)}
-      >
-=======
       <EuiLink target="_blank" href={modelSettingsUrl}>
->>>>>>> main
         {i18n.translate('xpack.streams.enableAIFeaturesLink.linkLabel', {
           defaultMessage: 'Enable AI Assistant features',
         })}
