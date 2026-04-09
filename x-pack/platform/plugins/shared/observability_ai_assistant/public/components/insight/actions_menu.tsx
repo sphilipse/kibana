@@ -67,8 +67,8 @@ export function ActionsMenu({
     },
     {
       id: 1,
-      title: i18n.translate('xpack.observabilityAiAssistant.insight.actions.connector', {
-        defaultMessage: 'Connector',
+      title: i18n.translate('xpack.observabilityAiAssistant.insight.actions.model', {
+        defaultMessage: 'Model',
       }),
       content: (
         <EuiPanel>
@@ -79,7 +79,7 @@ export function ActionsMenu({
             onClick={() => navigateToModelManagementApp(application!)}
           >
             {i18n.translate(
-              'xpack.observabilityAiAssistant.insight.actions.connector.manageConnectors',
+              'xpack.observabilityAiAssistant.insight.actions.model.manageModels',
               {
                 defaultMessage: 'Manage models',
               }

@@ -52,7 +52,6 @@ export { FailedToLoadResponse } from './components/message_panel/failed_to_load_
 
 export { MessageText } from './components/message_panel/message_text';
 
-export { ElasticLlmTourCallout } from './components/tour_callout/elastic_llm_tour_callout';
 export { EisKnowledgeBaseCallout } from './components/tour_callout/eis_knowledge_base_callout';
 
 export {
