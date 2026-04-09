@@ -33,7 +33,8 @@ export const NoModelsEmptyPrompt: React.FC = () => {
       alignment="center"
       grow
     >
-      <EuiEmptyPrompt color="plain"
+      <EuiEmptyPrompt
+        color="plain"
         iconType="machineLearningApp"
         title={<h2>{i18n.SETTINGS_NO_MODELS_TITLE}</h2>}
         body={
@@ -70,7 +71,6 @@ export const NoModelsEmptyPrompt: React.FC = () => {
                 {i18n.SETTINGS_NO_MODELS_ADD_MODELS}
               </EuiButton>
             </EuiFlexItem>
-            
           </EuiFlexGroup>
         }
       />
