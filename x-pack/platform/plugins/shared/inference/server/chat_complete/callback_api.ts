@@ -62,6 +62,7 @@ interface CreateChatCompleteApiOptions {
   endpointIdCache: InferenceEndpointIdCache;
   callbackManager?: InferenceCallbackManager;
   tokenUsageLogger?: TokenUsageLogger;
+  isTokenUsageTrackingEnabled?: () => Promise<boolean>;
 }
 
 type CreateChatCompleteApiOptionsKey =
@@ -116,6 +117,7 @@ export function createChatCompleteCallbackApi({
   endpointIdCache,
   callbackManager,
   tokenUsageLogger,
+  isTokenUsageTrackingEnabled,
 }: CreateChatCompleteApiOptions) {
   return (
     {
@@ -143,6 +145,7 @@ export function createChatCompleteCallbackApi({
         namespace,
         anonymization,
         tokenUsageLogger,
+        isTokenUsageTrackingEnabled,
       })
     ).pipe(
       retryWithExponentialBackoff({
@@ -176,6 +179,7 @@ function createChatCompletePipeline({
   anonymization,
   connectorId,
   tokenUsageLogger,
+  isTokenUsageTrackingEnabled,
 }: {
   resolve: () => Promise<ResolvedPipelineContext>;
   esClient: ElasticsearchClient;
@@ -189,6 +193,7 @@ function createChatCompletePipeline({
   anonymization?: InferenceAnonymizationOptions;
   connectorId: string;
   tokenUsageLogger?: TokenUsageLogger;
+  isTokenUsageTrackingEnabled?: () => Promise<boolean>;
 }) {
   return forkJoin({
     context: from(resolve()),
@@ -279,6 +284,7 @@ function createChatCompletePipeline({
                   parentFeatureId: metadata?.connectorTelemetry?.aggregateBy,
                 }),
               logger,
+              isEnabled: isTokenUsageTrackingEnabled,
             })
           : identity
       );
@@ -301,6 +307,7 @@ function resolveAndCreatePipeline({
   namespace,
   anonymization,
   tokenUsageLogger,
+  isTokenUsageTrackingEnabled,
 }: {
   connectorId: string;
   endpointIdCache: InferenceEndpointIdCache;
@@ -316,6 +323,7 @@ function resolveAndCreatePipeline({
   namespace: string;
   anonymization?: InferenceAnonymizationOptions;
   tokenUsageLogger?: TokenUsageLogger;
+  isTokenUsageTrackingEnabled?: () => Promise<boolean>;
 }) {
   return from(endpointIdCache.has(connectorId)).pipe(
     switchMap((isInferenceEndpoint) => {
@@ -426,6 +434,7 @@ function resolveAndCreatePipeline({
         anonymization,
         connectorId,
         tokenUsageLogger,
+        isTokenUsageTrackingEnabled,
       }).pipe(
         catchError((error) => {
           if (error?.meta?.status === 404 || error?.statusCode === 404) {

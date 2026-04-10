@@ -32,6 +32,7 @@ export interface CreateChatModelOptions {
   callbacks?: InferenceCallbacks;
   anonymization?: InferenceAnonymizationOptions;
   tokenUsageLogger?: TokenUsageLogger;
+  isTokenUsageTrackingEnabled?: () => Promise<boolean>;
 }
 
 export const createChatModel = async ({
@@ -48,6 +49,7 @@ export const createChatModel = async ({
   callbacks,
   anonymization,
   tokenUsageLogger,
+  isTokenUsageTrackingEnabled,
 }: CreateChatModelOptions): Promise<InferenceChatModel> => {
   const client = createClient({
     actions,
@@ -61,6 +63,7 @@ export const createChatModel = async ({
     callbacks,
     anonymization,
     tokenUsageLogger,
+    isTokenUsageTrackingEnabled,
   });
   const connector = await getConnectorById({ connectorId, actions, request, esClient, logger });
   return new InferenceChatModel({

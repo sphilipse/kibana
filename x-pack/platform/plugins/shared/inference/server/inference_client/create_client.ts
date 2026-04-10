@@ -38,6 +38,7 @@ interface CreateClientOptions {
   callbacks?: InferenceCallbacks;
   anonymization?: InferenceAnonymizationOptions;
   tokenUsageLogger?: TokenUsageLogger;
+  isTokenUsageTrackingEnabled?: () => Promise<boolean>;
 }
 
 interface BoundCreateClientOptions extends CreateClientOptions {
@@ -62,6 +63,7 @@ export function createClient(
     callbacks,
     anonymization,
     tokenUsageLogger,
+    isTokenUsageTrackingEnabled,
   } = options;
   const client = createInferenceClient({
     request,
@@ -76,6 +78,7 @@ export function createClient(
     callbacks,
     anonymization,
     tokenUsageLogger,
+    isTokenUsageTrackingEnabled,
   });
   if ('bindTo' in options) {
     return bindClient(client, options.bindTo);

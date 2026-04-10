@@ -17,10 +17,12 @@ export const handleTokenUsageLogging = ({
   tokenUsageLogger,
   getContext,
   logger,
+  isEnabled,
 }: {
   tokenUsageLogger: TokenUsageLogger;
   getContext: () => TokenUsageContext;
   logger: Logger;
+  isEnabled?: () => Promise<boolean>;
 }): OperatorFunction<ChatCompletionEvent, ChatCompletionEvent> => {
   return (source$) => {
     let tokenCount: ChatCompletionTokenCount | undefined;
@@ -42,8 +44,17 @@ export const handleTokenUsageLogging = ({
         },
         complete: () => {
           if (tokenCount) {
-            const context = getContext();
-            tokenUsageLogger.log({ tokens: tokenCount, model, context }).catch((err) => {
+            const doLog = async () => {
+              if (isEnabled) {
+                const enabled = await isEnabled();
+                if (!enabled) {
+                  return;
+                }
+              }
+              const context = getContext();
+              await tokenUsageLogger.log({ tokens: tokenCount!, model, context });
+            };
+            doLog().catch((err) => {
               logger.error(`Unexpected error in token usage logging: ${err.message}`);
             });
           }

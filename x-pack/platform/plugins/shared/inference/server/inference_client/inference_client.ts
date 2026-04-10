@@ -41,6 +41,7 @@ export function createInferenceClient({
   callbacks,
   anonymization,
   tokenUsageLogger,
+  isTokenUsageTrackingEnabled,
 }: {
   request: KibanaRequest;
   namespace: string;
@@ -54,6 +55,7 @@ export function createInferenceClient({
   callbacks?: InferenceCallbacks;
   anonymization?: InferenceAnonymizationOptions;
   tokenUsageLogger?: TokenUsageLogger;
+  isTokenUsageTrackingEnabled?: () => Promise<boolean>;
 }): InferenceClient {
   const callbackManager = createCallbackManager(callbacks);
 
@@ -75,6 +77,7 @@ export function createInferenceClient({
       },
     },
     tokenUsageLogger,
+    isTokenUsageTrackingEnabled,
   });
 
   const chatComplete = createChatCompleteApi({
