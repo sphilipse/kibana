@@ -46,7 +46,7 @@ const pages = {
   },
   conversations: {
     setupGenAiConnectorsButtonSelector:
-      'observabilityAiAssistantInitialSetupPanelSetUpGenerativeAiConnectorButton',
+      'observabilityAiAssistantInitialSetupPanelSetUpModelButton',
     chatInput: 'observabilityAiAssistantChatPromptEditorTextArea',
     installKnowledgeBaseButton: 'observabilityAiAssistantWelcomeMessageSetUpKnowledgeBaseButton',
     settingUpKnowledgeBase: 'observabilityAiAssistantWelcomeMessageSettingUpKnowledgeBaseText',

@@ -495,7 +495,7 @@ export function SearchPlaygroundPageProvider({ getService }: FtrProviderContext)
         await testSubjects.existOrFail('manageConnectorsLink');
         await testSubjects.click('manageConnectorsLink');
         await browser.switchTab(1);
-        await testSubjects.existOrFail('edit-connector-flyout');
+        await testSubjects.existOrFail('modelSettingsPage');
         await browser.closeCurrentWindow();
         await browser.switchTab(0);
       },
