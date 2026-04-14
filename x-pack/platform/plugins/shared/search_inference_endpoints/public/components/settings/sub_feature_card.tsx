@@ -18,6 +18,7 @@ import {
   EuiFlexItem,
   EuiHorizontalRule,
   EuiIcon,
+  EuiIconTip,
   EuiPanel,
   EuiSpacer,
   EuiSplitPanel,
@@ -69,6 +70,7 @@ interface SubFeatureCardProps {
   feature: InferenceFeatureConfig;
   endpointIds: string[];
   onEndpointsChange: (featureId: string, newEndpointIds: string[]) => void;
+  invalidEndpointIds: Set<string>;
 }
 
 export const SubFeatureCard: React.FC<SubFeatureCardProps> = ({
@@ -76,6 +78,7 @@ export const SubFeatureCard: React.FC<SubFeatureCardProps> = ({
   feature,
   endpointIds,
   onEndpointsChange,
+  invalidEndpointIds,
 }) => {
   const { data: connectors = [] } = useConnectors();
   const { features: registeredFeatures } = useRegisteredFeatures();
@@ -241,6 +244,7 @@ export const SubFeatureCard: React.FC<SubFeatureCardProps> = ({
                         {(provided) => {
                           const { icon = 'compute', label = endpointId } =
                             endpointDisplayMap.get(endpointId) ?? {};
+                          const isInvalid = invalidEndpointIds.has(endpointId);
                           return (
                             <div>
                               <EuiSplitPanel.Inner
@@ -262,7 +266,30 @@ export const SubFeatureCard: React.FC<SubFeatureCardProps> = ({
                                     </EuiPanel>
                                   </EuiFlexItem>
                                   <EuiFlexItem grow={false}>
-                                    <EuiIcon type={icon} size="m" aria-hidden />
+                                    {isInvalid ? (
+                                      <EuiIconTip
+                                        type="warning"
+                                        size="m"
+                                        color="warning"
+                                        content={i18n.translate(
+                                          'xpack.searchInferenceEndpoints.settings.endpointUnavailable',
+                                          {
+                                            defaultMessage:
+                                              'This inference endpoint is no longer available',
+                                          }
+                                        )}
+                                        aria-label={i18n.translate(
+                                          'xpack.searchInferenceEndpoints.settings.endpointUnavailable.ariaLabel',
+                                          {
+                                            defaultMessage:
+                                              'Inference endpoint {label} is no longer available',
+                                            values: { label },
+                                          }
+                                        )}
+                                      />
+                                    ) : (
+                                      <EuiIcon type={icon} size="m" aria-hidden />
+                                    )}
                                   </EuiFlexItem>
                                   <EuiFlexItem
                                     grow
