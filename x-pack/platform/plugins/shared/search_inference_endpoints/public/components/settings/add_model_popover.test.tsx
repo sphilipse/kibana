@@ -113,11 +113,7 @@ describe('AddModelPopover', () => {
   it('filters by task type when provided', () => {
     render(
       <Wrapper>
-        <AddModelPopover
-          existingEndpointIds={[]}
-          onAdd={onAdd}
-          taskType="text_embedding"
-        />
+        <AddModelPopover existingEndpointIds={[]} onAdd={onAdd} taskType="text_embedding" />
       </Wrapper>
     );
 

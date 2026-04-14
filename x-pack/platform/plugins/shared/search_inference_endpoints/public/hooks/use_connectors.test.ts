@@ -32,9 +32,7 @@ describe('useConnectors', () => {
   });
 
   it('calls the connectors API endpoint', async () => {
-    const connectors = [
-      { connectorId: 'c1', name: 'Test Connector', isPreconfigured: false },
-    ];
+    const connectors = [{ connectorId: 'c1', name: 'Test Connector', isPreconfigured: false }];
     mockGet.mockResolvedValue({ connectors });
 
     const { Wrapper } = createWrapper();
