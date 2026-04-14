@@ -25,13 +25,33 @@ const setupCoreMocks = (values: Record<string, any>) => {
   const soClient = {} as any;
   savedObjects.getScopedClient.mockReturnValue(soClient);
 
-  const get = jest.fn(async (key: string) => values[key]);
+  const get = jest.fn(async (key: string, _context?: { request?: unknown }) => values[key]);
   uiSettings.asScopedToClient.mockReturnValue({ get } as any);
 
-  return { savedObjects, uiSettings, request };
+  return { savedObjects, uiSettings, request, get };
 };
 
 describe('resolveSelectedConnectorId', () => {
+  it('passes request context to uiSettingsClient.get for dynamic getValue evaluation', async () => {
+    const { savedObjects, uiSettings, request, get } = setupCoreMocks({
+      [GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR]: 'dynamic-default-id',
+      [GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR_DEFAULT_ONLY]: false,
+    });
+    const inference = inferenceMock.createStartContract();
+
+    await resolveSelectedConnectorId({
+      uiSettings,
+      savedObjects,
+      request,
+      inference,
+    });
+
+    expect(get).toHaveBeenCalledWith(GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR, { request });
+    expect(get).toHaveBeenCalledWith(GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR_DEFAULT_ONLY, {
+      request,
+    });
+  });
+
   it('throws when defaultOnly=true and explicit connectorId does not match default', async () => {
     const { savedObjects, uiSettings, request } = setupCoreMocks({
       [GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR]: 'default-id',
