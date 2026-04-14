@@ -91,8 +91,8 @@ export const resolveSelectedConnectorId = async ({
   const uiSettingsClient = uiSettings.asScopedToClient(soClient);
 
   const [defaultConnectorSetting, defaultConnectorOnly] = await Promise.all([
-    uiSettingsClient.get<string>(GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR, { request }),
-    uiSettingsClient.get<boolean>(GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR_DEFAULT_ONLY, { request }),
+    uiSettingsClient.get<string>(GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR),
+    uiSettingsClient.get<boolean>(GEN_AI_SETTINGS_DEFAULT_AI_CONNECTOR_DEFAULT_ONLY),
   ]);
 
   const hasValidDefaultConnector =
