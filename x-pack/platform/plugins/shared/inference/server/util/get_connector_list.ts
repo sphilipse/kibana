@@ -96,17 +96,13 @@ export const getConnectorList = async (
         taskType: ep.taskType,
         service: ep.service,
         serviceSettings: ep.serviceSettings,
-      },
-      taskType: ep.taskType,
-      service: ep.service,
-      serviceSettings: ep.serviceSettings,
-      // temporary any until types are propagated in ES client
+        // temporary any until types are propagated in ES client
       modelCreator: (ep.metadata as Record<string, any>)?.display?.model_creator,
-    },
-    capabilities: {},
-    isInferenceEndpoint: true,
-    isPreconfigured: !!ep.metadata.display?.name,
-    isEis: ep.service === 'elastic',
+      },
+      capabilities: {},
+      isInferenceEndpoint: true,
+      isPreconfigured: !!ep.metadata.display?.name,
+      isEis: ep.service === 'elastic',
   }));
 
   // Exclude .inference stack connectors that have a corresponding ES inference endpoint,
