@@ -97,13 +97,14 @@ export const getConnectorList = async (
         service: ep.service,
         serviceSettings: ep.serviceSettings,
         // temporary any until types are propagated in ES client
-      modelCreator: (ep.metadata as Record<string, any>)?.display?.model_creator,
+        modelCreator: (ep.metadata as Record<string, any>)?.display?.model_creator,
       },
       capabilities: {},
       isInferenceEndpoint: true,
       isPreconfigured: !!ep.metadata.display?.name,
       isEis: ep.service === 'elastic',
-  }));
+    })
+  );
 
   // Exclude .inference stack connectors that have a corresponding ES inference endpoint,
   // since the endpoint representation is preferred (includes native endpoints too).
