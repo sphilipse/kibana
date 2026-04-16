@@ -77,7 +77,7 @@ export const defineInferenceConnectorsRoute = ({
         };
 
         if (defaultConnectorOnly) {
-          if (!defaultConnectorId) {
+          if (!defaultConnectorId || defaultConnectorId === 'NO_DEFAULT_CONNECTOR') {
             return response.ok({ body: { connectors: [], soEntryFound: false } });
           }
           const connector = await fetchConnectorById(defaultConnectorId);
