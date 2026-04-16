@@ -68,7 +68,8 @@ test.describe.skip(
         await route.fulfill({
           status: 200,
           body: JSON.stringify({
-            connectors: [{
+            connectors: [
+              {
                 connectorId: 'test-connector-1',
                 name: 'Test Connector 1',
                 type: '.gen-ai',
