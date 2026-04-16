@@ -104,7 +104,7 @@ export const defineInferenceConnectorsRoute = ({
         const merged = mergeConnectors(featureResult.endpoints, allConnectors, soEntryFound);
 
         let connectors: ApiInferenceConnector[] = merged;
-        if (!soEntryFound && defaultConnectorId) {
+        if (!soEntryFound && defaultConnectorId && defaultConnectorId !== 'NO_DEFAULT_CONNECTOR') {
           const defaultConnector = await fetchConnectorById(defaultConnectorId);
           if (defaultConnector) {
             connectors = [
