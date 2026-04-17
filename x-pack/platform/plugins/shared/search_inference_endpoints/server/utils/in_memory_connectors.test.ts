@@ -98,44 +98,6 @@ describe('filterPreconfiguredEndpoints', () => {
       expect(endpoint.task_type).toBe('chat_completion');
     });
   });
-
-  describe('end_of_life_date handling', () => {
-    it('filters out endpoints whose end_of_life_date is in the past', () => {
-      const endpoint = makeEndpoint({
-        metadata: {
-          heuristics: {
-            properties: ['kibana-connector'],
-            end_of_life_date: '2000-01-01',
-          },
-        },
-      });
-      expect(filterPreconfiguredEndpoints([endpoint])).toEqual([]);
-    });
-
-    it('keeps endpoints whose end_of_life_date is in the future', () => {
-      const endpoint = makeEndpoint({
-        metadata: {
-          heuristics: {
-            properties: ['kibana-connector'],
-            end_of_life_date: '2999-01-01',
-          },
-        },
-      });
-      expect(filterPreconfiguredEndpoints([endpoint])).toEqual([endpoint]);
-    });
-
-    it('keeps endpoints when end_of_life_date is an unparseable string', () => {
-      const endpoint = makeEndpoint({
-        metadata: {
-          heuristics: {
-            properties: ['kibana-connector'],
-            end_of_life_date: 'not-a-date',
-          },
-        },
-      });
-      expect(filterPreconfiguredEndpoints([endpoint])).toEqual([endpoint]);
-    });
-  });
 });
 
 describe('findEndpointsWithoutConnectors', () => {

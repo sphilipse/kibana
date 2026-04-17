@@ -801,7 +801,7 @@ export const mockEISPreconfiguredEndpoints: Array<
         properties: ['kibana-connector', 'multilingual', 'multimodal'],
         status: 'deprecated',
         release_date: '2025-02-24',
-        end_of_life_date: '2099-04-15',
+        end_of_life_date: '2026-04-15',
       },
       display: {
         name: 'Anthropic Claude Sonnet 3.7 (deprecated)',

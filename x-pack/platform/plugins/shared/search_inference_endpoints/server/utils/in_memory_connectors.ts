@@ -18,29 +18,12 @@ const KIBANA_CONNECTOR_PROPERTY = 'kibana-connector';
 export function filterPreconfiguredEndpoints(
   endpoints: InferenceInferenceEndpointInfo[]
 ): InferenceInferenceEndpointInfo[] {
-  const nowMs = Date.now();
   return endpoints.filter(
     (endpoint) =>
       isInferenceEndpointWithMetadata(endpoint) &&
       endpoint.metadata?.heuristics?.properties?.includes(KIBANA_CONNECTOR_PROPERTY) &&
-      endpoint.task_type === CHAT_COMPLETION_TASK_TYPE &&
-      !isEndpointPastEndOfLife(endpoint, nowMs)
+      endpoint.task_type === CHAT_COMPLETION_TASK_TYPE
   );
-}
-
-function isEndpointPastEndOfLife(endpoint: InferenceInferenceEndpointInfo, nowMs: number): boolean {
-  if (!isInferenceEndpointWithMetadata(endpoint)) {
-    return false;
-  }
-  const endOfLife = endpoint.metadata?.heuristics?.end_of_life_date;
-  if (typeof endOfLife !== 'string' || endOfLife.length === 0) {
-    return false;
-  }
-  const endOfLifeMs = Date.parse(endOfLife);
-  if (Number.isNaN(endOfLifeMs)) {
-    return false;
-  }
-  return endOfLifeMs <= nowMs;
 }
 
 type InMemoryConnectorWithInferenceId = InMemoryConnector & { config: { inferenceId: string } };
@@ -75,7 +58,7 @@ export function findEndpointsWithoutConnectors(
 
 /**
  * Returns the ids of dynamic inference connectors that no longer have a corresponding
- * eligible inference endpoint (removed, or past its end_of_life_date).
+ * eligible inference endpoint.
  */
 export function findStaleDynamicConnectorIds(
   eligibleEndpoints: InferenceInferenceEndpointInfo[],
