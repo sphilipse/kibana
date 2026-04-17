@@ -5,7 +5,12 @@
  * 2.0.
  */
 
-import type { ISavedObjectsRepository, IUiSettingsClient, Logger, SavedObject } from '@kbn/core/server';
+import type {
+  ISavedObjectsRepository,
+  IUiSettingsClient,
+  Logger,
+  SavedObject,
+} from '@kbn/core/server';
 import { SavedObjectsErrorHelpers } from '@kbn/core/server';
 import {
   type InferenceConnector,
@@ -569,7 +574,9 @@ describe('getForFeatureWithDefault', () => {
   });
 
   it('deduplicates the default connector when already present in the resolved endpoints', async () => {
-    registry.register(createValidFeature({ featureId: 'f1', recommendedEndpoints: ['default-id'] }));
+    registry.register(
+      createValidFeature({ featureId: 'f1', recommendedEndpoints: ['default-id'] })
+    );
     const result = await getForFeatureWithDefault({
       registry,
       soClient: createSoClient(),
