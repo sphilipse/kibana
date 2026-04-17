@@ -11,6 +11,7 @@ import { mockEISPreconfiguredEndpoints } from '../__mocks__/inference_endpoints'
 import {
   filterPreconfiguredEndpoints,
   findEndpointsWithoutConnectors,
+  findStaleDynamicConnectorIds,
   connectorFromEndpoint,
   getConnectorIdFromEndpoint,
   getConnectorNameFromEndpoint,
@@ -97,6 +98,44 @@ describe('filterPreconfiguredEndpoints', () => {
       expect(endpoint.task_type).toBe('chat_completion');
     });
   });
+
+  describe('end_of_life_date handling', () => {
+    it('filters out endpoints whose end_of_life_date is in the past', () => {
+      const endpoint = makeEndpoint({
+        metadata: {
+          heuristics: {
+            properties: ['kibana-connector'],
+            end_of_life_date: '2000-01-01',
+          },
+        },
+      });
+      expect(filterPreconfiguredEndpoints([endpoint])).toEqual([]);
+    });
+
+    it('keeps endpoints whose end_of_life_date is in the future', () => {
+      const endpoint = makeEndpoint({
+        metadata: {
+          heuristics: {
+            properties: ['kibana-connector'],
+            end_of_life_date: '2999-01-01',
+          },
+        },
+      });
+      expect(filterPreconfiguredEndpoints([endpoint])).toEqual([endpoint]);
+    });
+
+    it('keeps endpoints when end_of_life_date is an unparseable string', () => {
+      const endpoint = makeEndpoint({
+        metadata: {
+          heuristics: {
+            properties: ['kibana-connector'],
+            end_of_life_date: 'not-a-date',
+          },
+        },
+      });
+      expect(filterPreconfiguredEndpoints([endpoint])).toEqual([endpoint]);
+    });
+  });
 });
 
 describe('findEndpointsWithoutConnectors', () => {
@@ -128,6 +167,50 @@ describe('findEndpointsWithoutConnectors', () => {
     expect(
       findEndpointsWithoutConnectors([endpointA, endpointB], [connectorA, connectorB])
     ).toEqual([]);
+  });
+});
+
+describe('findStaleDynamicConnectorIds', () => {
+  const endpointA = makeEndpoint({ inference_id: '.model-a-chat_completion' });
+  const endpointB = makeEndpoint({ inference_id: '.model-b-chat_completion' });
+  const dynamicConnectorA = { ...connectorFromEndpoint(endpointA), isDynamic: true };
+  const dynamicConnectorB = { ...connectorFromEndpoint(endpointB), isDynamic: true };
+
+  it('returns connector ids that no longer have a matching endpoint', () => {
+    expect(
+      findStaleDynamicConnectorIds([endpointA], [dynamicConnectorA, dynamicConnectorB])
+    ).toEqual([dynamicConnectorB.id]);
+  });
+
+  it('returns an empty array when all dynamic connectors still have matching endpoints', () => {
+    expect(
+      findStaleDynamicConnectorIds([endpointA, endpointB], [dynamicConnectorA, dynamicConnectorB])
+    ).toEqual([]);
+  });
+
+  it('returns all dynamic connector ids when no endpoints remain', () => {
+    expect(findStaleDynamicConnectorIds([], [dynamicConnectorA, dynamicConnectorB])).toEqual([
+      dynamicConnectorA.id,
+      dynamicConnectorB.id,
+    ]);
+  });
+
+  it('ignores non-dynamic connectors even if their endpoint is missing', () => {
+    const nonDynamicConnector = { ...connectorFromEndpoint(endpointA), isDynamic: false };
+    expect(findStaleDynamicConnectorIds([], [nonDynamicConnector])).toEqual([]);
+  });
+
+  it('ignores connectors that are not .inference connectors', () => {
+    const otherConnector = {
+      ...dynamicConnectorA,
+      actionTypeId: '.slack',
+    };
+    expect(findStaleDynamicConnectorIds([], [otherConnector])).toEqual([]);
+  });
+
+  it('ignores dynamic connectors without an inferenceId in config', () => {
+    const connectorWithoutInferenceId = { ...dynamicConnectorA, config: {} };
+    expect(findStaleDynamicConnectorIds([], [connectorWithoutInferenceId])).toEqual([]);
   });
 });
 

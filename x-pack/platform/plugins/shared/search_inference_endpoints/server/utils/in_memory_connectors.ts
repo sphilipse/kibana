@@ -18,12 +18,29 @@ const KIBANA_CONNECTOR_PROPERTY = 'kibana-connector';
 export function filterPreconfiguredEndpoints(
   endpoints: InferenceInferenceEndpointInfo[]
 ): InferenceInferenceEndpointInfo[] {
+  const nowMs = Date.now();
   return endpoints.filter(
     (endpoint) =>
       isInferenceEndpointWithMetadata(endpoint) &&
       endpoint.metadata?.heuristics?.properties?.includes(KIBANA_CONNECTOR_PROPERTY) &&
-      endpoint.task_type === CHAT_COMPLETION_TASK_TYPE
+      endpoint.task_type === CHAT_COMPLETION_TASK_TYPE &&
+      !isEndpointPastEndOfLife(endpoint, nowMs)
   );
+}
+
+function isEndpointPastEndOfLife(endpoint: InferenceInferenceEndpointInfo, nowMs: number): boolean {
+  if (!isInferenceEndpointWithMetadata(endpoint)) {
+    return false;
+  }
+  const endOfLife = endpoint.metadata?.heuristics?.end_of_life_date;
+  if (typeof endOfLife !== 'string' || endOfLife.length === 0) {
+    return false;
+  }
+  const endOfLifeMs = Date.parse(endOfLife);
+  if (Number.isNaN(endOfLifeMs)) {
+    return false;
+  }
+  return endOfLifeMs <= nowMs;
 }
 
 type InMemoryConnectorWithInferenceId = InMemoryConnector & { config: { inferenceId: string } };
@@ -38,6 +55,12 @@ function isConnectorWithInferenceId(
   );
 }
 
+function isDynamicInferenceConnector(
+  connector: InMemoryConnector
+): connector is InMemoryConnectorWithInferenceId {
+  return connector.isDynamic === true && isConnectorWithInferenceId(connector);
+}
+
 export function findEndpointsWithoutConnectors(
   endpoints: InferenceInferenceEndpointInfo[],
   connectors: InMemoryConnector[]
@@ -48,6 +71,21 @@ export function findEndpointsWithoutConnectors(
   return endpoints.filter(
     (endpoint) => !existingConnectorInferenceIds.includes(endpoint.inference_id)
   );
+}
+
+/**
+ * Returns the ids of dynamic inference connectors that no longer have a corresponding
+ * eligible inference endpoint (removed, or past its end_of_life_date).
+ */
+export function findStaleDynamicConnectorIds(
+  eligibleEndpoints: InferenceInferenceEndpointInfo[],
+  connectors: InMemoryConnector[]
+): string[] {
+  const eligibleInferenceIds = new Set(eligibleEndpoints.map((endpoint) => endpoint.inference_id));
+  return connectors
+    .filter(isDynamicInferenceConnector)
+    .filter((connector) => !eligibleInferenceIds.has(connector.config.inferenceId))
+    .map((connector) => connector.id);
 }
 
 export function connectorFromEndpoint(endpoint: InferenceInferenceEndpointInfo): InMemoryConnector {
