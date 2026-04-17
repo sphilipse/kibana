@@ -258,9 +258,7 @@ export const SubFeatureCard: React.FC<SubFeatureCardProps> = ({
                           <EuiFlexItem grow={false}>
                             <EuiIcon type={globalDefaultIcon} size="m" aria-hidden />
                           </EuiFlexItem>
-                          <EuiFlexItem
-                            grow
-                          >
+                          <EuiFlexItem grow>
                             <EuiToolTip
                               title={globalDefaultLabel}
                               content={globalDefaultId}
