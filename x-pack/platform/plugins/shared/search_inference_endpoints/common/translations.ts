@@ -198,6 +198,13 @@ export const SETTINGS_DEFAULT_BADGE = i18n.translate(
   }
 );
 
+export const SETTINGS_GLOBAL_DEFAULT_BADGE = i18n.translate(
+  'xpack.searchInferenceEndpoints.settings.globalDefaultBadge',
+  {
+    defaultMessage: 'Global default',
+  }
+);
+
 export const SETTINGS_NO_FEATURES_TITLE = i18n.translate(
   'xpack.searchInferenceEndpoints.settings.noFeatures.title',
   {
