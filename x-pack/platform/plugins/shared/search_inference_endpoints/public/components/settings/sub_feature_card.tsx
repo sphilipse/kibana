@@ -248,9 +248,6 @@ export const SubFeatureCard: React.FC<SubFeatureCardProps> = ({
                         paddingSize="s"
                         color="subdued"
                         data-test-subj={`global-default-row-${featureId}`}
-                        css={css`
-                          opacity: 0.7;
-                        `}
                       >
                         <EuiFlexGroup alignItems="center" gutterSize="s">
                           <EuiFlexItem grow={false}>
@@ -263,9 +260,6 @@ export const SubFeatureCard: React.FC<SubFeatureCardProps> = ({
                           </EuiFlexItem>
                           <EuiFlexItem
                             grow
-                            css={css`
-                              min-width: 0;
-                            `}
                           >
                             <EuiToolTip
                               title={globalDefaultLabel}
