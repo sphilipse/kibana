@@ -11,53 +11,41 @@ import { EuiButtonEmpty, EuiIcon, EuiPopover, EuiSelectable } from '@elastic/eui
 import { i18n } from '@kbn/i18n';
 import type { EuiSelectableOption } from '@elastic/eui';
 import { useConnectors } from '../../hooks/use_connectors';
-import { useQueryInferenceEndpoints } from '../../hooks/use_inference_endpoints';
-import { mergeConnectorsAndEndpoints } from '../../utils/connector_display';
+import { getConnectorIcon } from '../../utils/connector_display';
 
 interface AddModelPopoverProps {
   existingEndpointIds: string[];
   onAdd: (endpointId: string) => void;
-  taskType?: string;
   panelWidth?: number;
 }
 
 export const AddModelPopover: React.FC<AddModelPopoverProps> = ({
   existingEndpointIds,
   onAdd,
-  taskType,
   panelWidth,
 }) => {
   const { data: connectors = [] } = useConnectors();
-  const { data: inferenceEndpoints = [] } = useQueryInferenceEndpoints();
   const [isOpen, setIsOpen] = useState(false);
-
-  const allModels = useMemo(
-    () => mergeConnectorsAndEndpoints(connectors, inferenceEndpoints),
-    [connectors, inferenceEndpoints]
-  );
 
   const options: EuiSelectableOption[] = useMemo(() => {
     const existingSet = new Set(existingEndpointIds);
-    const available = allModels.filter(
-      (model) =>
-        !existingSet.has(model.id) && (!taskType || model.taskType === taskType)
-    );
+    const available = connectors.filter((connector) => !existingSet.has(connector.connectorId));
 
-    const nameToCount = allModels.reduce<Map<string, number>>((acc, model) => {
-      acc.set(model.name, (acc.get(model.name) ?? 0) + 1);
+    const nameToCount = connectors.reduce<Map<string, number>>((acc, connector) => {
+      acc.set(connector.name, (acc.get(connector.name) ?? 0) + 1);
       return acc;
     }, new Map());
 
-    return available.map((model) => {
-      const count = nameToCount.get(model.name) ?? 1;
-      const label = count > 1 ? `${model.name} (${model.id})` : model.name;
+    return available.map((connector) => {
+      const count = nameToCount.get(connector.name) ?? 1;
+      const label = count > 1 ? `${connector.name} (${connector.connectorId})` : connector.name;
       return {
         label,
-        key: model.id,
-        prepend: <EuiIcon type={model.icon} size="s" aria-hidden />,
+        key: connector.connectorId,
+        prepend: <EuiIcon type={getConnectorIcon(connector)} size="s" aria-hidden />,
       };
     });
-  }, [allModels, existingEndpointIds, taskType]);
+  }, [connectors, existingEndpointIds]);
 
   const handleChange = useCallback(
     (newOptions: EuiSelectableOption[]) => {

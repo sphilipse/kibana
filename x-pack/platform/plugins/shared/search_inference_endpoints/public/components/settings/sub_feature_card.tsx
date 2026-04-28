@@ -416,7 +416,6 @@ export const SubFeatureCard: React.FC<SubFeatureCardProps> = ({
                   <AddModelPopover
                     existingEndpointIds={endpointIds}
                     onAdd={handleAdd}
-                    taskType={feature.taskType}
                     panelWidth={listWidth}
                   />
                 </EuiFlexItem>
