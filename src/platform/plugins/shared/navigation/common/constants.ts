@@ -18,4 +18,5 @@ export const DEFAULT_ROUTES = {
   observability: '/app/observability/landing',
   security: '/app/security/get_started',
   workplaceai: '/app/workplace_ai',
+  vectordb: '/app/vectordb',
 };
