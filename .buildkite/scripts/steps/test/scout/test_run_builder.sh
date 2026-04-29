@@ -32,6 +32,7 @@ if [[ "$SCOUT_TEST_DISTRIBUTION_STRATEGY" == "lanes" ]]; then
     local-serverless-security_essentials
     local-serverless-security_ease
     local-serverless-workplaceai
+    local-serverless-vectordb
   )
 
   TEST_TARGET_FLAGS=()
