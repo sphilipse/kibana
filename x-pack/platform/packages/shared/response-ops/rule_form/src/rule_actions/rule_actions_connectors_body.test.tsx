@@ -118,7 +118,7 @@ describe('ruleActionsConnectorsBody', () => {
           isPreconfigured: true,
           isSystemAction: false,
           isDeprecated: false,
-          },
+        },
       ],
       connectorTypes: mockActionTypes,
       aadTemplateFields: [],

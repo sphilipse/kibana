@@ -718,7 +718,7 @@ describe('Actions Plugin', () => {
               config: {},
               secrets: {},
               isDeprecated: false,
-                isPreconfigured: true,
+              isPreconfigured: true,
               isSystemAction: false,
             },
             {
@@ -728,7 +728,7 @@ describe('Actions Plugin', () => {
               config: {},
               secrets: {},
               isDeprecated: false,
-                isMissingSecrets: false,
+              isMissingSecrets: false,
               isPreconfigured: false,
               isSystemAction: true,
             },

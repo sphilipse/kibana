@@ -280,9 +280,7 @@ describe('ConnectorsDropdown', () => {
       wrapper: ({ children }) => <TestProviders>{children}</TestProviders>,
     });
 
-    const tooltips = screen.getAllByText(
-      'This connector type is deprecated.'
-    );
+    const tooltips = screen.getAllByText('This connector type is deprecated.');
     expect(tooltips[0]).toBeInTheDocument();
   });
 
@@ -302,9 +300,7 @@ describe('ConnectorsDropdown', () => {
       { wrapper: ({ children }) => <TestProviders>{children}</TestProviders> }
     );
 
-    const tooltips = screen.getAllByText(
-      'This connector type is deprecated.'
-    );
+    const tooltips = screen.getAllByText('This connector type is deprecated.');
     expect(tooltips[0]).toBeInTheDocument();
   });
 });

@@ -492,7 +492,7 @@ describe('update()', () => {
                 actionTypeId: '.test',
                 name: 'Test',
                 isDeprecated: false,
-                    config: {},
+                config: {},
                 secrets: {},
               },
             ],
