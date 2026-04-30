@@ -306,7 +306,6 @@ describe('Actions Plugin', () => {
             isDeprecated: false,
             isPreconfigured: true,
             isSystemAction: false,
-            isConnectorTypeDeprecated: false,
           },
           {
             id: 'system-connector-.cases',
@@ -318,7 +317,6 @@ describe('Actions Plugin', () => {
             isPreconfigured: false,
             isSystemAction: true,
             isMissingSecrets: false,
-            isConnectorTypeDeprecated: false,
           },
         ]);
       });
@@ -720,9 +718,8 @@ describe('Actions Plugin', () => {
               config: {},
               secrets: {},
               isDeprecated: false,
-              isPreconfigured: true,
+                isPreconfigured: true,
               isSystemAction: false,
-              isConnectorTypeDeprecated: false,
             },
             {
               id: 'system-connector-.cases',
@@ -731,10 +728,9 @@ describe('Actions Plugin', () => {
               config: {},
               secrets: {},
               isDeprecated: false,
-              isMissingSecrets: false,
+                isMissingSecrets: false,
               isPreconfigured: false,
               isSystemAction: true,
-              isConnectorTypeDeprecated: false,
             },
           ]);
           expect(pluginStart.isActionExecutable('preconfiguredServerLog', '.cases')).toBe(true);
@@ -868,7 +864,6 @@ describe('Actions Plugin', () => {
             isPreconfigured: true,
             isDeprecated: false,
             isSystemAction: false,
-            isConnectorTypeDeprecated: false,
           };
           expect(pluginStart.registerDynamicConnector(newDynamicConnector)).toEqual(true);
 
@@ -890,7 +885,6 @@ describe('Actions Plugin', () => {
             isDynamic: false,
             isDeprecated: false,
             isSystemAction: false,
-            isConnectorTypeDeprecated: false,
           };
           expect(pluginStart.registerDynamicConnector(newDynamicConnector)).toEqual(true);
 
@@ -911,7 +905,6 @@ describe('Actions Plugin', () => {
             isPreconfigured: true,
             isDeprecated: false,
             isSystemAction: false,
-            isConnectorTypeDeprecated: false,
           };
           expect(pluginStart.registerDynamicConnector(newDynamicConnector)).toEqual(false);
 
@@ -929,7 +922,6 @@ describe('Actions Plugin', () => {
             isPreconfigured: true,
             isDeprecated: false,
             isSystemAction: false,
-            isConnectorTypeDeprecated: false,
           };
           pluginStart.registerDynamicConnector(newDynamicConnector);
           expect(pluginStart.inMemoryConnectors.length).toEqual(2);
@@ -951,7 +943,6 @@ describe('Actions Plugin', () => {
             isPreconfigured: true,
             isDeprecated: false,
             isSystemAction: false,
-            isConnectorTypeDeprecated: false,
           };
           pluginStart.registerDynamicConnector(newDynamicConnector);
           const liveReference = pluginStart.inMemoryConnectors;

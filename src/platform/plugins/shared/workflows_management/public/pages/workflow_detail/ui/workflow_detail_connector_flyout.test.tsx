@@ -53,7 +53,6 @@ describe('WorkflowDetailConnectorFlyout', () => {
     isPreconfigured: false,
     isDeprecated: false,
     isSystemAction: false,
-    isConnectorTypeDeprecated: false,
   } as ActionConnector;
 
   const mockInsertPosition = {

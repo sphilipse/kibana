@@ -24,10 +24,10 @@ describe('fetchConnector', () => {
       connector_type_id: 'test',
       is_preconfigured: false,
       is_deprecated: false,
+      is_connector_type_deprecated: false,
       is_missing_secrets: false,
       is_system_action: false,
       referenced_by_count: 0,
-      is_connector_type_deprecated: false,
       secrets: {},
       config: {},
     };

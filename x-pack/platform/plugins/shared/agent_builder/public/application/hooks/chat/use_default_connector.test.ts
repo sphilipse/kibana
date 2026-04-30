@@ -20,7 +20,6 @@ const createConnector = (id: string, isPreconfigured = false): AIConnector =>
     isDeprecated: false,
     isSystemAction: false,
     config: {},
-    isConnectorTypeDeprecated: false,
   } as AIConnector);
 
 describe('useDefaultConnector', () => {

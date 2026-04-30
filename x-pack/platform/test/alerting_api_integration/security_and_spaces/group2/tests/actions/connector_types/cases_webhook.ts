@@ -116,11 +116,11 @@ export default function casesWebhookTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
+          is_connector_type_deprecated: false,
           name: 'A casesWebhook action',
           connector_type_id: '.cases-webhook',
           is_missing_secrets: false,
           config: simulatorConfig,
-          is_connector_type_deprecated: false,
         });
 
         const { body: fetchedAction } = await supertest
@@ -132,11 +132,11 @@ export default function casesWebhookTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
+          is_connector_type_deprecated: false,
           name: 'A casesWebhook action',
           connector_type_id: '.cases-webhook',
           is_missing_secrets: false,
           config: simulatorConfig,
-          is_connector_type_deprecated: false,
           auth_mode: 'shared',
         });
       });
@@ -165,11 +165,11 @@ export default function casesWebhookTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
+          is_connector_type_deprecated: false,
           name: 'A casesWebhook action',
           connector_type_id: '.cases-webhook',
           is_missing_secrets: false,
           config: newConfig,
-          is_connector_type_deprecated: false,
         });
 
         const { body: fetchedAction } = await supertest
@@ -181,11 +181,11 @@ export default function casesWebhookTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
+          is_connector_type_deprecated: false,
           name: 'A casesWebhook action',
           connector_type_id: '.cases-webhook',
           is_missing_secrets: false,
           config: newConfig,
-          is_connector_type_deprecated: false,
           auth_mode: 'shared',
         });
       });

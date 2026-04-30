@@ -19,14 +19,14 @@ export function connectorFromInMemoryConnector({
   inMemoryConnector: InMemoryConnector;
   actionTypeRegistry: ActionTypeRegistry;
 }): Connector {
+  const isConnectorTypeDeprecated = actionTypeRegistry.isDeprecated(inMemoryConnector.actionTypeId);
   const connector: Connector = {
     id,
     actionTypeId: inMemoryConnector.actionTypeId,
     name: inMemoryConnector.name,
     isPreconfigured: inMemoryConnector.isPreconfigured,
     isSystemAction: inMemoryConnector.isSystemAction,
-    isDeprecated: isConnectorDeprecated(inMemoryConnector),
-    isConnectorTypeDeprecated: actionTypeRegistry.isDeprecated(inMemoryConnector.actionTypeId),
+    isDeprecated: isConnectorDeprecated(inMemoryConnector, isConnectorTypeDeprecated),
     authMode: inMemoryConnector.authMode ?? 'shared',
   };
 

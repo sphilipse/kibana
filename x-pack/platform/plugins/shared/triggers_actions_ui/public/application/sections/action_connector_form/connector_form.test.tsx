@@ -25,7 +25,6 @@ describe('ConnectorForm', () => {
     config: {},
     secrets: {},
     isMissingSecrets: false,
-    isConnectorTypeDeprecated: false,
   };
 
   beforeEach(() => {

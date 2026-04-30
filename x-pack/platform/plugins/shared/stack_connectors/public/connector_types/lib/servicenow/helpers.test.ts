@@ -26,7 +26,6 @@ const deprecatedConnector: ActionConnector = {
   isPreconfigured: false,
   isDeprecated: true,
   isSystemAction: false as const,
-  isConnectorTypeDeprecated: true,
 };
 
 const validConnector = {

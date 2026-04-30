@@ -280,7 +280,6 @@ describe('create()', () => {
             secrets: {},
             isPreconfigured: false,
             isDeprecated: false,
-            isConnectorTypeDeprecated: false,
           },
         ],
       };
@@ -314,7 +313,6 @@ describe('create()', () => {
             config: {},
             secrets: {},
             isDeprecated: false,
-            isConnectorTypeDeprecated: false,
           },
         ],
       };
@@ -370,7 +368,6 @@ describe('create()', () => {
         isPreconfigured: false,
         isSystemAction: false,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
       });
 
       expect(unsecuredSavedObjectsClient.create).toHaveBeenCalledWith(
@@ -538,7 +535,6 @@ describe('create()', () => {
         isPreconfigured: false,
         isSystemAction: false,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
       });
 
       expect(authTypeRegistry.get).toHaveBeenCalledWith('basic');
@@ -599,7 +595,6 @@ describe('create()', () => {
         isPreconfigured: false,
         isSystemAction: false,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
         authMode: 'per-user',
       });
 
@@ -651,7 +646,6 @@ describe('create()', () => {
         isPreconfigured: false,
         isSystemAction: false,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
       });
 
       expect(authTypeRegistry.get).not.toHaveBeenCalled();
@@ -1177,7 +1171,7 @@ describe('create()', () => {
         },
       });
 
-      expect(result.isConnectorTypeDeprecated).toBe(true);
+      expect(result.isDeprecated).toBe(true);
     });
 
     test('marks connector as deprecated when attributes indicate deprecation', async () => {

@@ -31,11 +31,11 @@ export default function slackTest({ getService }: FtrProviderContext) {
         is_preconfigured: false,
         is_system_action: false,
         is_deprecated: false,
+        is_connector_type_deprecated: false,
         is_missing_secrets: false,
         name: 'A slack api action',
         connector_type_id: '.slack_api',
         config: {},
-        is_connector_type_deprecated: false,
       });
 
       expect(typeof createdAction.id).to.be('string');
@@ -49,11 +49,11 @@ export default function slackTest({ getService }: FtrProviderContext) {
         is_preconfigured: false,
         is_system_action: false,
         is_deprecated: false,
+        is_connector_type_deprecated: false,
         is_missing_secrets: false,
         name: 'A slack api action',
         connector_type_id: '.slack_api',
         config: {},
-        is_connector_type_deprecated: false,
         auth_mode: 'shared',
       });
     });

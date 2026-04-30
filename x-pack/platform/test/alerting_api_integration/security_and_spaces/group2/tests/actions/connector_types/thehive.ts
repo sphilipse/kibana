@@ -71,11 +71,11 @@ export default function theHiveTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
+          is_connector_type_deprecated: false,
           name,
           connector_type_id: connectorTypeId,
           is_missing_secrets: false,
           config,
-          is_connector_type_deprecated: false,
         });
       });
 
@@ -96,11 +96,11 @@ export default function theHiveTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
+          is_connector_type_deprecated: false,
           name,
           connector_type_id: connectorTypeId,
           is_missing_secrets: false,
           config: { ...config, organisation: 'test-organisation' },
-          is_connector_type_deprecated: false,
         });
       });
 

@@ -135,7 +135,6 @@ describe('checkActionFormActionTypeEnabled', () => {
       isDeprecated: true,
       name: 'test',
       referencedByCount: 0,
-      isConnectorTypeDeprecated: false,
     },
     {
       actionTypeId: '2',
@@ -145,7 +144,6 @@ describe('checkActionFormActionTypeEnabled', () => {
       isSystemAction: false,
       name: 'test',
       referencedByCount: 0,
-      isConnectorTypeDeprecated: false,
     },
   ];
 

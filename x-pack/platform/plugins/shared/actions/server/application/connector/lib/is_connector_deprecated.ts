@@ -8,17 +8,19 @@
 import { isPlainObject } from 'lodash';
 import type { RawAction, InMemoryConnector } from '../../../types';
 
-export type ConnectorWithOptionalDeprecation = Omit<
-  InMemoryConnector,
-  'isDeprecated' | 'isConnectorTypeDeprecated'
-> &
-  Pick<Partial<InMemoryConnector>, 'isDeprecated' | 'isConnectorTypeDeprecated'>;
+export type ConnectorWithOptionalDeprecation = Omit<InMemoryConnector, 'isDeprecated'> &
+  Pick<Partial<InMemoryConnector>, 'isDeprecated'>;
 
 const isObject = (obj: unknown): obj is Record<string, unknown> => isPlainObject(obj);
 
 export const isConnectorDeprecated = (
-  connector: RawAction | ConnectorWithOptionalDeprecation
+  connector: RawAction | ConnectorWithOptionalDeprecation,
+  isConnectorTypeDeprecated: boolean = false
 ): boolean => {
+  if (isConnectorTypeDeprecated) {
+    return true;
+  }
+
   if (connector.actionTypeId === '.servicenow' || connector.actionTypeId === '.servicenow-sir') {
     /**
      * Connectors after the Elastic ServiceNow application use the

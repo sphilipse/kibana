@@ -74,4 +74,12 @@ describe('isConnectorDeprecated', () => {
       })
     ).toBe(true);
   });
+
+  it('returns true if the connector type is deprecated', () => {
+    expect(isConnectorDeprecated(connector, true)).toBe(true);
+  });
+
+  it('returns false if the connector type is not deprecated and the connector is not deprecated', () => {
+    expect(isConnectorDeprecated(connector, false)).toBe(false);
+  });
 });

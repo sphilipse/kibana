@@ -18,12 +18,12 @@ describe('transformConnectorsResponse', () => {
         connector_type_id: 'test-1',
         is_preconfigured: false,
         is_deprecated: false,
+        is_connector_type_deprecated: false,
         is_missing_secrets: false,
         is_system_action: false,
         referenced_by_count: 0,
         secrets: {},
         config: {},
-        is_connector_type_deprecated: false,
       },
       {
         id: 'test-connector-2',
@@ -31,12 +31,12 @@ describe('transformConnectorsResponse', () => {
         connector_type_id: 'test-2',
         is_preconfigured: true,
         is_deprecated: true,
+        is_connector_type_deprecated: true,
         is_missing_secrets: true,
         is_system_action: true,
         referenced_by_count: 0,
         secrets: {},
         config: {},
-        is_connector_type_deprecated: true,
       },
     ]);
 
@@ -52,7 +52,6 @@ describe('transformConnectorsResponse', () => {
         name: 'Test-1',
         referencedByCount: 0,
         secrets: {},
-        isConnectorTypeDeprecated: false,
       },
       {
         actionTypeId: 'test-2',
@@ -65,7 +64,6 @@ describe('transformConnectorsResponse', () => {
         name: 'Test-2',
         referencedByCount: 0,
         secrets: {},
-        isConnectorTypeDeprecated: true,
       },
     ]);
   });

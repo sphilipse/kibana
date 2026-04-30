@@ -169,7 +169,6 @@ describe('get()', () => {
         isPreconfigured: true,
         isSystemAction: false,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
         config: {},
         secrets: {},
       };
@@ -181,7 +180,6 @@ describe('get()', () => {
         isPreconfigured: true,
         isSystemAction: false,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
         config: {},
       });
 
@@ -232,7 +230,6 @@ describe('get()', () => {
         isPreconfigured: true,
         isSystemAction: false,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
         config: { webhookUrl: 'https://hooks.slack.com/services/xxx' },
         secrets: {},
       };
@@ -244,7 +241,6 @@ describe('get()', () => {
         isPreconfigured: true,
         isSystemAction: false,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
         config: { webhookUrl: 'https://hooks.slack.com/services/xxx' },
       };
 
@@ -272,7 +268,6 @@ describe('get()', () => {
         isPreconfigured: false,
         isSystemAction: true,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
         config: {},
         secrets: {},
       };
@@ -284,7 +279,6 @@ describe('get()', () => {
         isPreconfigured: false,
         isSystemAction: true,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
       };
 
       connectorFromInMemoryConnectorMock.mockReturnValueOnce(expectedConnector);
@@ -307,7 +301,6 @@ describe('get()', () => {
         isPreconfigured: false,
         isSystemAction: true,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
         config: {},
         secrets: {},
       };
@@ -330,7 +323,6 @@ describe('get()', () => {
         isPreconfigured: false,
         isSystemAction: true,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
         config: {},
         secrets: {},
       };
@@ -354,7 +346,6 @@ describe('get()', () => {
         isPreconfigured: true,
         isSystemAction: false,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
         config: {},
         secrets: {},
       };
@@ -366,7 +357,6 @@ describe('get()', () => {
         isPreconfigured: true,
         isSystemAction: false,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
       });
 
       await get({
@@ -408,7 +398,6 @@ describe('get()', () => {
         isPreconfigured: false,
         isSystemAction: false,
         isDeprecated: false,
-        isConnectorTypeDeprecated: false,
         authMode: 'shared',
       });
 
@@ -506,7 +495,7 @@ describe('get()', () => {
       expect(result.isMissingSecrets).toBe(true);
     });
 
-    test('sets isConnectorTypeDeprecated correctly', async () => {
+    test('sets isDeprecated for deprecated connector type', async () => {
       getConnectorSoMock.mockResolvedValueOnce({
         id: '1',
         type: 'action',
@@ -526,7 +515,7 @@ describe('get()', () => {
         id: '1',
       });
 
-      expect(result.isConnectorTypeDeprecated).toBe(true);
+      expect(result.isDeprecated).toBe(true);
       expect(actionTypeRegistry.isDeprecated).toHaveBeenCalledWith('.pagerduty');
     });
 

@@ -106,7 +106,6 @@ describe('client', () => {
           isDeprecated: false,
           isSystemAction: false,
           referencedByCount: 1,
-          isConnectorTypeDeprecated: false,
         },
         {
           id: '2',
@@ -117,7 +116,6 @@ describe('client', () => {
           isSystemAction: false,
           isDeprecated: false,
           referencedByCount: 1,
-          isConnectorTypeDeprecated: false,
         },
       ]);
     });
@@ -135,7 +133,6 @@ describe('client', () => {
           isDeprecated: false,
           isSystemAction: false,
           referencedByCount: 1,
-          isConnectorTypeDeprecated: false,
         },
       ]);
 
@@ -149,7 +146,6 @@ describe('client', () => {
           isDeprecated: false,
           isSystemAction: false,
           referencedByCount: 1,
-          isConnectorTypeDeprecated: false,
         },
         {
           id: '2',
@@ -160,7 +156,6 @@ describe('client', () => {
           isDeprecated: false,
           isSystemAction: false,
           referencedByCount: 1,
-          isConnectorTypeDeprecated: false,
         },
         {
           id: '4',
@@ -171,7 +166,6 @@ describe('client', () => {
           isSystemAction: false,
           isDeprecated: false,
           referencedByCount: 1,
-          isConnectorTypeDeprecated: false,
         },
       ]);
     });
@@ -189,7 +183,6 @@ describe('client', () => {
           isDeprecated: false,
           isSystemAction: false,
           referencedByCount: 1,
-          isConnectorTypeDeprecated: false,
         },
       ]);
 
@@ -203,7 +196,6 @@ describe('client', () => {
           isDeprecated: false,
           isSystemAction: false,
           referencedByCount: 1,
-          isConnectorTypeDeprecated: false,
         },
         {
           id: '2',
@@ -214,7 +206,6 @@ describe('client', () => {
           isDeprecated: false,
           isSystemAction: false,
           referencedByCount: 1,
-          isConnectorTypeDeprecated: false,
         },
       ]);
     });

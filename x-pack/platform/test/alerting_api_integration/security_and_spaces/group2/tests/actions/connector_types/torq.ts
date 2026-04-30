@@ -92,13 +92,13 @@ export default function torqTest({ getService }: FtrProviderContext) {
         is_preconfigured: false,
         is_system_action: false,
         is_deprecated: false,
+        is_connector_type_deprecated: false,
         name: 'A Torq action',
         connector_type_id: '.torq',
         is_missing_secrets: false,
         config: {
           webhookIntegrationUrl: torqSimulatorURL,
         },
-        is_connector_type_deprecated: false,
       });
 
       expect(typeof createdAction.id).to.be('string');

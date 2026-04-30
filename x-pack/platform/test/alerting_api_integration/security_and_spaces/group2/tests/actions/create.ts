@@ -72,13 +72,13 @@ export default function createConnectorTests({ getService }: FtrProviderContext)
                 is_preconfigured: false,
                 is_system_action: false,
                 is_deprecated: false,
+                is_connector_type_deprecated: false,
                 is_missing_secrets: false,
                 name: 'My Connector',
                 connector_type_id: 'test.index-record',
                 config: {
                   unencrypted: `This value shouldn't get encrypted`,
                 },
-                is_connector_type_deprecated: false,
               });
               expect(typeof response.body.id).to.be('string');
               // Ensure AAD isn't broken
@@ -309,13 +309,13 @@ export default function createConnectorTests({ getService }: FtrProviderContext)
                 is_preconfigured: false,
                 is_system_action: false,
                 is_deprecated: false,
+                is_connector_type_deprecated: false,
                 is_missing_secrets: false,
                 name: 'My Connector',
                 connector_type_id: 'test.index-record',
                 config: {
                   unencrypted: `This value shouldn't get encrypted`,
                 },
-                is_connector_type_deprecated: false,
               });
               expect(typeof response.body.id).to.be('string');
               // Ensure AAD isn't broken

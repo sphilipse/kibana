@@ -206,9 +206,9 @@ describe('ConnectorsDropdown', () => {
               grow={false}
             >
               <EuiIconTip
-                aria-label="This connector is deprecated. Update it, or create a new one."
+                aria-label="This connector type is deprecated."
                 color="warning"
-                content="This connector is deprecated. Update it, or create a new one."
+                content="This connector type is deprecated."
                 css="unknown styles"
                 size="m"
                 type="warning"
@@ -281,7 +281,7 @@ describe('ConnectorsDropdown', () => {
     });
 
     const tooltips = screen.getAllByText(
-      'This connector is deprecated. Update it, or create a new one.'
+      'This connector type is deprecated.'
     );
     expect(tooltips[0]).toBeInTheDocument();
   });
@@ -303,7 +303,7 @@ describe('ConnectorsDropdown', () => {
     );
 
     const tooltips = screen.getAllByText(
-      'This connector is deprecated. Update it, or create a new one.'
+      'This connector type is deprecated.'
     );
     expect(tooltips[0]).toBeInTheDocument();
   });

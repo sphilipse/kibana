@@ -13,7 +13,12 @@ import { EuiToolTip } from '@elastic/eui';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { isEmpty } from 'lodash';
 import { checkActionTypeEnabled } from '@kbn/alerts-ui-shared/src/check_action_type_enabled';
-import { TECH_PREVIEW_DESCRIPTION, TECH_PREVIEW_LABEL } from '../translations';
+import {
+  DEPRECATED_DESCRIPTION,
+  DEPRECATED_LABEL,
+  TECH_PREVIEW_DESCRIPTION,
+  TECH_PREVIEW_LABEL,
+} from '../translations';
 import type { ActionType, ActionTypeIndex, ActionTypeRegistryContract } from '../../../types';
 import { loadActionTypes } from '../../lib/action_connector_api';
 import { actionTypeCompare } from '../../lib/action_type_compare';
@@ -136,13 +141,14 @@ export const ActionTypeMenu = ({
     .sort((a, b) => actionTypeCompare(a.actionType, b.actionType))
     .map((item, index) => {
       const checkEnabledResult = checkActionTypeEnabled(item.actionType);
+      const badgeProps = item.isDeprecated
+        ? { label: DEPRECATED_LABEL, tooltipContent: DEPRECATED_DESCRIPTION }
+        : item.isExperimental
+        ? { label: TECH_PREVIEW_LABEL, tooltipContent: TECH_PREVIEW_DESCRIPTION }
+        : undefined;
       const card = (
         <EuiCard
-          betaBadgeProps={
-            item.isExperimental
-              ? { label: TECH_PREVIEW_LABEL, tooltipContent: TECH_PREVIEW_DESCRIPTION }
-              : undefined
-          }
+          betaBadgeProps={badgeProps}
           role="listitem"
           titleSize="xs"
           data-test-subj={`${item.actionType.id}-card`}

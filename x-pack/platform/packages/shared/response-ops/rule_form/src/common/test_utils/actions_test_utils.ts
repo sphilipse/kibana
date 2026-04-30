@@ -28,7 +28,6 @@ export const getConnector = (
     isPreconfigured: false,
     isSystemAction: false,
     isDeprecated: false,
-    isConnectorTypeDeprecated: false,
     ...overwrites,
   };
 };

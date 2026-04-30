@@ -38,6 +38,7 @@ export default function typeNotEnabledTests({ getService }: FtrProviderContext) 
         supported_feature_ids: ['alerting'],
         is_system_action_type: false,
         is_deprecated: true,
+        is_connector_type_deprecated: true,
         source: 'stack',
       });
 
@@ -65,9 +66,9 @@ export default function typeNotEnabledTests({ getService }: FtrProviderContext) 
         id: createdConnector.id,
         is_preconfigured: false,
         is_deprecated: false,
+        is_connector_type_deprecated: false,
         is_system_action: false,
         is_missing_secrets: false,
-        is_connector_type_deprecated: true,
         auth_mode: 'shared',
       });
     });

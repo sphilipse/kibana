@@ -18,10 +18,9 @@ export const createSystemConnectors = (actionTypes: ActionType[]): InMemoryConne
     isMissingSecrets: false,
     config: {},
     secrets: {},
-    isDeprecated: false,
+    isDeprecated: systemActionType.isDeprecated ?? false,
     isPreconfigured: false,
     isSystemAction: true,
-    isConnectorTypeDeprecated: systemActionType.isDeprecated ?? false,
   }));
 
   return systemConnectors;

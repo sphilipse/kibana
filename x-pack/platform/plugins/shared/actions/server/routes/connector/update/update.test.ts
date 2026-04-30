@@ -68,8 +68,8 @@ describe('updateConnectorRoute', () => {
         config: { foo: true },
         is_preconfigured: false,
         is_deprecated: false,
-        is_system_action: false,
         is_connector_type_deprecated: false,
+        is_system_action: false,
       },
     });
 

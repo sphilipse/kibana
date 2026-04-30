@@ -91,7 +91,6 @@ const CreateConnectorFlyoutComponent: React.FC<CreateConnectorFlyoutProps> = ({
     config: {},
     secrets: {},
     isMissingSecrets: false,
-    isConnectorTypeDeprecated: false,
   };
 
   const defaultConnector = initialConnector
@@ -270,6 +269,7 @@ const CreateConnectorFlyoutComponent: React.FC<CreateConnectorFlyoutProps> = ({
         actionTypeMessage={actionTypeModel?.selectMessage}
         compatibility={getConnectorCompatibility(actionType?.supportedFeatureIds)}
         isExperimental={actionTypeModel?.isExperimental}
+        isDeprecated={actionType?.isDeprecated}
       />
       <EuiFlyoutBody
         banner={!actionType && hasActionsUpgradeableByTrial ? <UpgradeLicenseCallOut /> : null}
@@ -299,6 +299,32 @@ const CreateConnectorFlyoutComponent: React.FC<CreateConnectorFlyoutProps> = ({
                   data-test-subj="slackTypeChangeButton"
                 />
                 <EuiSpacer size="xs" />
+              </>
+            )}
+
+            {actionType.isDeprecated && (
+              <>
+                <EuiCallOut
+                  size="s"
+                  color="warning"
+                  iconType="warning"
+                  data-test-subj="connector-form-deprecated-callout"
+                  title={i18n.translate(
+                    'xpack.triggersActionsUI.sections.actionConnectorAdd.deprecatedConnectorTitle',
+                    {
+                      defaultMessage: 'This connector is deprecated',
+                    }
+                  )}
+                >
+                  {i18n.translate(
+                    'xpack.triggersActionsUI.sections.actionConnectorAdd.deprecatedConnectorDescription',
+                    {
+                      defaultMessage:
+                        'This connector type is deprecated and may be removed in a future release. Existing connectors will continue to work, but creating new ones is discouraged.',
+                    }
+                  )}
+                </EuiCallOut>
+                <EuiSpacer size="m" />
               </>
             )}
 

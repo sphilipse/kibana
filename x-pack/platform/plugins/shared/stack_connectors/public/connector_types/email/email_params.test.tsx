@@ -420,7 +420,6 @@ describe('getEmailSender', () => {
       isDeprecated: false,
       referencedByCount: 0,
       isSystemAction: false,
-      isConnectorTypeDeprecated: false,
       id: 'test-id',
       name: 'preconfigured-email',
     };
@@ -436,7 +435,6 @@ describe('getEmailSender', () => {
       referencedByCount: 0,
       isMissingSecrets: false,
       isSystemAction: false,
-      isConnectorTypeDeprecated: false,
       id: 'test-id',
       name: 'email connector',
       config: {

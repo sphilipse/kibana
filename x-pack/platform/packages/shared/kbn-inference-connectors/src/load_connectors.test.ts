@@ -37,7 +37,6 @@ describe('toAIConnector', () => {
       config: { region: 'us-east-1' },
       isPreconfigured: true,
       isDeprecated: true,
-      isConnectorTypeDeprecated: true,
       isMissingSecrets: true,
     });
 
@@ -52,7 +51,6 @@ describe('toAIConnector', () => {
       isPreconfigured: true,
       isSystemAction: false,
       isDeprecated: true,
-      isConnectorTypeDeprecated: true,
       isMissingSecrets: true,
       isRecommended: undefined,
       apiProvider: undefined,
@@ -62,14 +60,12 @@ describe('toAIConnector', () => {
   it('should default optional boolean fields to false when undefined', () => {
     const connector = createInferenceConnector({
       isDeprecated: undefined,
-      isConnectorTypeDeprecated: undefined,
       isMissingSecrets: undefined,
     });
 
     const result = toAIConnector(connector);
 
     expect(result.isDeprecated).toBe(false);
-    expect(result.isConnectorTypeDeprecated).toBe(false);
     expect(result.isMissingSecrets).toBe(false);
   });
 

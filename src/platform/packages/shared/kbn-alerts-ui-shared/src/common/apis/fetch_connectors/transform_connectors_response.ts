@@ -27,7 +27,6 @@ const transformConnector: RewriteRequestCase<
   referenced_by_count: referencedByCount,
   is_missing_secrets: isMissingSecrets,
   is_system_action: isSystemAction,
-  is_connector_type_deprecated: isConnectorTypeDeprecated,
   auth_mode: authMode,
   ...res
 }) => ({
@@ -37,7 +36,6 @@ const transformConnector: RewriteRequestCase<
   referencedByCount,
   isMissingSecrets,
   isSystemAction,
-  isConnectorTypeDeprecated,
   ...(authMode !== undefined ? { authMode } : {}),
   ...res,
 });

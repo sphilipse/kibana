@@ -73,7 +73,6 @@ const ConnectorAddModal = ({
     config: {},
     secrets: {},
     isMissingSecrets: false,
-    isConnectorTypeDeprecated: false,
   });
 
   const canSave = hasSaveActionsCapability(capabilities);
@@ -112,7 +111,6 @@ const ConnectorAddModal = ({
         config: {},
         secrets: {},
         isMissingSecrets: false,
-        isConnectorTypeDeprecated: false,
       });
       if (resetConnectorForm.current) {
         resetConnectorForm.current({

@@ -85,6 +85,7 @@ export default function resilientTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
+          is_connector_type_deprecated: false,
           name: 'An IBM Resilient action',
           connector_type_id: '.resilient',
           is_missing_secrets: false,
@@ -92,7 +93,6 @@ export default function resilientTest({ getService }: FtrProviderContext) {
             apiUrl: resilientSimulatorURL,
             orgId: mockResilient.config.orgId,
           },
-          is_connector_type_deprecated: false,
         });
 
         const { body: fetchedAction } = await supertest
@@ -104,6 +104,7 @@ export default function resilientTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
+          is_connector_type_deprecated: false,
           name: 'An IBM Resilient action',
           connector_type_id: '.resilient',
           is_missing_secrets: false,
@@ -111,7 +112,6 @@ export default function resilientTest({ getService }: FtrProviderContext) {
             apiUrl: resilientSimulatorURL,
             orgId: mockResilient.config.orgId,
           },
-          is_connector_type_deprecated: false,
           auth_mode: 'shared',
         });
       });

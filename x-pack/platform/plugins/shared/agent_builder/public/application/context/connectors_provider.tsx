@@ -28,7 +28,6 @@ const toActionConnector = (c: ConnectorItem): ActionConnector =>
     isPreconfigured: c.isPreconfigured,
     isDeprecated: c.isDeprecated,
     isSystemAction: c.isSystemAction,
-    isConnectorTypeDeprecated: c.isConnectorTypeDeprecated,
     config: c.config,
     isMissingSecrets: c.isMissingSecrets ?? false,
     authMode: c.authMode,

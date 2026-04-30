@@ -205,6 +205,7 @@ export async function create({
     throw result;
   }
 
+  const isConnectorTypeDeprecated = context.actionTypeRegistry.isDeprecated(actionTypeId);
   return {
     id: result.id,
     actionTypeId: result.attributes.actionTypeId,
@@ -213,8 +214,7 @@ export async function create({
     config: result.attributes.config,
     isPreconfigured: false,
     isSystemAction: false,
-    isDeprecated: isConnectorDeprecated(result.attributes),
-    isConnectorTypeDeprecated: context.actionTypeRegistry.isDeprecated(actionTypeId),
+    isDeprecated: isConnectorDeprecated(result.attributes, isConnectorTypeDeprecated),
     ...(result.attributes.authMode !== undefined ? { authMode: result.attributes.authMode } : {}),
   };
 }

@@ -23,5 +23,5 @@ export const deprecatedMessage = i18n.translate(
 
 export const connectorDeprecatedMessage = i18n.translate(
   'xpack.triggersActionsUI.sections.isDeprecatedDescription',
-  { defaultMessage: 'This connector is deprecated. Update it, or create a new one.' }
+  { defaultMessage: 'This connector type is deprecated and may be removed in a future release.' }
 );

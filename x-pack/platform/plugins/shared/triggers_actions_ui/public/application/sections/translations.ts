@@ -33,6 +33,18 @@ export const TECH_PREVIEW_DESCRIPTION = i18n.translate(
   }
 );
 
+export const DEPRECATED_LABEL = i18n.translate('xpack.triggersActionsUI.deprecatedBadgeLabel', {
+  defaultMessage: 'Deprecated',
+});
+
+export const DEPRECATED_DESCRIPTION = i18n.translate(
+  'xpack.triggersActionsUI.deprecatedBadgeDescription',
+  {
+    defaultMessage:
+      'This connector type is deprecated and may be removed in a future release. Existing connectors will continue to work, but creating new ones is discouraged.',
+  }
+);
+
 const SHOW_REQUEST_MODAL_EDIT = i18n.translate(
   'xpack.triggersActionsUI.sections.showRequestModal.subheadingTitleEdit',
   {

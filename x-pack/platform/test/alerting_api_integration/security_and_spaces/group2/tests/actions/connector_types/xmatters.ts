@@ -65,6 +65,7 @@ export default function xmattersTest({ getService }: FtrProviderContext) {
         is_preconfigured: false,
         is_system_action: false,
         is_deprecated: false,
+        is_connector_type_deprecated: false,
         name: 'An xmatters action',
         connector_type_id: '.xmatters',
         is_missing_secrets: false,
@@ -72,7 +73,6 @@ export default function xmattersTest({ getService }: FtrProviderContext) {
           configUrl: null,
           usesBasic: false,
         },
-        is_connector_type_deprecated: false,
       });
 
       expect(typeof createdAction.id).to.be('string');
@@ -101,6 +101,7 @@ export default function xmattersTest({ getService }: FtrProviderContext) {
         is_preconfigured: false,
         is_system_action: false,
         is_deprecated: false,
+        is_connector_type_deprecated: false,
         name: 'An xmatters action',
         connector_type_id: '.xmatters',
         is_missing_secrets: false,
@@ -108,7 +109,6 @@ export default function xmattersTest({ getService }: FtrProviderContext) {
           configUrl: xmattersSimulatorURL,
           usesBasic: true,
         },
-        is_connector_type_deprecated: false,
       });
 
       expect(typeof createdAction.id).to.be('string');

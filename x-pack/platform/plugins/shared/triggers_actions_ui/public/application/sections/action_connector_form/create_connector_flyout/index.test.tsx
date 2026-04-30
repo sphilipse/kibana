@@ -27,6 +27,7 @@ const createConnectorResponse = {
   connector_type_id: 'test',
   is_preconfigured: false,
   is_deprecated: false,
+  is_connector_type_deprecated: false,
   name: 'My test',
   config: { testTextField: 'My text field' },
   secrets: {},
@@ -761,7 +762,6 @@ describe('CreateConnectorFlyout', () => {
       },
       secrets: {},
       isMissingSecrets: false,
-      isConnectorTypeDeprecated: false,
     };
 
     const initialActionTypeModel = actionTypeRegistryMock.createMockActionTypeModel({

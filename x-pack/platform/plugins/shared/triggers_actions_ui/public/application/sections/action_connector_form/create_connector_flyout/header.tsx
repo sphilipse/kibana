@@ -19,7 +19,12 @@ import {
   EuiBetaBadge,
 } from '@elastic/eui';
 import { FormattedMessage } from '@kbn/i18n-react';
-import { TECH_PREVIEW_DESCRIPTION, TECH_PREVIEW_LABEL } from '../../translations';
+import {
+  DEPRECATED_DESCRIPTION,
+  DEPRECATED_LABEL,
+  TECH_PREVIEW_DESCRIPTION,
+  TECH_PREVIEW_LABEL,
+} from '../../translations';
 
 interface Props {
   icon?: IconType | null;
@@ -27,6 +32,7 @@ interface Props {
   actionTypeMessage?: string | null;
   compatibility?: string[] | null;
   isExperimental?: boolean;
+  isDeprecated?: boolean;
 }
 
 const FlyoutHeaderComponent: React.FC<Props> = ({
@@ -35,6 +41,7 @@ const FlyoutHeaderComponent: React.FC<Props> = ({
   actionTypeMessage,
   compatibility,
   isExperimental,
+  isDeprecated,
 }) => {
   return (
     <EuiFlyoutHeader hasBorder data-test-subj="create-connector-flyout-header">
@@ -61,7 +68,15 @@ const FlyoutHeaderComponent: React.FC<Props> = ({
                     </h3>
                   </EuiTitle>
                 </EuiFlexItem>
-                {actionTypeName && isExperimental && (
+                {actionTypeName && isDeprecated && (
+                  <EuiFlexItem grow={false}>
+                    <EuiBetaBadge
+                      label={DEPRECATED_LABEL}
+                      tooltipContent={DEPRECATED_DESCRIPTION}
+                    />
+                  </EuiFlexItem>
+                )}
+                {actionTypeName && !isDeprecated && isExperimental && (
                   <EuiFlexItem grow={false}>
                     <EuiBetaBadge
                       label={TECH_PREVIEW_LABEL}

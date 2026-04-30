@@ -56,11 +56,11 @@ export default function indexTest({ getService }: FtrProviderContext) {
         id: createdConnector.id,
         is_preconfigured: false,
         is_deprecated: false,
+        is_connector_type_deprecated: false,
         is_system_action: false,
         name: 'An index connector',
         connector_type_id: '.index',
         is_missing_secrets: false,
-        is_connector_type_deprecated: false,
         config: {
           index: ES_TEST_INDEX_NAME,
           refresh: false,

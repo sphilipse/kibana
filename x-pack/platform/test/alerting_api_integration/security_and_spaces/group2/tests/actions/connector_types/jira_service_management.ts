@@ -60,13 +60,13 @@ export default function jiraServiceManagementTest({ getService }: FtrProviderCon
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
+          is_connector_type_deprecated: false,
           name: 'A Jira Service Management action',
           connector_type_id: '.jira-service-management',
           is_missing_secrets: false,
           config: {
             apiUrl: simulatorUrl,
           },
-          is_connector_type_deprecated: false,
         });
       });
 
