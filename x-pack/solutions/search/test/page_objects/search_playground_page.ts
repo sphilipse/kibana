@@ -227,6 +227,7 @@ export function SearchPlaygroundPageProvider({ getService }: FtrProviderContext)
       },
       async createConnectorFlyoutIsVisible() {
         await testSubjects.existOrFail('create-connector-flyout');
+        await testSubjects.existOrFail('.inference-card');
         await testSubjects.existOrFail('.bedrock-card');
         await testSubjects.existOrFail('.gemini-card');
         await testSubjects.existOrFail('.gen-ai-card');
