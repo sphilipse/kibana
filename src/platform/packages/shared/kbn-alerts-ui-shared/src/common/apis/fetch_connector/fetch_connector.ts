@@ -22,8 +22,15 @@ export async function fetchConnector(
   return transformConnectorResponse(res) as ActionConnector;
 }
 
+type ConnectorApiResponse = AsApiContract<
+  ActionConnectorProps<Record<string, unknown>, Record<string, unknown>>
+> & {
+  // Public API backwards-compat field that mirrors `is_deprecated`. Discarded by the transform.
+  is_connector_type_deprecated?: boolean;
+};
+
 export const transformConnectorResponse = (
-  result: AsApiContract<ActionConnectorProps<Record<string, unknown>, Record<string, unknown>>>
+  result: ConnectorApiResponse
 ): ActionConnectorProps<Record<string, unknown>, Record<string, unknown>> => {
   const {
     connector_type_id: actionTypeId,
@@ -32,6 +39,7 @@ export const transformConnectorResponse = (
     referenced_by_count: referencedByCount,
     is_missing_secrets: isMissingSecrets,
     is_system_action: isSystemAction,
+    is_connector_type_deprecated: _isConnectorTypeDeprecated,
     ...res
   } = result;
   return {

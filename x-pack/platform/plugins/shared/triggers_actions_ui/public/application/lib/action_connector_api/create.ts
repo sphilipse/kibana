@@ -5,7 +5,7 @@
  * 2.0.
  */
 import type { HttpSetup } from '@kbn/core/public';
-import type { RewriteRequestCase, RewriteResponseCase } from '@kbn/actions-plugin/common';
+import type { AsApiContract, RewriteResponseCase } from '@kbn/actions-plugin/common';
 import { BASE_ACTION_API_PATH } from '../../constants';
 import type {
   ActionConnector,
@@ -20,17 +20,26 @@ const rewriteBodyRequest: RewriteResponseCase<
   connector_type_id: actionTypeId,
 });
 
-const rewriteBodyRes: RewriteRequestCase<
+type ConnectorApiResponse = AsApiContract<
   ActionConnectorProps<Record<string, unknown>, Record<string, unknown>>
-> = ({
+> & {
+  // Public API backwards-compat field that mirrors `is_deprecated`. Discarded by the transform.
+  is_connector_type_deprecated?: boolean;
+};
+
+const rewriteBodyRes = ({
   connector_type_id: actionTypeId,
   is_preconfigured: isPreconfigured,
   is_deprecated: isDeprecated,
   is_missing_secrets: isMissingSecrets,
   is_system_action: isSystemAction,
   auth_mode: authMode,
+  is_connector_type_deprecated: _isConnectorTypeDeprecated,
   ...res
-}) => ({
+}: ConnectorApiResponse): ActionConnectorProps<
+  Record<string, unknown>,
+  Record<string, unknown>
+> => ({
   ...res,
   actionTypeId,
   isPreconfigured,
