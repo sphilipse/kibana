@@ -577,6 +577,7 @@
     "@kbn/deeplinks-search": "link:src/platform/packages/shared/deeplinks/search",
     "@kbn/deeplinks-security": "link:src/platform/packages/shared/deeplinks/security",
     "@kbn/deeplinks-shared": "link:src/platform/packages/shared/deeplinks/shared",
+    "@kbn/deeplinks-vectordb": "link:src/platform/packages/shared/deeplinks/vectordb",
     "@kbn/deeplinks-workflows": "link:src/platform/packages/shared/deeplinks/workflows",
     "@kbn/deeplinks-workplace-ai": "link:src/platform/packages/shared/deeplinks/workplace_ai",
     "@kbn/default-tracer": "link:src/platform/packages/shared/kbn-default-tracer",

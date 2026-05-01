@@ -7,18 +7,26 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { EuiEmptyPrompt, EuiPageTemplate } from '@elastic/eui';
-import type { AppMountParameters } from '@kbn/core/public';
+import type { AppMountParameters, CoreStart } from '@kbn/core/public';
+import { I18nProvider } from '@kbn/i18n-react';
+import { KibanaContextProvider } from '@kbn/kibana-react-plugin/public';
+import { VectordbOnboarding } from './onboarding/onboarding';
+import type { ServerlessVectordbServices } from './types';
 
-const VectordbHome: React.FC = () => (
-  <EuiPageTemplate restrictWidth={false}>
-    <EuiPageTemplate.EmptyPrompt>
-      <EuiEmptyPrompt iconType="logoElasticsearch" title={<h1>Welcome to Vector DB</h1>} />
-    </EuiPageTemplate.EmptyPrompt>
-  </EuiPageTemplate>
-);
-
-export function renderApp({ element }: AppMountParameters) {
-  ReactDOM.render(<VectordbHome />, element);
+export const renderApp = (
+  core: CoreStart,
+  services: ServerlessVectordbServices,
+  { element }: AppMountParameters
+) => {
+  ReactDOM.render(
+    core.rendering.addContext(
+      <KibanaContextProvider services={services}>
+        <I18nProvider>
+          <VectordbOnboarding />
+        </I18nProvider>
+      </KibanaContextProvider>
+    ),
+    element
+  );
   return () => ReactDOM.unmountComponentAtNode(element);
-}
+};

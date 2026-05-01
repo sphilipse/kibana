@@ -984,6 +984,8 @@
       "@kbn/deeplinks-security/*": ["src/platform/packages/shared/deeplinks/security/*"],
       "@kbn/deeplinks-shared": ["src/platform/packages/shared/deeplinks/shared"],
       "@kbn/deeplinks-shared/*": ["src/platform/packages/shared/deeplinks/shared/*"],
+      "@kbn/deeplinks-vectordb": ["src/platform/packages/shared/deeplinks/vectordb"],
+      "@kbn/deeplinks-vectordb/*": ["src/platform/packages/shared/deeplinks/vectordb/*"],
       "@kbn/deeplinks-workflows": ["src/platform/packages/shared/deeplinks/workflows"],
       "@kbn/deeplinks-workflows/*": ["src/platform/packages/shared/deeplinks/workflows/*"],
       "@kbn/deeplinks-workplace-ai": ["src/platform/packages/shared/deeplinks/workplace_ai"],

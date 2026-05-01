@@ -6510,6 +6510,10 @@
   version "0.0.0"
   uid ""
 
+"@kbn/deeplinks-vectordb@link:src/platform/packages/shared/deeplinks/vectordb":
+  version "0.0.0"
+  uid ""
+
 "@kbn/deeplinks-workflows@link:src/platform/packages/shared/deeplinks/workflows":
   version "0.0.0"
   uid ""
