@@ -28,7 +28,10 @@ export const GettingStartedRedirectGate = ({ coreStart, children }: Props) => {
   const shouldVisitGettingStartedPage =
     !visitedGettingStartedPage || visitedGettingStartedPage === 'false'; // visit if null or value is false
 
+  // In Serverless Elasticsearch the homepage itself renders the onboarding
+  // wizard, so the legacy `searchGettingStarted` redirect must be skipped.
   const shouldRedirect =
+    !cloud?.isServerlessEnabled &&
     storageStats != null &&
     ((cloud?.isCloudEnabled ? cloud?.isInTrial() : isTrial) || storageStats.hasNoDocuments) &&
     shouldVisitGettingStartedPage;

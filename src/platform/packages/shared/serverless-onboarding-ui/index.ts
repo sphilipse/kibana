@@ -14,4 +14,3 @@ export { PathStep } from './src/onboarding/path_step';
 export { IngestStep } from './src/onboarding/ingest_step';
 export { SearchStep } from './src/onboarding/search_step';
 export type { OnboardingServices } from './src/services';
-export type { OnboardingServices } from './src/services';
