@@ -8,7 +8,7 @@ pageLoadAssetSize:
   aiops: 15227
   alerting: 22371
   alertingVTwo: 47881
-  apm: 26000
+  apm: 27979
   apmSourcesAccess: 2278
   automaticImport: 18629
   banners: 4006
@@ -86,6 +86,7 @@ pageLoadAssetSize:
   grokdebugger: 5469
   home: 13091
   imageEmbeddable: 6189
+  inbox: 5344
   indexLifecycleManagement: 35090
   indexManagement: 39694
   inference: 10368
@@ -129,10 +130,9 @@ pageLoadAssetSize:
   observabilityAiAssistantManagement: 7126
   observabilityLogsExplorer: 4918
   observabilityOnboarding: 14161
-  observabilityShared: 75115
+  observabilityShared: 75022
   osquery: 47422
   painlessLab: 6299
-  presentationPanel: 10936
   presentationUtil: 8985
   productDocBase: 5678
   productIntercept: 9860
@@ -178,7 +178,7 @@ pageLoadAssetSize:
   spaces: 28871
   stackAlerts: 31499
   stackConnectors: 85421
-  streams: 15434
+  streams: 32595
   streamsApp: 25375
   synthetics: 31571
   telemetry: 25755
