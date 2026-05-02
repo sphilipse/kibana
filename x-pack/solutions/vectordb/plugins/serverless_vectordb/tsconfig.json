@@ -26,5 +26,8 @@
     "@kbn/console-plugin",
     "@kbn/try-in-console",
     "@kbn/core-chrome-browser",
+    "@kbn/cloud-plugin",
+    "@kbn/shared-ux-router",
+    "@kbn/agent-builder-plugin",
   ]
 }

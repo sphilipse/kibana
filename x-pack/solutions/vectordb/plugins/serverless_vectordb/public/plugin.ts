@@ -41,6 +41,9 @@ export class ServerlessVectordbPlugin
           ...coreStart,
           share: depsStart.share,
           console: depsStart.console,
+          cloud: depsStart.cloud,
+          agentBuilder: depsStart.agentBuilder,
+          history: params.history,
         };
         return renderApp(coreStart, appServices, params);
       },

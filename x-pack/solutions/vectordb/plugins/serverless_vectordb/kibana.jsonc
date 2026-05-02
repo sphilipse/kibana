@@ -22,7 +22,8 @@
       "agentBuilder"
     ],
     "optionalPlugins": [
-      "console"
+      "console",
+      "cloud"
     ],
     "requiredBundles": [
       "kibanaReact"

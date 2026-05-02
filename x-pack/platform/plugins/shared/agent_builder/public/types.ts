@@ -33,8 +33,21 @@ import type { TriggersAndActionsUIPublicPluginStart } from '@kbn/triggers-action
 import type { UsageCollectionSetup } from '@kbn/usage-collection-plugin/public';
 import type { AttachmentInput, UpdateOriginResponse } from '@kbn/agent-builder-common/attachments';
 import type { EvalsPublicStart } from '@kbn/evals-plugin/public';
+import type { ComponentType } from 'react';
 import type { EmbeddableConversationProps } from './embeddable/types';
 import type { OpenConversationSidebarOptions } from './sidebar/types';
+
+/**
+ * Props accepted by the publicly exposed `EmbeddableConversation` component.
+ *
+ * Inline embedders typically only need to pass `EmbeddableConversationProps`.
+ * `onClose` and `ariaLabelledBy` are optional — sensible defaults are provided
+ * by the plugin when omitted.
+ */
+export interface PublicEmbeddableConversationProps extends EmbeddableConversationProps {
+  onClose?: () => void;
+  ariaLabelledBy?: string;
+}
 export interface ConversationSidebarRef {
   close(): void;
 }
@@ -153,4 +166,17 @@ export interface AgentBuilderPluginStart {
     attachmentId: string,
     origin: string
   ) => Promise<UpdateOriginResponse>;
+  /**
+   * Inline-embeddable conversation component, pre-bound to the plugin's internal services.
+   *
+   * Render this anywhere in your app to host a fully functional agent_builder chat
+   * — the same component that powers the chat sidebar, but without the sidebar chrome.
+   *
+   * @example
+   * ```tsx
+   * const { EmbeddableConversation } = plugins.agentBuilder;
+   * <EmbeddableConversation sessionTag="my-app-home" />
+   * ```
+   */
+  EmbeddableConversation: ComponentType<PublicEmbeddableConversationProps>;
 }
