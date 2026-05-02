@@ -58,6 +58,15 @@ export class SearchHomepagePlugin
       title: i18n.translate('xpack.searchHomepage.appTitle', { defaultMessage: 'Home' }),
       category: DEFAULT_APP_CATEGORIES.enterpriseSearch,
       euiIconType: 'logoElasticsearch',
+      deepLinks: [
+        {
+          id: 'tutorials',
+          path: '/tutorials',
+          title: i18n.translate('xpack.searchHomepage.tutorials.title', {
+            defaultMessage: 'Tutorials',
+          }),
+        },
+      ],
       async mount({ element, history }: AppMountParameters) {
         const { renderApp } = await import('./application');
         const [coreStart, depsStart] = await core.getStartServices();

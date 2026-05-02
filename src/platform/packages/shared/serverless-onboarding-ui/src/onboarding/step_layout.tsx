@@ -48,11 +48,11 @@ interface StepLayoutProps {
 }
 
 const STEP_LABELS = [
-  i18n.translate('xpack.serverlessVectordb.wizard.steps.path', {
+  i18n.translate('serverlessOnboarding.wizard.steps.path', {
     defaultMessage: 'Start',
   }),
-  i18n.translate('xpack.serverlessVectordb.wizard.steps.ingest', { defaultMessage: 'Ingest' }),
-  i18n.translate('xpack.serverlessVectordb.wizard.steps.search', { defaultMessage: 'Search' }),
+  i18n.translate('serverlessOnboarding.wizard.steps.ingest', { defaultMessage: 'Ingest' }),
+  i18n.translate('serverlessOnboarding.wizard.steps.search', { defaultMessage: 'Search' }),
 ];
 
 const CredentialField: React.FC<{
@@ -129,12 +129,12 @@ const StepRail: React.FC<{
 
         <EuiFlexItem grow={false}>
           <CredentialField
-            label={i18n.translate('xpack.serverlessVectordb.wizard.rail.urlLabel', {
+            label={i18n.translate('serverlessOnboarding.wizard.rail.urlLabel', {
               defaultMessage: 'Elasticsearch URL',
             })}
             value={elasticsearchUrl}
             isLoading={isLoading}
-            copyAriaLabel={i18n.translate('xpack.serverlessVectordb.wizard.rail.copyUrl', {
+            copyAriaLabel={i18n.translate('serverlessOnboarding.wizard.rail.copyUrl', {
               defaultMessage: 'Copy Elasticsearch URL',
             })}
           />
@@ -142,12 +142,12 @@ const StepRail: React.FC<{
 
         <EuiFlexItem grow={false}>
           <CredentialField
-            label={i18n.translate('xpack.serverlessVectordb.wizard.rail.apiKeyLabel', {
+            label={i18n.translate('serverlessOnboarding.wizard.rail.apiKeyLabel', {
               defaultMessage: 'API key',
             })}
             value={apiKey}
             isLoading={isLoading}
-            copyAriaLabel={i18n.translate('xpack.serverlessVectordb.wizard.rail.copyApiKey', {
+            copyAriaLabel={i18n.translate('serverlessOnboarding.wizard.rail.copyApiKey', {
               defaultMessage: 'Copy API key',
             })}
           />
@@ -177,7 +177,7 @@ const StepRail: React.FC<{
             onClick={onSkip}
             data-test-subj="vectordbWizardSkip"
           >
-            {i18n.translate('xpack.serverlessVectordb.wizard.skip', { defaultMessage: 'Skip' })}
+            {i18n.translate('serverlessOnboarding.wizard.skip', { defaultMessage: 'Skip' })}
           </EuiButtonEmpty>
         </EuiFlexItem>
       </EuiFlexGroup>
@@ -240,7 +240,7 @@ export const StepLayout: React.FC<StepLayoutProps> = ({
                   onClick={onBack}
                   data-test-subj="vectordbWizardBack"
                 >
-                  {i18n.translate('xpack.serverlessVectordb.wizard.back', {
+                  {i18n.translate('serverlessOnboarding.wizard.back', {
                     defaultMessage: 'Back',
                   })}
                 </EuiButtonEmpty>
@@ -259,7 +259,7 @@ export const StepLayout: React.FC<StepLayoutProps> = ({
                   data-test-subj="vectordbWizardNext"
                 >
                   {nextLabel ??
-                    i18n.translate('xpack.serverlessVectordb.wizard.next', {
+                    i18n.translate('serverlessOnboarding.wizard.next', {
                       defaultMessage: 'Next',
                     })}
                 </EuiButton>

@@ -13,6 +13,8 @@ import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { Redirect, useHistory } from 'react-router-dom';
 import { useKibana } from '../services';
+import { ONBOARDING_TUTORIAL_ID } from '../tutorials/tutorial_data';
+import { markTutorialComplete } from '../tutorials/use_tutorial_progress';
 import { ApiStep } from './api_step';
 import { getSearchSnippets } from './language_snippets';
 import { getSearchSnippet } from './snippets';
@@ -38,21 +40,24 @@ export const SearchStep: React.FC = () => {
       currentStep={3}
       title={
         isGenerate
-          ? i18n.translate('xpack.serverlessVectordb.search.generate.title', {
+          ? i18n.translate('serverlessOnboarding.search.generate.title', {
               defaultMessage: 'Search with natural language',
             })
-          : i18n.translate('xpack.serverlessVectordb.search.have.title', {
+          : i18n.translate('serverlessOnboarding.search.have.title', {
               defaultMessage: 'Run a kNN query',
             })
       }
-      docsLabel={i18n.translate('xpack.serverlessVectordb.search.docsLabel', {
+      docsLabel={i18n.translate('serverlessOnboarding.search.docsLabel', {
         defaultMessage: 'Search docs',
       })}
       docsHref={docsHref}
       onSkip={() => history.push('/')}
       onBack={() => history.push(`/onboarding/ingest${pathQuery(path)}`)}
-      onNext={() => history.push('/')}
-      nextLabel={i18n.translate('xpack.serverlessVectordb.search.done', {
+      onNext={() => {
+        markTutorialComplete(ONBOARDING_TUTORIAL_ID);
+        history.push('/');
+      }}
+      nextLabel={i18n.translate('serverlessOnboarding.search.done', {
         defaultMessage: 'Done',
       })}
     >
@@ -65,7 +70,7 @@ export const SearchStep: React.FC = () => {
             title={
               <EuiText size="xs">
                 <FormattedMessage
-                  id="xpack.serverlessVectordb.search.have.callout"
+                  id="serverlessOnboarding.search.have.callout"
                   defaultMessage="Tune {numCandidates} to trade off speed against accuracy."
                   values={{
                     numCandidates: (

@@ -131,6 +131,7 @@
     "searchIndexDocuments": "x-pack/solutions/search/packages/kbn-search-index-documents",
     "searchResponseWarnings": "src/platform/packages/shared/kbn-search-response-warnings",
     "searchTypes": "src/platform/packages/shared/kbn-search-types",
+    "serverlessOnboarding": "src/platform/packages/shared/serverless-onboarding-ui",
     "securitySolutionPackages": [
       "x-pack/solutions/security/packages/data-table",
       "x-pack/solutions/security/packages/ecs-data-quality-dashboard",

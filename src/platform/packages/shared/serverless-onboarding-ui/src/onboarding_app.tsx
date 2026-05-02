@@ -14,6 +14,7 @@ import { HomePage } from './home/home_page';
 import { IngestStep } from './onboarding/ingest_step';
 import { PathStep } from './onboarding/path_step';
 import { SearchStep } from './onboarding/search_step';
+import { TutorialsPage } from './tutorials/tutorials_page';
 
 /**
  * Renders the full onboarding experience: a deployment dashboard at `/` and a
@@ -27,6 +28,7 @@ export const OnboardingApp: React.FC = () => (
     <Route exact path="/onboarding" component={PathStep} />
     <Route exact path="/onboarding/ingest" component={IngestStep} />
     <Route exact path="/onboarding/search" component={SearchStep} />
+    <Route exact path="/tutorials" component={TutorialsPage} />
     <Route render={() => <Redirect to="/" />} />
   </Routes>
 );

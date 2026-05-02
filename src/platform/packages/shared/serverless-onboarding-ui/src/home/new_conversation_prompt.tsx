@@ -205,7 +205,7 @@ export const NewConversationPrompt: React.FC = () => {
         <EuiFlexItem grow={false}>
           <EuiTitle size="m" css={titleStyles}>
             <h2>
-              {i18n.translate('xpack.serverlessVectordb.home.newConversationPrompt.title', {
+              {i18n.translate('serverlessOnboarding.home.newConversationPrompt.title', {
                 defaultMessage: 'How can I help you?',
               })}
             </h2>
@@ -216,13 +216,12 @@ export const NewConversationPrompt: React.FC = () => {
             <textarea
               data-test-subj="vectordbHomeNewConversationInput"
               placeholder={i18n.translate(
-                'xpack.serverlessVectordb.home.newConversationPrompt.placeholder',
+                'serverlessOnboarding.home.newConversationPrompt.placeholder',
                 { defaultMessage: 'Ask the agent anything…' }
               )}
-              aria-label={i18n.translate(
-                'xpack.serverlessVectordb.home.newConversationPrompt.aria',
-                { defaultMessage: 'Open the AI agent chat' }
-              )}
+              aria-label={i18n.translate('serverlessOnboarding.home.newConversationPrompt.aria', {
+                defaultMessage: 'Open the AI agent chat',
+              })}
               readOnly
               rows={3}
               onFocus={expand}
@@ -237,10 +236,9 @@ export const NewConversationPrompt: React.FC = () => {
                 display="fill"
                 size="m"
                 onClick={expand}
-                aria-label={i18n.translate(
-                  'xpack.serverlessVectordb.home.newConversationPrompt.send',
-                  { defaultMessage: 'Open the AI agent chat' }
-                )}
+                aria-label={i18n.translate('serverlessOnboarding.home.newConversationPrompt.send', {
+                  defaultMessage: 'Open the AI agent chat',
+                })}
                 data-test-subj="vectordbHomeNewConversationSend"
               />
             </div>

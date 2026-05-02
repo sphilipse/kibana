@@ -8,6 +8,7 @@
 import { of } from 'rxjs';
 import type { CoreSetup, CoreStart, Plugin } from '@kbn/core/public';
 import { DEFAULT_APP_CATEGORIES } from '@kbn/core/public';
+import { i18n } from '@kbn/i18n';
 import { createNavigationTree } from './navigation_tree';
 import type {
   ServerlessVectordbPluginSetup,
@@ -34,6 +35,15 @@ export class ServerlessVectordbPlugin
       appRoute: '/app/vectordb',
       euiIconType: 'logoElasticsearch',
       category: DEFAULT_APP_CATEGORIES.enterpriseSearch,
+      deepLinks: [
+        {
+          id: 'tutorials',
+          path: '/tutorials',
+          title: i18n.translate('xpack.serverlessVectordb.tutorials.title', {
+            defaultMessage: 'Tutorials',
+          }),
+        },
+      ],
       async mount(params) {
         const [coreStart, depsStart] = await core.getStartServices();
         const { renderApp } = await import('./application');

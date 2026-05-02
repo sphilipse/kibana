@@ -38,25 +38,25 @@ export const IngestStep: React.FC = () => {
       currentStep={2}
       title={
         isGenerate
-          ? i18n.translate('xpack.serverlessVectordb.ingest.generate.title', {
+          ? i18n.translate('serverlessOnboarding.ingest.generate.title', {
               defaultMessage: 'Index plain text',
             })
-          : i18n.translate('xpack.serverlessVectordb.ingest.have.title', {
+          : i18n.translate('serverlessOnboarding.ingest.have.title', {
               defaultMessage: 'Index your embeddings',
             })
       }
       description={
         isGenerate
-          ? i18n.translate('xpack.serverlessVectordb.ingest.generate.description', {
+          ? i18n.translate('serverlessOnboarding.ingest.generate.description', {
               defaultMessage:
                 "Create the index, then ingest your data. We use Elastic's state of the art Jina models to generate your vectors.",
             })
-          : i18n.translate('xpack.serverlessVectordb.ingest.have.description', {
+          : i18n.translate('serverlessOnboarding.ingest.have.description', {
               defaultMessage:
                 'Create the index with the right dimensions, then ingest your vectors. We quantize the vectors for you to save space and speed up search.',
             })
       }
-      docsLabel={i18n.translate('xpack.serverlessVectordb.ingest.docsLabel', {
+      docsLabel={i18n.translate('serverlessOnboarding.ingest.docsLabel', {
         defaultMessage: 'Learn more',
       })}
       docsHref={docsHref}
@@ -73,7 +73,7 @@ export const IngestStep: React.FC = () => {
             title={
               <EuiText size="xs">
                 <FormattedMessage
-                  id="xpack.serverlessVectordb.ingest.have.callout"
+                  id="serverlessOnboarding.ingest.have.callout"
                   defaultMessage="Set {dims} to your model's output size and {similarity} to match how it was trained."
                   values={{
                     dims: <EuiCode>dims</EuiCode>,
@@ -102,12 +102,12 @@ export const IngestStep: React.FC = () => {
         <EuiFlexItem grow={false}>
           <EuiText size="xs" color="subdued">
             <FormattedMessage
-              id="xpack.serverlessVectordb.ingest.claudeHint"
+              id="serverlessOnboarding.ingest.claudeHint"
               defaultMessage="Want this in your codebase? {prompt} helps your coding assistant generate the right code for you."
               values={{
                 prompt: (
                   <strong>
-                    {i18n.translate('xpack.serverlessVectordb.ingest.claudeHint.prompt', {
+                    {i18n.translate('serverlessOnboarding.ingest.claudeHint.prompt', {
                       defaultMessage: 'Copy prompt',
                     })}
                   </strong>

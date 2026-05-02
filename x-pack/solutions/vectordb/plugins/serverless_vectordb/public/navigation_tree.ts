@@ -67,6 +67,14 @@ export const createNavigationTree = (): NavigationTreeDefinition => ({
   ],
   footer: [
     {
+      id: 'tutorials',
+      title: i18n.translate('xpack.serverlessVectordb.nav.tutorials', {
+        defaultMessage: 'Getting started',
+      }),
+      link: 'vectordb:tutorials',
+      icon: 'rocket',
+    },
+    {
       id: 'devTools',
       title: i18n.translate('xpack.serverlessVectordb.nav.devTools', {
         defaultMessage: 'Developer tools',

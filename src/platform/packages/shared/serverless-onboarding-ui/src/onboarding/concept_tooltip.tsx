@@ -12,27 +12,27 @@ import { EuiIconTip } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 
 const CONCEPTS = {
-  dense_vector: i18n.translate('xpack.serverlessVectordb.concept.denseVector', {
+  dense_vector: i18n.translate('serverlessOnboarding.concept.denseVector', {
     defaultMessage:
       'A field that stores a fixed-length array of floats — your precomputed embedding.',
   }),
-  semantic_text: i18n.translate('xpack.serverlessVectordb.concept.semanticText', {
+  semantic_text: i18n.translate('serverlessOnboarding.concept.semanticText', {
     defaultMessage:
       'A field that takes plain text and lets Elasticsearch generate and store the embedding for you.',
   }),
-  knn: i18n.translate('xpack.serverlessVectordb.concept.knn', {
+  knn: i18n.translate('serverlessOnboarding.concept.knn', {
     defaultMessage:
       'k-Nearest-Neighbor search: returns the k vectors closest to your query vector.',
   }),
-  similarity: i18n.translate('xpack.serverlessVectordb.concept.similarity', {
+  similarity: i18n.translate('serverlessOnboarding.concept.similarity', {
     defaultMessage:
       'How "close" two vectors are. Cosine works for most embedding models. Match this to your model.',
   }),
-  quantization: i18n.translate('xpack.serverlessVectordb.concept.quantization', {
+  quantization: i18n.translate('serverlessOnboarding.concept.quantization', {
     defaultMessage:
       'Compresses each vector (e.g. float32 → int8 or 1-bit) to cut memory and disk use. Defaults to int8 — a good fit for most workloads.',
   }),
-  num_candidates: i18n.translate('xpack.serverlessVectordb.concept.numCandidates', {
+  num_candidates: i18n.translate('serverlessOnboarding.concept.numCandidates', {
     defaultMessage:
       'How many candidate vectors each shard considers before returning the top k. Higher = more accurate, slower.',
   }),

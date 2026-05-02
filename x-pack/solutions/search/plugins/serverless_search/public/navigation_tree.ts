@@ -77,6 +77,14 @@ export function createNavigationTree(
     ],
     footer: [
       {
+        id: 'tutorials',
+        title: i18n.translate('xpack.serverlessSearch.nav.tutorials', {
+          defaultMessage: 'Getting started',
+        }),
+        link: 'searchHomepage:tutorials',
+        icon: 'rocket',
+      },
+      {
         id: 'devTools',
         title: i18n.translate('xpack.serverlessSearch.nav.developerTools', {
           defaultMessage: 'Developer tools',

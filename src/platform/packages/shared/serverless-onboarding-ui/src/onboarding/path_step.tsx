@@ -40,7 +40,7 @@ export const PathStep: React.FC = () => {
       <div style={{ textAlign: 'center' }}>
         <EuiTitle size="l">
           <h1>
-            {i18n.translate('xpack.serverlessVectordb.path.title', {
+            {i18n.translate('serverlessOnboarding.path.title', {
               defaultMessage: 'Do you already have vectors?',
             })}
           </h1>
@@ -48,7 +48,7 @@ export const PathStep: React.FC = () => {
         <EuiSpacer size="m" />
         <EuiText size="m" color="subdued">
           <p>
-            {i18n.translate('xpack.serverlessVectordb.path.description', {
+            {i18n.translate('serverlessOnboarding.path.description', {
               defaultMessage: 'Not sure? Let us generate the vectors for you.',
             })}
           </p>
@@ -62,14 +62,14 @@ export const PathStep: React.FC = () => {
           <EuiCard
             data-test-subj="vectordbPathHave"
             icon={<EuiIcon type="tokenVectorDense" size="xxl" color="primary" aria-hidden />}
-            title={i18n.translate('xpack.serverlessVectordb.path.have.label', {
+            title={i18n.translate('serverlessOnboarding.path.have.label', {
               defaultMessage: 'I already have vectors',
             })}
             paddingSize="l"
             textAlign="center"
             description={
               <FormattedMessage
-                id="xpack.serverlessVectordb.path.generate.description"
+                id="serverlessOnboarding.path.generate.description"
                 defaultMessage="Just ingest your vectors and we'll handle the rest, using quantization to optimize storage and search latency."
               />
             }
@@ -80,7 +80,7 @@ export const PathStep: React.FC = () => {
           <EuiCard
             data-test-subj="vectordbPathGenerate"
             icon={<EuiIcon type="tokenSemanticText" size="xxl" color="accent" aria-hidden />}
-            title={i18n.translate('xpack.serverlessVectordb.path.generate.label', {
+            title={i18n.translate('serverlessOnboarding.path.generate.label', {
               defaultMessage: 'Generate vectors for me',
             })}
             paddingSize="l"
@@ -88,7 +88,7 @@ export const PathStep: React.FC = () => {
             onClick={() => choose('generate-vectors')}
             description={
               <FormattedMessage
-                id="xpack.serverlessVectordb.path.generate.description"
+                id="serverlessOnboarding.path.generate.description"
                 defaultMessage="Just ingest your text documents and we'll use our state of the art models to generate the vectors."
               />
             }

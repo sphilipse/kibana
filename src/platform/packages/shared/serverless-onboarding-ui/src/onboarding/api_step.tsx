@@ -53,7 +53,7 @@ export const ApiStep: React.FC<ApiStepProps> = ({ snippets, consoleRequest, prom
             value={language}
             onChange={(e) => setLanguage(e.target.value as Language)}
             options={LANGUAGES.map((l) => ({ value: l.id, text: l.label }))}
-            aria-label={i18n.translate('xpack.serverlessVectordb.wizard.languagePickerLegend', {
+            aria-label={i18n.translate('serverlessOnboarding.wizard.languagePickerLegend', {
               defaultMessage: 'Programming language',
             })}
             data-test-subj="vectordbWizardLanguagePicker"
@@ -97,7 +97,7 @@ export const ApiStep: React.FC<ApiStepProps> = ({ snippets, consoleRequest, prom
                   onClick={copy}
                   data-test-subj="vectordbWizardCopyPrompt"
                 >
-                  {i18n.translate('xpack.serverlessVectordb.wizard.copyPrompt', {
+                  {i18n.translate('serverlessOnboarding.wizard.copyPrompt', {
                     defaultMessage: 'Copy prompt',
                   })}
                 </EuiButtonEmpty>

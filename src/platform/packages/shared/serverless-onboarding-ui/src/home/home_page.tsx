@@ -67,7 +67,7 @@ export const HomePage: React.FC = () => {
       <EuiPageTemplate.Section paddingSize="xl" grow={false}>
         <EuiTitle size="l">
           <h1>
-            {i18n.translate('xpack.serverlessVectordb.home.heading', {
+            {i18n.translate('serverlessOnboarding.home.heading', {
               defaultMessage: 'Vector DB',
             })}
           </h1>
@@ -75,7 +75,7 @@ export const HomePage: React.FC = () => {
         <EuiSpacer size="xs" />
         <EuiText color="subdued" size="s">
           <p>
-            {i18n.translate('xpack.serverlessVectordb.home.subheading', {
+            {i18n.translate('serverlessOnboarding.home.subheading', {
               defaultMessage: 'Your project at a glance.',
             })}
           </p>
@@ -85,35 +85,35 @@ export const HomePage: React.FC = () => {
 
         <EuiFlexGrid columns={3} gutterSize="m">
           <StatTile
-            label={i18n.translate('xpack.serverlessVectordb.home.stats.vectors', {
+            label={i18n.translate('serverlessOnboarding.home.stats.vectors', {
               defaultMessage: 'Vector documents',
             })}
             value={formatNumber(stats.vectorDocsCount)}
             isLoading={isLoading}
           />
           <StatTile
-            label={i18n.translate('xpack.serverlessVectordb.home.stats.indices', {
+            label={i18n.translate('serverlessOnboarding.home.stats.indices', {
               defaultMessage: 'Indices',
             })}
             value={formatNumber(stats.indicesCount)}
             isLoading={isLoading}
           />
           <StatTile
-            label={i18n.translate('xpack.serverlessVectordb.home.stats.storage', {
+            label={i18n.translate('serverlessOnboarding.home.stats.storage', {
               defaultMessage: 'Storage',
             })}
             value={formatBytes(stats.storeSizeBytes)}
             isLoading={isLoading}
           />
           <StatTile
-            label={i18n.translate('xpack.serverlessVectordb.home.stats.agents', {
+            label={i18n.translate('serverlessOnboarding.home.stats.agents', {
               defaultMessage: 'Agents',
             })}
             value={formatNumber(stats.agentsCount)}
             isLoading={isLoading}
           />
           <StatTile
-            label={i18n.translate('xpack.serverlessVectordb.home.stats.workflows', {
+            label={i18n.translate('serverlessOnboarding.home.stats.workflows', {
               defaultMessage: 'Workflows',
             })}
             value={formatNumber(stats.workflowsCount)}
@@ -126,7 +126,7 @@ export const HomePage: React.FC = () => {
         <EuiPanel hasBorder paddingSize="l">
           <EuiTitle size="xs">
             <h2>
-              {i18n.translate('xpack.serverlessVectordb.home.connect.heading', {
+              {i18n.translate('serverlessOnboarding.home.connect.heading', {
                 defaultMessage: 'Connect to your project',
               })}
             </h2>
@@ -136,7 +136,7 @@ export const HomePage: React.FC = () => {
             <EuiFlexItem>
               <EuiText size="xs" color="subdued">
                 <label htmlFor="vectordbHomeEsUrl">
-                  {i18n.translate('xpack.serverlessVectordb.home.connect.urlLabel', {
+                  {i18n.translate('serverlessOnboarding.home.connect.urlLabel', {
                     defaultMessage: 'Elasticsearch endpoint',
                   })}
                 </label>
@@ -155,10 +155,9 @@ export const HomePage: React.FC = () => {
                           iconType="copyClipboard"
                           size="xs"
                           onClick={copy}
-                          aria-label={i18n.translate(
-                            'xpack.serverlessVectordb.home.connect.copyUrl',
-                            { defaultMessage: 'Copy endpoint URL' }
-                          )}
+                          aria-label={i18n.translate('serverlessOnboarding.home.connect.copyUrl', {
+                            defaultMessage: 'Copy endpoint URL',
+                          })}
                         />
                       )}
                     </EuiCopy>
@@ -176,7 +175,7 @@ export const HomePage: React.FC = () => {
                 onClick={goToApiKeys}
                 data-test-subj="vectordbHomeCreateApiKey"
               >
-                {i18n.translate('xpack.serverlessVectordb.home.connect.createApiKey', {
+                {i18n.translate('serverlessOnboarding.home.connect.createApiKey', {
                   defaultMessage: 'Create API key',
                 })}
               </EuiButton>

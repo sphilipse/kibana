@@ -13,4 +13,10 @@ export { NewConversationPrompt } from './src/home/new_conversation_prompt';
 export { PathStep } from './src/onboarding/path_step';
 export { IngestStep } from './src/onboarding/ingest_step';
 export { SearchStep } from './src/onboarding/search_step';
+export { TutorialsPage } from './src/tutorials/tutorials_page';
+export {
+  markTutorialComplete,
+  isTutorialComplete,
+  useTutorialProgress,
+} from './src/tutorials/use_tutorial_progress';
 export type { OnboardingServices } from './src/services';

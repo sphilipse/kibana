@@ -41,6 +41,8 @@ export type ApplicationsLinkId = 'searchApplications';
 
 export type SynonymsLinkId = 'synonyms';
 
+export type SearchHomepageLinkId = 'tutorials';
+
 export type DeepLinkId =
   | EnterpriseSearchApp
   | EnterpriseSearchContentApp
@@ -55,5 +57,6 @@ export type DeepLinkId =
   | `${EnterpriseSearchContentApp}:${ContentLinkId}`
   | `${EnterpriseSearchApplicationsApp}:${ApplicationsLinkId}`
   | `${SearchSynonymsId}:${SynonymsLinkId}`
+  | `${SearchHomepage}:${SearchHomepageLinkId}`
   | SearchIndexManagement
   | SearchGettingStarted;
