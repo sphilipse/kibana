@@ -7,10 +7,22 @@
 
 import React from 'react';
 import { Route, Routes } from '@kbn/shared-ux-router';
+import { OnboardingApp } from '@kbn/serverless-onboarding-ui';
 
 import { SearchHomepagePage } from './components/search_homepage/search_homepage';
+import { useKibana } from './hooks/use_kibana';
 
 export const HomepageRouter = () => {
+  const {
+    services: { cloud },
+  } = useKibana();
+
+  // In Serverless Elasticsearch the home app is replaced by the onboarding
+  // wizard + deployment dashboard. Stateful Kibana keeps the existing homepage.
+  if (cloud?.isServerlessEnabled) {
+    return <OnboardingApp />;
+  }
+
   return (
     <Routes>
       <Route>
