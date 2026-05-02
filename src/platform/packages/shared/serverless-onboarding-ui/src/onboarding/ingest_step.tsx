@@ -26,7 +26,7 @@ export const IngestStep: React.FC = () => {
     services: { docLinks },
   } = useKibana();
 
-  if (!path) return <Redirect to="/" />;
+  if (!path) return <Redirect to="/onboarding" />;
 
   const isGenerate = path === 'generate-vectors';
   const docsHref = isGenerate
@@ -60,9 +60,9 @@ export const IngestStep: React.FC = () => {
         defaultMessage: 'Learn more',
       })}
       docsHref={docsHref}
-      onSkip={() => history.push('/dashboard')}
-      onBack={() => history.push(`/${pathQuery(path)}`)}
-      onNext={() => history.push(`/search${pathQuery(path)}`)}
+      onSkip={() => history.push('/')}
+      onBack={() => history.push(`/onboarding${pathQuery(path)}`)}
+      onNext={() => history.push(`/onboarding/search${pathQuery(path)}`)}
     >
       {!isGenerate ? (
         <>

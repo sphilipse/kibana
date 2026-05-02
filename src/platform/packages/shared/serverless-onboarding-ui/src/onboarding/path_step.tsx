@@ -7,7 +7,7 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   EuiCard,
   EuiFlexGroup,
@@ -20,6 +20,7 @@ import {
 import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { useHistory } from 'react-router-dom';
+import { markOnboardingSeen } from '../first_load';
 import type { VectorPath } from './snippets';
 import { StepLayout } from './step_layout';
 import { pathQuery } from './use_wizard_path';
@@ -27,10 +28,15 @@ import { pathQuery } from './use_wizard_path';
 export const PathStep: React.FC = () => {
   const history = useHistory();
 
-  const choose = (path: VectorPath) => history.push(`/ingest${pathQuery(path)}`);
+  // The user has reached the wizard — don't auto-redirect them back here next time.
+  useEffect(() => {
+    markOnboardingSeen();
+  }, []);
+
+  const choose = (path: VectorPath) => history.push(`/onboarding/ingest${pathQuery(path)}`);
 
   return (
-    <StepLayout currentStep={1} variant="hero" onSkip={() => history.push('/dashboard')}>
+    <StepLayout currentStep={1} variant="hero" onSkip={() => history.push('/')}>
       <div style={{ textAlign: 'center' }}>
         <EuiTitle size="l">
           <h1>

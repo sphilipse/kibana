@@ -26,7 +26,7 @@ export const SearchStep: React.FC = () => {
     services: { docLinks },
   } = useKibana();
 
-  if (!path) return <Redirect to="/" />;
+  if (!path) return <Redirect to="/onboarding" />;
 
   const isGenerate = path === 'generate-vectors';
   const docsHref = isGenerate
@@ -49,9 +49,9 @@ export const SearchStep: React.FC = () => {
         defaultMessage: 'Search docs',
       })}
       docsHref={docsHref}
-      onSkip={() => history.push('/dashboard')}
-      onBack={() => history.push(`/ingest${pathQuery(path)}`)}
-      onNext={() => history.push('/dashboard')}
+      onSkip={() => history.push('/')}
+      onBack={() => history.push(`/onboarding/ingest${pathQuery(path)}`)}
+      onNext={() => history.push('/')}
       nextLabel={i18n.translate('xpack.serverlessVectordb.search.done', {
         defaultMessage: 'Done',
       })}

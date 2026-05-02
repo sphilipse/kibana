@@ -16,17 +16,17 @@ import { PathStep } from './onboarding/path_step';
 import { SearchStep } from './onboarding/search_step';
 
 /**
- * Renders the full onboarding experience: a 3-step wizard (path choice,
- * ingest, search) at `/`, `/ingest`, `/search`, plus a deployment dashboard
- * at `/dashboard`. The hosting plugin is responsible for wrapping this in
- * a `<Router>` and providing the required Kibana services on context.
+ * Renders the full onboarding experience: a deployment dashboard at `/` and a
+ * 3-step wizard at `/onboarding` (path choice → ingest → search). On first
+ * load the dashboard auto-redirects to the wizard once; on subsequent loads
+ * it stays put.
  */
 export const OnboardingApp: React.FC = () => (
   <Routes>
-    <Route exact path="/" component={PathStep} />
-    <Route exact path="/ingest" component={IngestStep} />
-    <Route exact path="/search" component={SearchStep} />
-    <Route exact path="/dashboard" component={HomePage} />
+    <Route exact path="/" component={HomePage} />
+    <Route exact path="/onboarding" component={PathStep} />
+    <Route exact path="/onboarding/ingest" component={IngestStep} />
+    <Route exact path="/onboarding/search" component={SearchStep} />
     <Route render={() => <Redirect to="/" />} />
   </Routes>
 );
