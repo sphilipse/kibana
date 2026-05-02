@@ -28,5 +28,6 @@
     "@kbn/shared-ux-router",
     "@kbn/agent-builder-plugin",
     "@kbn/serverless-onboarding-ui",
+    "@kbn/i18n",
   ]
 }
