@@ -9,10 +9,10 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { css } from '@emotion/react';
 import { EuiButtonEmpty, EuiIcon, EuiPopover, EuiSelectable } from '@elastic/eui';
 import type { EuiSelectableOption } from '@elastic/eui';
-import { useConnectors } from '../../hooks/use_connectors';
-import { getConnectorIcon } from '../../utils/connector_display';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { i18n } from '@kbn/i18n';
+import { useConnectors } from '../../hooks/use_connectors';
+import { getConnectorIcon } from '../../utils/connector_display';
 
 interface AddModelPopoverProps {
   existingEndpointIds: string[];
