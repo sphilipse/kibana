@@ -35,7 +35,7 @@ const containsVectorField = (properties?: Record<string, MappingProperty>): bool
 export const registerDeploymentStatsRoute = (router: IRouter, logger: Logger) => {
   router.get(
     {
-      path: '/internal/serverless_onboarding/deployment_stats',
+      path: '/internal/search_homepage/onboarding/deployment_stats',
       validate: false,
       security: {
         authz: {

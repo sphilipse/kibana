@@ -8,6 +8,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useOnboardingApiPaths } from '../api_paths';
 import { useKibana } from '../services';
 
 export interface DeploymentStats {
@@ -32,6 +33,7 @@ export const useDeploymentStats = () => {
   const {
     services: { http, cloud },
   } = useKibana();
+  const { deploymentStats: deploymentStatsPath } = useOnboardingApiPaths();
   const [stats, setStats] = useState<DeploymentStats>(initialStats);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -41,7 +43,7 @@ export const useDeploymentStats = () => {
 
     const fetchEs = http
       .get<{ indicesCount: number; vectorDocsCount: number; storeSizeBytes: number }>(
-        '/internal/serverless_onboarding/deployment_stats'
+        deploymentStatsPath
       )
       .catch(() => null);
 
@@ -83,7 +85,7 @@ export const useDeploymentStats = () => {
     return () => {
       cancelled = true;
     };
-  }, [http, cloud]);
+  }, [http, cloud, deploymentStatsPath]);
 
   return { stats, isLoading };
 };

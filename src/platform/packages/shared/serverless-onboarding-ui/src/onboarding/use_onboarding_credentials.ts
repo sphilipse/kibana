@@ -8,6 +8,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useOnboardingApiPaths } from '../api_paths';
 import { useKibana } from '../services';
 
 const SESSION_KEY = 'vectordb.onboarding.apiKey';
@@ -45,6 +46,7 @@ export const useOnboardingCredentials = (): OnboardingCredentials => {
   const {
     services: { http, cloud },
   } = useKibana();
+  const { apiKey: apiKeyPath } = useOnboardingApiPaths();
   const [elasticsearchUrl, setElasticsearchUrl] = useState<string | null>(null);
   const [apiKey, setApiKey] = useState<string | null>(() => readCachedKey()?.encoded ?? null);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,7 +66,7 @@ export const useOnboardingCredentials = (): OnboardingCredentials => {
     const keyPromise: Promise<string | null> = cached
       ? Promise.resolve(cached.encoded)
       : http
-          .post<CachedKey>('/internal/serverless_onboarding/api_key', {
+          .post<CachedKey>(apiKeyPath, {
             body: JSON.stringify({}),
           })
           .then((result) => {
@@ -83,7 +85,7 @@ export const useOnboardingCredentials = (): OnboardingCredentials => {
     return () => {
       cancelled = true;
     };
-  }, [http, cloud]);
+  }, [http, cloud, apiKeyPath]);
 
   return { elasticsearchUrl, apiKey, isLoading };
 };

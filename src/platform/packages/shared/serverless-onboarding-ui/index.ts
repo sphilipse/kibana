@@ -8,6 +8,8 @@
  */
 
 export { OnboardingApp } from './src/onboarding_app';
+export { OnboardingApiPathsProvider } from './src/api_paths';
+export type { OnboardingApiPaths } from './src/api_paths';
 export { HomePage } from './src/home/home_page';
 export { NewConversationPrompt } from './src/home/new_conversation_prompt';
 export { PathStep } from './src/onboarding/path_step';

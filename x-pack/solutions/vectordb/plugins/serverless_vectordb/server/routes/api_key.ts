@@ -11,7 +11,7 @@ import type { IRouter, Logger } from '@kbn/core/server';
 export const registerCreateApiKeyRoute = (router: IRouter, logger: Logger) => {
   router.post(
     {
-      path: '/internal/serverless_onboarding/api_key',
+      path: '/internal/serverless_vectordb/api_key',
       validate: {
         body: schema.object({
           name: schema.maybe(schema.string()),
