@@ -82,7 +82,6 @@ export default function jiraTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           name: 'A jira action',
           connector_type_id: '.jira',
           is_missing_secrets: false,
@@ -90,6 +89,7 @@ export default function jiraTest({ getService }: FtrProviderContext) {
             apiUrl: jiraSimulatorURL,
             projectKey: mockJira.config.projectKey,
           },
+          is_connector_type_deprecated: false,
         });
 
         const { body: fetchedAction } = await supertest
@@ -101,7 +101,6 @@ export default function jiraTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           name: 'A jira action',
           connector_type_id: '.jira',
           is_missing_secrets: false,
@@ -109,6 +108,7 @@ export default function jiraTest({ getService }: FtrProviderContext) {
             apiUrl: jiraSimulatorURL,
             projectKey: mockJira.config.projectKey,
           },
+          is_connector_type_deprecated: false,
           auth_mode: 'shared',
         });
       });

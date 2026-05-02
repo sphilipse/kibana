@@ -28,6 +28,7 @@ const mockAIConnectors: AIConnector[] = [
     isPreconfigured: false,
     isEis: false,
     isDeprecated: false,
+    isConnectorTypeDeprecated: false,
     isMissingSecrets: false,
   } as AIConnector,
   {
@@ -38,6 +39,7 @@ const mockAIConnectors: AIConnector[] = [
     isPreconfigured: false,
     isEis: false,
     isDeprecated: false,
+    isConnectorTypeDeprecated: false,
     isMissingSecrets: false,
   } as AIConnector,
 ];

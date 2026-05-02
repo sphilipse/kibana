@@ -7,42 +7,37 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { AsApiContract } from '@kbn/actions-types';
+import type { AsApiContract, RewriteRequestCase } from '@kbn/actions-types';
 import type { ActionConnectorProps } from '../../types';
 
-type ConnectorApiResponse = AsApiContract<
-  ActionConnectorProps<Record<string, unknown>, Record<string, unknown>>
-> & {
-  // Public API backwards-compat field that mirrors `is_deprecated`. Discarded by the transform.
-  is_connector_type_deprecated?: boolean;
-};
-
 export const transformConnectorResponse = (
-  results: ConnectorApiResponse[]
+  results: Array<
+    AsApiContract<ActionConnectorProps<Record<string, unknown>, Record<string, unknown>>>
+  >
 ): Array<ActionConnectorProps<Record<string, unknown>, Record<string, unknown>>> => {
   return results.map((item) => transformConnector(item));
 };
 
-const transformConnector = ({
+const transformConnector: RewriteRequestCase<
+  ActionConnectorProps<Record<string, unknown>, Record<string, unknown>>
+> = ({
   connector_type_id: actionTypeId,
   is_preconfigured: isPreconfigured,
   is_deprecated: isDeprecated,
   referenced_by_count: referencedByCount,
   is_missing_secrets: isMissingSecrets,
   is_system_action: isSystemAction,
+  is_connector_type_deprecated: isConnectorTypeDeprecated,
   auth_mode: authMode,
-  is_connector_type_deprecated: _isConnectorTypeDeprecated,
   ...res
-}: ConnectorApiResponse): ActionConnectorProps<
-  Record<string, unknown>,
-  Record<string, unknown>
-> => ({
+}) => ({
   actionTypeId,
   isPreconfigured,
   isDeprecated,
   referencedByCount,
   isMissingSecrets,
   isSystemAction,
+  isConnectorTypeDeprecated,
   ...(authMode !== undefined ? { authMode } : {}),
   ...res,
 });

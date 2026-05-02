@@ -86,7 +86,6 @@ export default function genAiTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           name,
           connector_type_id: connectorTypeId,
           is_missing_secrets: false,
@@ -94,6 +93,7 @@ export default function genAiTest({ getService }: FtrProviderContext) {
             ...config,
             defaultModel: 'gpt-4.1',
           },
+          is_connector_type_deprecated: false,
         });
       });
 
@@ -117,7 +117,6 @@ export default function genAiTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           name,
           connector_type_id: connectorTypeId,
           is_missing_secrets: false,
@@ -125,6 +124,7 @@ export default function genAiTest({ getService }: FtrProviderContext) {
             ...config,
             defaultModel: 'gpt-3.5-turbo',
           },
+          is_connector_type_deprecated: false,
         });
       });
 

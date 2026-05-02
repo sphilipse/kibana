@@ -23,6 +23,7 @@ export default function createUnsecuredActionTests({ getService }: FtrProviderCo
       isDeprecated: false,
       isSystemAction: false,
       referencedByCount: 0,
+      isConnectorTypeDeprecated: false,
       authMode: 'shared',
     },
     {
@@ -33,6 +34,7 @@ export default function createUnsecuredActionTests({ getService }: FtrProviderCo
       isDeprecated: false,
       isSystemAction: false,
       referencedByCount: 0,
+      isConnectorTypeDeprecated: false,
       authMode: 'shared',
     },
     {
@@ -43,6 +45,7 @@ export default function createUnsecuredActionTests({ getService }: FtrProviderCo
       isDeprecated: false,
       isSystemAction: false,
       referencedByCount: 0,
+      isConnectorTypeDeprecated: false,
       authMode: 'shared',
     },
     {
@@ -53,6 +56,7 @@ export default function createUnsecuredActionTests({ getService }: FtrProviderCo
       isDeprecated: true,
       isSystemAction: false,
       referencedByCount: 0,
+      isConnectorTypeDeprecated: false,
       authMode: 'shared',
     },
     {
@@ -63,6 +67,7 @@ export default function createUnsecuredActionTests({ getService }: FtrProviderCo
       isDeprecated: true,
       isSystemAction: false,
       referencedByCount: 0,
+      isConnectorTypeDeprecated: false,
       authMode: 'shared',
     },
     {
@@ -73,6 +78,7 @@ export default function createUnsecuredActionTests({ getService }: FtrProviderCo
       isDeprecated: false,
       isSystemAction: false,
       referencedByCount: 0,
+      isConnectorTypeDeprecated: false,
       authMode: 'shared',
     },
     {
@@ -83,6 +89,7 @@ export default function createUnsecuredActionTests({ getService }: FtrProviderCo
       isDeprecated: false,
       isSystemAction: false,
       referencedByCount: 0,
+      isConnectorTypeDeprecated: false,
       authMode: 'shared',
     },
     {
@@ -93,6 +100,7 @@ export default function createUnsecuredActionTests({ getService }: FtrProviderCo
       isDeprecated: false,
       isSystemAction: false,
       referencedByCount: 0,
+      isConnectorTypeDeprecated: false,
       authMode: 'shared',
     },
     {
@@ -103,6 +111,7 @@ export default function createUnsecuredActionTests({ getService }: FtrProviderCo
       isDeprecated: false,
       isSystemAction: false,
       referencedByCount: 0,
+      isConnectorTypeDeprecated: false,
       authMode: 'shared',
     },
   ];
@@ -171,6 +180,7 @@ export default function createUnsecuredActionTests({ getService }: FtrProviderCo
           id: createdConnector1.id,
           isPreconfigured: false,
           isDeprecated: false,
+          isConnectorTypeDeprecated: false,
           name: 'zzz - My action1',
           actionTypeId: 'test.index-record',
           isMissingSecrets: false,
@@ -203,6 +213,7 @@ export default function createUnsecuredActionTests({ getService }: FtrProviderCo
           id: createdConnector2.id,
           isPreconfigured: false,
           isDeprecated: false,
+          isConnectorTypeDeprecated: false,
           name: 'zzz - My action2',
           actionTypeId: 'test.index-record',
           isMissingSecrets: false,

@@ -187,6 +187,7 @@ export interface ConnectorItem {
   isDeprecated: boolean;
   isSystemAction: boolean;
   isMissingSecrets?: boolean;
+  isConnectorTypeDeprecated: boolean;
   authMode?: 'shared' | 'per-user';
   oauthStatus?: OAuthStatus;
 }

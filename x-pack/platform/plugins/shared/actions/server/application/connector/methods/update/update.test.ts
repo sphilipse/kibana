@@ -440,6 +440,7 @@ describe('update()', () => {
             config: {},
             secrets: {},
             isDeprecated: false,
+            isConnectorTypeDeprecated: false,
           },
         ],
       };
@@ -466,6 +467,7 @@ describe('update()', () => {
             config: {},
             secrets: {},
             isDeprecated: false,
+            isConnectorTypeDeprecated: false,
           },
         ],
       };
@@ -492,6 +494,7 @@ describe('update()', () => {
                 actionTypeId: '.test',
                 name: 'Test',
                 isDeprecated: false,
+                isConnectorTypeDeprecated: false,
                 config: {},
                 secrets: {},
               },
@@ -688,6 +691,7 @@ describe('update()', () => {
         isPreconfigured: false,
         isSystemAction: false,
         isDeprecated: false,
+        isConnectorTypeDeprecated: false,
         authMode: 'shared',
       });
     });

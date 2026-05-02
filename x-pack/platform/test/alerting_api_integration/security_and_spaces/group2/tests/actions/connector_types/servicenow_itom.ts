@@ -116,7 +116,6 @@ export default function serviceNowITOMTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           name: 'A servicenow action',
           connector_type_id: '.servicenow-itom',
           is_missing_secrets: false,
@@ -127,6 +126,7 @@ export default function serviceNowITOMTest({ getService }: FtrProviderContext) {
             jwtKeyId: null,
             userIdentifierValue: null,
           },
+          is_connector_type_deprecated: false,
         });
 
         const { body: fetchedAction } = await supertest
@@ -138,7 +138,6 @@ export default function serviceNowITOMTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           name: 'A servicenow action',
           connector_type_id: '.servicenow-itom',
           is_missing_secrets: false,
@@ -149,6 +148,7 @@ export default function serviceNowITOMTest({ getService }: FtrProviderContext) {
             jwtKeyId: null,
             userIdentifierValue: null,
           },
+          is_connector_type_deprecated: false,
           auth_mode: 'shared',
         });
       });
@@ -173,7 +173,6 @@ export default function serviceNowITOMTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           name: 'A servicenow action',
           connector_type_id: '.servicenow-itom',
           is_missing_secrets: false,
@@ -184,6 +183,7 @@ export default function serviceNowITOMTest({ getService }: FtrProviderContext) {
             jwtKeyId: mockServiceNowOAuth.config.jwtKeyId,
             userIdentifierValue: mockServiceNowOAuth.config.userIdentifierValue,
           },
+          is_connector_type_deprecated: false,
         });
 
         const { body: fetchedConnector } = await supertest
@@ -195,7 +195,6 @@ export default function serviceNowITOMTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           name: 'A servicenow action',
           connector_type_id: '.servicenow-itom',
           is_missing_secrets: false,
@@ -206,6 +205,7 @@ export default function serviceNowITOMTest({ getService }: FtrProviderContext) {
             jwtKeyId: mockServiceNowOAuth.config.jwtKeyId,
             userIdentifierValue: mockServiceNowOAuth.config.userIdentifierValue,
           },
+          is_connector_type_deprecated: false,
           auth_mode: 'shared',
         });
       });

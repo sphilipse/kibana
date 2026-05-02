@@ -86,6 +86,7 @@ export function connectorFromEndpoint(endpoint: InferenceInferenceEndpointInfo):
     secrets: {},
     isPreconfigured: true,
     isSystemAction: false,
+    isConnectorTypeDeprecated: false,
     isDynamic: true,
     isDeprecated: false,
   };

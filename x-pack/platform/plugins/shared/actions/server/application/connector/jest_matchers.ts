@@ -22,6 +22,7 @@ export const toContainConnector: MatcherFunction<[expected: Connector]> = functi
     isPreconfigured: false,
     isDeprecated: false,
     isSystemAction: false,
+    isConnectorTypeDeprecated: false,
     ...(expected as Partial<Connector>),
   };
 
@@ -71,6 +72,7 @@ export const toContainConnectors: MatcherFunction<
       isPreconfigured: false,
       isDeprecated: false,
       isSystemAction: false,
+      isConnectorTypeDeprecated: false,
       ...expectedConnector,
     };
 
@@ -121,6 +123,7 @@ export const toContainConnectorsFindResult: MatcherFunction<
       isPreconfigured: false,
       isDeprecated: false,
       isSystemAction: false,
+      isConnectorTypeDeprecated: false,
       referencedByCount: 0, // This is the difference between this and toMatchConnectors
       ...expectedConnector,
     };

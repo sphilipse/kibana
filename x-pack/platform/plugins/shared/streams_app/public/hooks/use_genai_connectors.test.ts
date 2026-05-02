@@ -35,6 +35,7 @@ const createMockAIConnector = (id: string, name: string) => ({
   isPreconfigured: false,
   isSystemAction: false,
   isDeprecated: false,
+  isConnectorTypeDeprecated: false,
   isMissingSecrets: false,
 });
 

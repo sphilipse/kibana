@@ -166,12 +166,11 @@ const ActionsConnectorsList = ({
 
   const actionConnectorTableItems: ActionConnectorTableItem[] = actionTypesIndex
     ? actions.map((action) => {
-        const typeName = actionTypesIndex[action.actionTypeId]
-          ? actionTypesIndex[action.actionTypeId].name
-          : action.actionTypeId;
         return {
           ...action,
-          actionType: action.isDeprecated ? `${typeName} ${deprecatedMessage}` : typeName,
+          actionType: actionTypesIndex[action.actionTypeId]
+            ? actionTypesIndex[action.actionTypeId].name
+            : action.actionTypeId,
           compatibility: actionTypesIndex[action.actionTypeId]
             ? getConnectorCompatibility(actionTypesIndex[action.actionTypeId].supportedFeatureIds)
             : [],
@@ -240,8 +239,12 @@ const ActionsConnectorsList = ({
           actionTypesIndex && actionTypesIndex[item.actionTypeId],
           item.isPreconfigured
         );
+        /**
+         * TODO: Remove when connectors can provide their own UX message.
+         * Issue: https://github.com/elastic/kibana/issues/114507
+         */
         const showDeprecatedTooltip = item.isDeprecated;
-        const name = value;
+        const name = getConnectorName(value, item);
 
         const link = (
           <EuiFlexGroup alignItems="center" gutterSize="xs">
@@ -620,6 +623,10 @@ export { ActionsConnectorsList as default };
 
 function getActionsCountByActionType(actions: ActionConnector[], actionTypeId: string) {
   return actions.filter((action) => action.actionTypeId === actionTypeId).length;
+}
+
+function getConnectorName(name: string, connector: ActionConnector): string {
+  return connector.isDeprecated ? `${name} ${deprecatedMessage}` : name;
 }
 
 const DeleteOperation: React.FunctionComponent<{

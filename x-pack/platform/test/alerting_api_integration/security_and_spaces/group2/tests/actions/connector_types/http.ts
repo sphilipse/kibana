@@ -43,6 +43,7 @@ function expectBasicHttpConnectorShape({
   expect(action.name).to.be('A generic Http action');
   expect(action.connector_type_id).to.be('.http');
   expect(action.is_missing_secrets).to.be(false);
+  expect(action.is_connector_type_deprecated).to.be(false);
 
   expect(action.config.url).to.be(expectedUrl);
   expect(action.config.headers).to.eql(expectedHeaders);

@@ -46,6 +46,7 @@ export const toConnectorItem = (
     isDeprecated: connector.isDeprecated,
     isSystemAction: connector.isSystemAction,
     isMissingSecrets: connector.isMissingSecrets,
+    isConnectorTypeDeprecated: connector.isConnectorTypeDeprecated,
     config: connector.config,
     authMode: connector.authMode,
     oauthStatus: options?.oauthStatus,

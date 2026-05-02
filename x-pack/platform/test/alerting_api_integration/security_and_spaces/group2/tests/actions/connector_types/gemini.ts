@@ -89,7 +89,6 @@ export default function geminiTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           name,
           connector_type_id: connectorTypeId,
           is_missing_secrets: false,
@@ -97,6 +96,7 @@ export default function geminiTest({ getService }: FtrProviderContext) {
             ...config,
             defaultModel: DEFAULT_MODEL,
           },
+          is_connector_type_deprecated: false,
         });
       });
 

@@ -78,9 +78,6 @@ export async function get({
       })
     );
 
-    const isConnectorTypeDeprecated = actionTypeRegistry.isDeprecated(
-      result.attributes.actionTypeId
-    );
     connector = {
       id,
       actionTypeId: result.attributes.actionTypeId,
@@ -89,7 +86,8 @@ export async function get({
       config: result.attributes.config,
       isPreconfigured: false,
       isSystemAction: false,
-      isDeprecated: isConnectorDeprecated(result.attributes, isConnectorTypeDeprecated),
+      isDeprecated: isConnectorDeprecated(result.attributes),
+      isConnectorTypeDeprecated: actionTypeRegistry.isDeprecated(result.attributes.actionTypeId),
       authMode: result.attributes.authMode
         ? (result.attributes.authMode as Connector['authMode'])
         : 'shared',

@@ -99,12 +99,10 @@ async function getAllHelper({
   const savedObjectsActions = (
     await findConnectorsSo({ savedObjectsClient, namespace })
   ).saved_objects.map((rawAction) => {
-    const isConnectorTypeDeprecated = connectorTypeRegistry.isDeprecated(
-      rawAction.attributes.actionTypeId
-    );
     const connector = connectorFromSavedObject(
       rawAction,
-      isConnectorDeprecated(rawAction.attributes, isConnectorTypeDeprecated)
+      isConnectorDeprecated(rawAction.attributes),
+      connectorTypeRegistry.isDeprecated(rawAction.attributes.actionTypeId)
     );
     return omit(connector, 'secrets');
   });
@@ -123,14 +121,14 @@ async function getAllHelper({
   const mergedResult = [
     ...savedObjectsActions,
     ...(await filterInferenceConnectors(esClient, inMemoryConnectors)).map((connector) => {
-      const isConnectorTypeDeprecated = connectorTypeRegistry.isDeprecated(connector.actionTypeId);
       return {
         id: connector.id,
         actionTypeId: connector.actionTypeId,
         name: connector.name,
         isPreconfigured: connector.isPreconfigured,
-        isDeprecated: isConnectorDeprecated(connector, isConnectorTypeDeprecated),
+        isDeprecated: isConnectorDeprecated(connector),
         isSystemAction: connector.isSystemAction,
+        isConnectorTypeDeprecated: connectorTypeRegistry.isDeprecated(connector.actionTypeId),
         ...(connector.exposeConfig ? { config: connector.config } : {}),
         authMode: connector.authMode ? connector.authMode : 'shared',
       };
@@ -183,16 +181,16 @@ export async function getAllSystemConnectors({
 
   const transformedSystemConnectors = systemConnectors
     .map((systemConnector) => {
-      const isConnectorTypeDeprecated = context.actionTypeRegistry.isDeprecated(
-        systemConnector.actionTypeId
-      );
       return {
         id: systemConnector.id,
         actionTypeId: systemConnector.actionTypeId,
         name: systemConnector.name,
         isPreconfigured: systemConnector.isPreconfigured,
-        isDeprecated: isConnectorDeprecated(systemConnector, isConnectorTypeDeprecated),
+        isDeprecated: isConnectorDeprecated(systemConnector),
         isSystemAction: systemConnector.isSystemAction,
+        isConnectorTypeDeprecated: context.actionTypeRegistry.isDeprecated(
+          systemConnector.actionTypeId
+        ),
         authMode: systemConnector.authMode ? systemConnector.authMode : 'shared',
       };
     })

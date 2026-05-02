@@ -38,6 +38,7 @@ export function createMockActionConnector<
       actionTypeId: '.test-connector-type',
       name: 'Test Connector',
       isDeprecated: false,
+      isConnectorTypeDeprecated: false,
       ...overrides,
       isSystemAction: false,
       isPreconfigured: true,
@@ -49,6 +50,7 @@ export function createMockActionConnector<
       actionTypeId: '.test-connector-type',
       name: 'Test Connector',
       isDeprecated: false,
+      isConnectorTypeDeprecated: false,
       ...overrides,
       isPreconfigured: false,
       isSystemAction: true,
@@ -64,6 +66,7 @@ export function createMockActionConnector<
     isPreconfigured: false,
     isDeprecated: false,
     isSystemAction: false,
+    isConnectorTypeDeprecated: false,
     ...overrides,
   } as UserConfiguredActionConnector<Secrets, Config>;
 }

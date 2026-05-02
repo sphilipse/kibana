@@ -53,6 +53,8 @@ export interface InferenceConnector {
   isEis?: boolean;
   /** Present when sourced from a stack connector that exposes deprecation state. */
   isDeprecated?: boolean;
+  /** Present when sourced from a stack connector that exposes connector-type deprecation. */
+  isConnectorTypeDeprecated?: boolean;
   /** Present when sourced from a stack connector that exposes missing-secrets state. */
   isMissingSecrets?: boolean;
 }
@@ -77,6 +79,7 @@ export interface RawConnector {
   isPreconfigured?: boolean;
   isEis?: boolean;
   isDeprecated?: boolean;
+  isConnectorTypeDeprecated?: boolean;
   isMissingSecrets?: boolean;
 }
 
@@ -88,5 +91,6 @@ export interface RawInferenceConnector {
   isPreconfigured?: boolean;
   isEis?: boolean;
   isDeprecated?: boolean;
+  isConnectorTypeDeprecated?: boolean;
   isMissingSecrets?: boolean;
 }

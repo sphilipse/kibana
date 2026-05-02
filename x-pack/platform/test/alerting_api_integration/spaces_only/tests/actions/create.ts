@@ -39,7 +39,6 @@ export default function createConnectorTests({ getService }: FtrProviderContext)
         id: response.body.id,
         is_preconfigured: false,
         is_deprecated: false,
-        is_connector_type_deprecated: false,
         name: 'My connector',
         connector_type_id: 'test.index-record',
         is_missing_secrets: false,
@@ -47,6 +46,7 @@ export default function createConnectorTests({ getService }: FtrProviderContext)
         config: {
           unencrypted: `This value shouldn't get encrypted`,
         },
+        is_connector_type_deprecated: false,
       });
       expect(typeof response.body.id).to.be('string');
 

@@ -28,6 +28,7 @@ const toInferenceConnector = (connector: AIConnector): InferenceConnector => ({
   isPreconfigured: connector.isPreconfigured,
   isEis: connector.isEis,
   isDeprecated: connector.isDeprecated,
+  isConnectorTypeDeprecated: connector.isConnectorTypeDeprecated,
   isMissingSecrets: connector.isMissingSecrets,
 });
 

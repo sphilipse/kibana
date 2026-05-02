@@ -199,6 +199,7 @@ describe('connectorFromEndpoint', () => {
       secrets: {},
       isPreconfigured: true,
       isSystemAction: false,
+      isConnectorTypeDeprecated: false,
       isDynamic: true,
       isDeprecated: false,
     });

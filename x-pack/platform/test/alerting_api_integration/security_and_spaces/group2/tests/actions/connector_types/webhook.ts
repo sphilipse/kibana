@@ -131,7 +131,6 @@ export default function webhookTest({ getService }: FtrProviderContext) {
         is_preconfigured: false,
         is_system_action: false,
         is_deprecated: false,
-        is_connector_type_deprecated: false,
         name: 'A generic Webhook action',
         connector_type_id: '.webhook',
         is_missing_secrets: false,
@@ -139,6 +138,7 @@ export default function webhookTest({ getService }: FtrProviderContext) {
           ...defaultValues,
           url: webhookSimulatorURL,
         },
+        is_connector_type_deprecated: false,
       });
 
       expect(typeof createdAction.id).to.be('string');
@@ -152,7 +152,6 @@ export default function webhookTest({ getService }: FtrProviderContext) {
         is_preconfigured: false,
         is_system_action: false,
         is_deprecated: false,
-        is_connector_type_deprecated: false,
         name: 'A generic Webhook action',
         connector_type_id: '.webhook',
         is_missing_secrets: false,
@@ -160,6 +159,7 @@ export default function webhookTest({ getService }: FtrProviderContext) {
           ...defaultValues,
           url: webhookSimulatorURL,
         },
+        is_connector_type_deprecated: false,
         auth_mode: 'shared',
       });
     });
@@ -188,7 +188,6 @@ export default function webhookTest({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           name: 'A generic Webhook action',
           connector_type_id: '.webhook',
           is_missing_secrets: false,
@@ -197,6 +196,7 @@ export default function webhookTest({ getService }: FtrProviderContext) {
             url: webhookSimulatorURL,
             method,
           },
+          is_connector_type_deprecated: false,
         };
 
         expect(createdAction).to.eql(expectedResult);
@@ -234,7 +234,6 @@ export default function webhookTest({ getService }: FtrProviderContext) {
         is_preconfigured: false,
         is_system_action: false,
         is_deprecated: false,
-        is_connector_type_deprecated: false,
         name: 'A generic Webhook action',
         connector_type_id: '.webhook',
         is_missing_secrets: false,
@@ -245,6 +244,7 @@ export default function webhookTest({ getService }: FtrProviderContext) {
             someHeader: '123',
           },
         },
+        is_connector_type_deprecated: false,
       });
 
       await supertest
@@ -274,7 +274,6 @@ export default function webhookTest({ getService }: FtrProviderContext) {
         is_preconfigured: false,
         is_system_action: false,
         is_deprecated: false,
-        is_connector_type_deprecated: false,
         name: 'A generic Webhook action',
         connector_type_id: '.webhook',
         is_missing_secrets: false,
@@ -285,6 +284,7 @@ export default function webhookTest({ getService }: FtrProviderContext) {
             someOtherHeader: '456',
           },
         },
+        is_connector_type_deprecated: false,
         auth_mode: 'shared',
       });
     });

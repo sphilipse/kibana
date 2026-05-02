@@ -39,6 +39,7 @@ describe('SlackParamsFields', () => {
     isDeprecated: false,
     isPreconfigured: false as const,
     isSystemAction: false,
+    isConnectorTypeDeprecated: false,
   };
 
   const actionConnectorWithAllowedList = {

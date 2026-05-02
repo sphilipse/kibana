@@ -18,6 +18,7 @@ export function createMockConnector(overrides: Partial<Connector> = {}): Connect
     isPreconfigured: false,
     isDeprecated: false,
     isSystemAction: false,
+    isConnectorTypeDeprecated: false,
     ...overrides,
   };
 }
@@ -32,6 +33,7 @@ export function createMockConnectorFindResult(
     isPreconfigured: false,
     isDeprecated: false,
     isSystemAction: false,
+    isConnectorTypeDeprecated: false,
     referencedByCount: 0,
     ...overrides,
   };
@@ -63,6 +65,7 @@ export function createMockInMemoryConnector(
     isPreconfigured: false,
     isDeprecated: false,
     isSystemAction: false,
+    isConnectorTypeDeprecated: false,
     secrets: {},
     config: {},
     ...overrides,

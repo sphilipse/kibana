@@ -70,6 +70,7 @@ jest.mock('./rule_actions_connectors_modal', () => ({
             isPreconfigured: false,
             isSystemAction: false,
             isDeprecated: false,
+            isConnectorTypeDeprecated: false,
           })
         }
       >

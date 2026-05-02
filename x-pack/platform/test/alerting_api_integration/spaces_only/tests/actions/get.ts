@@ -40,7 +40,6 @@ export default function getConnectorTests({ getService }: FtrProviderContext) {
           id: createdConnector.id,
           is_preconfigured: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           is_missing_secrets: false,
           is_system_action: false,
           connector_type_id: 'test.index-record',
@@ -48,6 +47,7 @@ export default function getConnectorTests({ getService }: FtrProviderContext) {
           config: {
             unencrypted: `This value shouldn't get encrypted`,
           },
+          is_connector_type_deprecated: false,
           auth_mode: 'shared',
         });
     });
@@ -85,10 +85,10 @@ export default function getConnectorTests({ getService }: FtrProviderContext) {
           id: 'my-slack1',
           is_preconfigured: true,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           is_system_action: false,
           connector_type_id: '.slack',
           name: 'Slack#xyz',
+          is_connector_type_deprecated: false,
           auth_mode: 'shared',
         });
     });
@@ -110,10 +110,10 @@ export default function getConnectorTests({ getService }: FtrProviderContext) {
           id: 'my-deprecated-servicenow',
           is_preconfigured: true,
           is_deprecated: true,
-          is_connector_type_deprecated: true,
           is_system_action: false,
           connector_type_id: '.servicenow',
           name: 'ServiceNow#xyz',
+          is_connector_type_deprecated: false,
           auth_mode: 'shared',
         });
 
@@ -125,10 +125,10 @@ export default function getConnectorTests({ getService }: FtrProviderContext) {
           id: 'my-deprecated-servicenow-default',
           is_preconfigured: true,
           is_deprecated: true,
-          is_connector_type_deprecated: true,
           is_system_action: false,
           connector_type_id: '.servicenow',
           name: 'ServiceNow#xyz',
+          is_connector_type_deprecated: false,
           auth_mode: 'shared',
         });
     });

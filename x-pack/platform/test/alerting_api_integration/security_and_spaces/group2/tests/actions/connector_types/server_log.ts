@@ -34,11 +34,11 @@ export default function serverLogTest({ getService }: FtrProviderContext) {
         is_preconfigured: false,
         is_system_action: false,
         is_deprecated: false,
-        is_connector_type_deprecated: false,
         is_missing_secrets: false,
         name: 'A server.log action',
         connector_type_id: '.server-log',
         config: {},
+        is_connector_type_deprecated: false,
       });
 
       expect(typeof createdAction.id).to.be('string');
@@ -52,11 +52,11 @@ export default function serverLogTest({ getService }: FtrProviderContext) {
         is_preconfigured: false,
         is_system_action: false,
         is_deprecated: false,
-        is_connector_type_deprecated: false,
         name: 'A server.log action',
         connector_type_id: '.server-log',
         is_missing_secrets: false,
         config: {},
+        is_connector_type_deprecated: false,
         auth_mode: 'shared',
       });
     });

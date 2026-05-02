@@ -47,8 +47,8 @@ describe('createCrowdStrikeConnectorIfNeeded', () => {
       connector_type_id: 'crowdstrike',
       is_preconfigured: false,
       is_deprecated: false,
-      is_connector_type_deprecated: false,
       is_system_action: false,
+      is_connector_type_deprecated: false,
     };
 
     mockedConnectorsServices.fetchConnectorByType.mockResolvedValue(existingConnector);

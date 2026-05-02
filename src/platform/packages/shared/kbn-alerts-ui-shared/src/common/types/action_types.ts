@@ -45,6 +45,7 @@ export interface ActionConnectorProps<Config, Secrets> {
   isDeprecated: boolean;
   isSystemAction: boolean;
   isMissingSecrets?: boolean;
+  isConnectorTypeDeprecated: boolean;
   source?: ActionTypeSource;
   authMode?: 'shared' | 'per-user';
 }

@@ -342,13 +342,11 @@ export class ActionsClient {
           `Failed to load action ${action.id} (${action.error.statusCode}): ${action.error.message}`
         );
       }
-      const isConnectorTypeDeprecated = this.context.actionTypeRegistry.isDeprecated(
-        action.attributes.actionTypeId
-      );
       actionResults.push(
         connectorFromSavedObject(
           action,
-          isConnectorDeprecated(action.attributes, isConnectorTypeDeprecated)
+          isConnectorDeprecated(action.attributes),
+          this.context.actionTypeRegistry.isDeprecated(action.attributes.actionTypeId)
         )
       );
     }

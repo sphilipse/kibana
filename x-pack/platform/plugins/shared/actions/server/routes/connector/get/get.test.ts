@@ -59,6 +59,7 @@ describe('getConnectorRoute', () => {
           "config": Object {},
           "connector_type_id": "2",
           "id": "1",
+          "is_connector_type_deprecated": false,
           "is_deprecated": false,
           "is_missing_secrets": false,
           "is_preconfigured": false,
@@ -79,9 +80,9 @@ describe('getConnectorRoute', () => {
         config: {},
         is_preconfigured: false,
         is_deprecated: false,
-        is_connector_type_deprecated: false,
         is_missing_secrets: false,
         is_system_action: false,
+        is_connector_type_deprecated: false,
         auth_mode: 'per-user',
       },
     });

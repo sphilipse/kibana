@@ -217,7 +217,6 @@ export async function update({ context, id, action }: ConnectorUpdateParams): Pr
     );
   }
 
-  const isConnectorTypeDeprecated = context.actionTypeRegistry.isDeprecated(actionTypeId);
   return {
     id,
     actionTypeId: result.attributes.actionTypeId as string,
@@ -226,7 +225,8 @@ export async function update({ context, id, action }: ConnectorUpdateParams): Pr
     config: result.attributes.config as Record<string, unknown>,
     isPreconfigured: false,
     isSystemAction: false,
-    isDeprecated: isConnectorDeprecated(result.attributes, isConnectorTypeDeprecated),
+    isDeprecated: isConnectorDeprecated(result.attributes),
+    isConnectorTypeDeprecated: context.actionTypeRegistry.isDeprecated(actionTypeId),
     authMode: result.attributes.authMode
       ? (result.attributes.authMode as Connector['authMode'])
       : 'shared',

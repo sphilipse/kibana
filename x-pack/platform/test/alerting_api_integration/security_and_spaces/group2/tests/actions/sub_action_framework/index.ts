@@ -95,13 +95,13 @@ export default function createActionTests({ getService }: FtrProviderContext) {
           is_preconfigured: false,
           is_system_action: false,
           is_deprecated: false,
-          is_connector_type_deprecated: false,
           is_missing_secrets: false,
           name: 'My sub connector',
           connector_type_id: 'test.sub-action-connector',
           config: {
             url: 'https://example.com',
           },
+          is_connector_type_deprecated: false,
         });
       });
     });

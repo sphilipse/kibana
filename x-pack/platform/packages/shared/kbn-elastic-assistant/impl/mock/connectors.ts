@@ -63,6 +63,7 @@ export const mockConnectors: AIConnector[] = [
     config: {
       apiProvider: 'OpenAI',
     },
+    isConnectorTypeDeprecated: false,
   },
   {
     id: 'c29c28a0-20fe-11ee-9306-a1f4d42ec542',
@@ -76,6 +77,7 @@ export const mockConnectors: AIConnector[] = [
     config: {
       apiProvider: 'OpenAI',
     },
+    isConnectorTypeDeprecated: false,
   },
   {
     id: 'c29c28a0-20fe-11ee-9386-a1f4d42ec542',
@@ -90,5 +92,6 @@ export const mockConnectors: AIConnector[] = [
       apiProvider: 'OpenAI',
       taskType: 'chat_completion',
     },
+    isConnectorTypeDeprecated: false,
   },
 ];

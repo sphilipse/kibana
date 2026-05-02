@@ -22,6 +22,7 @@ export const transformGetAllConnectorsResponse = (
       referencedByCount,
       isMissingSecrets,
       isSystemAction,
+      isConnectorTypeDeprecated,
       authMode,
     }) => ({
       id,
@@ -33,7 +34,7 @@ export const transformGetAllConnectorsResponse = (
       referenced_by_count: referencedByCount,
       is_missing_secrets: isMissingSecrets,
       is_system_action: isSystemAction,
-      is_connector_type_deprecated: isDeprecated,
+      is_connector_type_deprecated: isConnectorTypeDeprecated,
       ...(authMode !== undefined ? { auth_mode: authMode } : {}),
     })
   );

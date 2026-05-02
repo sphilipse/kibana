@@ -78,6 +78,7 @@ describe('ruleActionsConnectorsBody', () => {
         isSystemAction: false,
         name: 'connector-1',
         secrets: { secret: 'secret' },
+        isConnectorTypeDeprecated: false,
       })
     );
 
@@ -92,6 +93,7 @@ describe('ruleActionsConnectorsBody', () => {
         isSystemAction: false,
         name: 'connector-2',
         secrets: { secret: 'secret' },
+        isConnectorTypeDeprecated: false,
       })
     );
   });
