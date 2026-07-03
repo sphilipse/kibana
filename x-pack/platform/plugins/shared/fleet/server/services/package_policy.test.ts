@@ -37,7 +37,7 @@ import type {
   PackagePolicy,
   PostPackagePolicyPostCreateCallback,
   PostPackagePolicyDeleteCallback,
-  UpdatePackagePolicy,
+  UpdatePackagePolicyWithId,
   AssetsMap,
 } from '../types';
 import { createPackagePolicyMock } from '../../common/mocks';
@@ -5448,7 +5448,10 @@ describe('Package policy service', () => {
           id: 'asdb1',
         }),
       ];
-      const testedPackagePolicies = packagePoliciesSO.map((so) => so.attributes);
+      const testedPackagePolicies = packagePoliciesSO.map((so) => ({
+        ...so.attributes,
+        id: so.id,
+      }));
 
       const totalPolicyIds = packagePoliciesSO.reduce(
         (count, policy) => count + policy.attributes.policy_ids.length,
@@ -5492,7 +5495,7 @@ describe('Package policy service', () => {
       const callPackagePolicyServiceBulkUpdate = async (
         savedObjectsClient: ReturnType<typeof savedObjectsClientMock.create>,
         elasticsearchClient: ElasticsearchClientMock,
-        packagePolicies: UpdatePackagePolicy[]
+        packagePolicies: UpdatePackagePolicyWithId[]
       ) => {
         await packagePolicyService.bulkUpdate(
           savedObjectsClient,
@@ -5644,7 +5647,10 @@ describe('Package policy service', () => {
           }),
         ];
 
-        const nonEndpointTestedPolicies = nonEndpointPoliciesSO.map((so) => so.attributes);
+        const nonEndpointTestedPolicies = nonEndpointPoliciesSO.map((so) => ({
+          ...so.attributes,
+          id: so.id,
+        }));
 
         setupSOClientMocks(savedObjectsClient, nonEndpointPoliciesSO);
 
@@ -5682,8 +5688,12 @@ describe('Package policy service', () => {
           }),
         ];
         const mixedTestedPolicies = [
-          { ...mixedPoliciesSO[0].attributes, policy_ids: [] }, // endpoint policy IDs removed
-          { ...mixedPoliciesSO[1].attributes, policy_ids: ['test-agent-policy-2'] }, // not-endpoint unchanged
+          { ...mixedPoliciesSO[0].attributes, id: mixedPoliciesSO[0].id, policy_ids: [] }, // endpoint policy IDs removed
+          {
+            ...mixedPoliciesSO[1].attributes,
+            id: mixedPoliciesSO[1].id,
+            policy_ids: ['test-agent-policy-2'],
+          }, // not-endpoint unchanged
         ];
 
         setupSOClientMocks(savedObjectsClient, mixedPoliciesSO);
