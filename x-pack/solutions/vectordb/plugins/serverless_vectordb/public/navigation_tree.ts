@@ -67,7 +67,7 @@ export function createNavigationTree({
   return {
     body: [
       {
-        icon: 'logoElasticsearch',
+        icon: 'logoVectorDB',
         link: 'vectordb',
         renderAs: 'home',
         title: NAV_TITLE,

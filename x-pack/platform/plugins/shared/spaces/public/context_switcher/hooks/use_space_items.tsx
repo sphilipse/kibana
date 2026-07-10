@@ -39,7 +39,7 @@ const SOLUTION_VIEW_INFO: Record<SolutionKey, { iconType: IconType; label: strin
   es: ES_SOLUTION,
   oblt: OBS_SOLUTION,
   search: ES_SOLUTION,
-  vectordb: ES_SOLUTION,
+  vectordb: { ...ES_SOLUTION, iconType: 'logoVectorDB' },
   observability: OBS_SOLUTION,
   workplaceai: {
     iconType: 'logoElasticsearch',
