@@ -153,9 +153,7 @@ export const resultToFieldFromMappings = (
       ? (source[INFERENCE_FIELDS_KEY] as Record<string, InferenceFieldMetadata>)
       : {};
 
-    const sourceFieldNames = new Set(
-      Object.keys(source).filter((k) => k !== INFERENCE_FIELDS_KEY)
-    );
+    const sourceFieldNames = new Set(Object.keys(source).filter((k) => k !== INFERENCE_FIELDS_KEY));
 
     const fromSource: FieldProps[] = Object.entries(source)
       .filter(([key]) => key !== INFERENCE_FIELDS_KEY)

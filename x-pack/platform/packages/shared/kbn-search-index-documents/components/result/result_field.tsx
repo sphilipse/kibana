@@ -16,7 +16,6 @@ import {
   EuiTableRow,
   EuiTableRowCell,
   EuiText,
-  EuiToken,
   useEuiTheme,
 } from '@elastic/eui';
 
@@ -149,10 +148,13 @@ export const ResultField: React.FC<ResultFieldProps> = ({
                     defaultMessage: 'embeddings',
                   }
                 )}
-                fieldTypeLabel={i18n.translate('xpack.searchIndexDocuments.result.embeddingsFieldTypeAriaLabel', {
-                  defaultMessage: 'This semantic text field contains embeddings as well as the original text',
-                })}
-
+                fieldTypeLabel={i18n.translate(
+                  'xpack.searchIndexDocuments.result.embeddingsFieldTypeAriaLabel',
+                  {
+                    defaultMessage:
+                      'This semantic text field contains embeddings as well as the original text',
+                  }
+                )}
               />
             </EuiFlexItem>
           </EuiFlexGroup>
