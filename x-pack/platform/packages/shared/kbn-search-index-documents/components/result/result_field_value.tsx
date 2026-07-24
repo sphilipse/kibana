@@ -30,7 +30,9 @@ interface ResultFieldValueProps {
 function truncateVectors(embeddings: string[] | string[][]): string {
   const embeds = Array.isArray(embeddings[0])
     ? truncateVectors(embeddings[0])
-    : embeddings.slice(0, 5).concat(['...']).join(', ');
+    : embeddings.length > 4
+    ? embeddings.slice(0, 5).concat(['...']).join(', ')
+    : embeddings.join(', ');
   return `[${embeds}]`;
 }
 
@@ -65,7 +67,7 @@ const VectorFieldValue: React.FC<{ embeddings: string }> = ({ embeddings }) => {
       </EuiFlexItem>
       {chunks > 1 && (
         <EuiFlexItem grow={false}>
-          <EuiBadge color="hollow">
+          <EuiBadge>
             {i18n.translate('xpack.searchIndexDocuments.result.value.denseVector.chunksLabel', {
               defaultMessage: '{value} chunks',
               values: {
@@ -120,10 +122,13 @@ export const ResultFieldValue: React.FC<ResultFieldValueProps> = ({
   } else if (PERMANENTLY_TRUNCATED_FIELDS.includes(fieldType)) {
     return (
       <>
-        <EuiText size="s" color="default">
-          {fieldValue}
-        </EuiText>
-        {fieldType === 'dense_vector' && <VectorFieldValue embeddings={fieldValue} />}
+        {fieldType === 'dense_vector' ? (
+          <VectorFieldValue embeddings={fieldValue} />
+        ) : (
+          <EuiText size="s" color="default">
+            {fieldValue}
+          </EuiText>
+        )}
       </>
     );
   } else if (embeddings && embeddings.length > 0) {

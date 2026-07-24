@@ -45,6 +45,7 @@ describe('Documents sample API', () => {
         _source: {
           includes: ['*', '_inference_fields'],
         },
+        fields: ['*'],
         sort: [
           {
             _doc: {

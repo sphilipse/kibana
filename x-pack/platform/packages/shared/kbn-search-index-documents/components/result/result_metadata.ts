@@ -98,6 +98,7 @@ export const resultToFieldFromMappingResponse = (
 const INFERENCE_FIELDS_KEY = '_inference_fields';
 
 interface InferenceChunk {
+  text?: string;
   embeddings?: unknown;
 }
 
@@ -126,11 +127,13 @@ const getSemanticTextDenseVector = (
   if (inference?.model_settings?.task_type !== 'text_embedding') {
     return undefined;
   }
-  const chunks = inference.chunks?.[fieldName];
-  if (!Array.isArray(chunks)) {
-    return undefined;
-  }
-  const embeddings = chunks.map((chunk) => chunk.embeddings).filter(isDenseEmbedding);
+  // Regular semantic_text: chunks keyed by field name.
+  // copy_to semantic_text: chunks keyed by source field names — fall back to all chunks.
+  const directChunks = inference.chunks?.[fieldName];
+  const chunkList = Array.isArray(directChunks)
+    ? directChunks
+    : Object.values(inference.chunks ?? {}).flat();
+  const embeddings = chunkList.map((chunk) => chunk.embeddings).filter(isDenseEmbedding);
   if (embeddings.length === 0) {
     return undefined;
   }
@@ -150,7 +153,11 @@ export const resultToFieldFromMappings = (
       ? (source[INFERENCE_FIELDS_KEY] as Record<string, InferenceFieldMetadata>)
       : {};
 
-    return Object.entries(source)
+    const sourceFieldNames = new Set(
+      Object.keys(source).filter((k) => k !== INFERENCE_FIELDS_KEY)
+    );
+
+    const fromSource: FieldProps[] = Object.entries(source)
       .filter(([key]) => key !== INFERENCE_FIELDS_KEY)
       .map(([key, value]) => {
         const fieldType = mappings[key]?.type ?? 'object';
@@ -173,6 +180,42 @@ export const resultToFieldFromMappings = (
           fieldValue: JSON.stringify(value, null, 2),
         };
       });
+
+    // Handle semantic_text fields populated via copy_to: text comes from hit.fields (array-wrapped),
+    // vectors from _inference_fields as usual.
+    const hitFields = isRecord(result.fields) ? (result.fields as Record<string, unknown[]>) : {};
+    const fromCopyTo: FieldProps[] = Object.entries(mappings)
+      .filter(
+        ([fieldName, mapping]) =>
+          mapping.type === 'semantic_text' &&
+          !sourceFieldNames.has(fieldName) &&
+          Array.isArray(hitFields[fieldName]) &&
+          (hitFields[fieldName] as unknown[]).length > 0
+      )
+      .map(([fieldName]) => {
+        const rawValues = hitFields[fieldName] as unknown[];
+        const rawValue = rawValues.length === 1 ? rawValues[0] : rawValues;
+        const fieldValue = JSON.stringify(rawValue, null, 2);
+
+        const denseVector = getSemanticTextDenseVector(fieldName, inferenceFields[fieldName]);
+        if (denseVector) {
+          const { dimensions, embeddings } = denseVector;
+          return {
+            fieldName,
+            fieldType: 'semantic_text' as const,
+            fieldValue,
+            dimensions,
+            embeddings: JSON.stringify(embeddings.length === 1 ? embeddings[0] : embeddings),
+          };
+        }
+        return {
+          fieldName,
+          fieldType: 'semantic_text' as const,
+          fieldValue,
+        };
+      });
+
+    return [...fromSource, ...fromCopyTo];
   }
   return [];
 };

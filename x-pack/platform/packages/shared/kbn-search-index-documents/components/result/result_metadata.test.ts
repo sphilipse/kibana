@@ -196,4 +196,38 @@ describe('resultToFieldFromMappings', () => {
       { fieldName: 'title', fieldType: 'text', fieldValue: JSON.stringify('hello', null, 2) },
     ]);
   });
+
+  it('surfaces a semantic_text field populated via copy_to using hit.fields for text and _inference_fields for vectors', () => {
+    const embeddings = [0.1, 0.2, 0.3];
+    const result = {
+      ...makeSearchHit({
+        title: 'hello',
+        _inference_fields: {
+          semantic_field: {
+            inference: {
+              model_settings: { task_type: 'text_embedding', dimensions: 3 },
+              chunks: { title: [{ embeddings }] }, // keyed by source field, not target
+            },
+          },
+        },
+      }),
+      fields: { semantic_field: ['hello'] },
+    };
+
+    expect(
+      resultToFieldFromMappings(result, {
+        title: { type: 'text' },
+        semantic_field: { type: 'semantic_text' },
+      })
+    ).toEqual([
+      { fieldName: 'title', fieldType: 'text', fieldValue: JSON.stringify('hello', null, 2) },
+      {
+        fieldName: 'semantic_field',
+        fieldType: 'semantic_text',
+        fieldValue: JSON.stringify('hello', null, 2),
+        dimensions: 3,
+        embeddings: JSON.stringify(embeddings),
+      },
+    ]);
+  });
 });

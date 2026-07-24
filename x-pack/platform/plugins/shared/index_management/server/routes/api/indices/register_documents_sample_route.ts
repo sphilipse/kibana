@@ -42,6 +42,7 @@ export function registerDocumentsSampleRoute({
           _source: {
             includes: ['*', '_inference_fields'],
           },
+          fields: ['*'],
           sort: [
             {
               _doc: {
