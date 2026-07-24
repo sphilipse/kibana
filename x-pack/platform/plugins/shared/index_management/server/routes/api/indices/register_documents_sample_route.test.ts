@@ -42,6 +42,9 @@ describe('Documents sample API', () => {
       expect(searchMock).toHaveBeenCalledWith({
         index: 'my-index',
         size: DEFAULT_DOCUMENT_PAGE_SIZE,
+        _source: {
+          includes: ['*', '_inference_fields'],
+        },
         sort: [
           {
             _doc: {
