@@ -90,9 +90,7 @@ export const ResultField: React.FC<ResultFieldProps> = ({
   const shouldTruncate = isSemanticVector
     ? false
     : !isExpanded || PERMANENTLY_TRUNCATED_FIELDS.includes(fieldType);
-  const resolvedIconType =
-    iconType ||
-    (fieldType ? iconMap[fieldType] : defaultToken);
+  const resolvedIconType = iconType || (fieldType ? iconMap[fieldType] : defaultToken);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const fieldTypeLabel = i18n.translate('xpack.searchIndexDocuments.result.fieldTypeAriaLabel', {
     defaultMessage: 'This field is of the type {fieldType}',
