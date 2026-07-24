@@ -27,13 +27,28 @@ interface ResultFieldValueProps {
   embeddings: string | undefined;
 }
 
-function truncateVectors(embeddings: string[]) {
-  const embeds = embeddings.slice(0, 5).concat(['...']).join(', ');
+function truncateVectors(embeddings: string[] | string[][]): string {
+  const embeds = Array.isArray(embeddings[0]) ? truncateVectors(embeddings[0]) : embeddings.slice(0, 5).concat(['...']).join(', ');
   return `[${embeds}]`;
 }
 
+function getEmbeddings(embeddings: string): { embeddings: string[] | string[][]; chunks: number } {
+  try {
+    const embeds = JSON.parse(embeddings);
+    if (Array.isArray(embeds)) {
+      if (Array.isArray(embeds[0])) {
+        return { embeddings: embeds, chunks: embeds.length };
+      }
+      return { embeddings: embeds, chunks: 1 };
+    }
+    return { embeddings: [], chunks: 0 };
+  } catch {
+    return { embeddings: [], chunks: 0 };
+  }
+}
+
 const VectorFieldValue: React.FC<{ embeddings: string }> = ({ embeddings }) => {
-  const jsonEmbeddings = JSON.parse(embeddings);
+  const { embeddings: jsonEmbeddings, chunks } = getEmbeddings(embeddings);
   return (
     <EuiFlexGroup justifyContent="center" alignItems="center" gutterSize="s">
       <EuiFlexItem grow={false}>
@@ -46,6 +61,18 @@ const VectorFieldValue: React.FC<{ embeddings: string }> = ({ embeddings }) => {
           })}
         </EuiBadge>
       </EuiFlexItem>
+      {chunks > 1 && (
+        <EuiFlexItem grow={false}>
+          <EuiBadge color="hollow">
+            {i18n.translate('xpack.searchIndexDocuments.result.value.denseVector.chunksLabel', {
+              defaultMessage: '{value} chunks',
+              values: {
+                value: chunks,
+              },
+            })}
+          </EuiBadge>
+        </EuiFlexItem>
+      )}
       <EuiFlexItem>
         <EuiCodeBlock transparentBackground fontSize="s" paddingSize="none">
           {truncateVectors(jsonEmbeddings)}
@@ -94,13 +121,7 @@ export const ResultFieldValue: React.FC<ResultFieldValueProps> = ({
         <EuiText size="s" color="default">
           {fieldValue}
         </EuiText>
-        {fieldType === 'dense_vector' ? (
-          <VectorFieldValue embeddings={fieldValue} />
-        ) : (
-          <EuiText size="s" color="default">
-            {fieldValue}
-          </EuiText>
-        )}
+        {fieldType === 'dense_vector' && <VectorFieldValue embeddings={fieldValue} />}
       </>
     );
   } else if (embeddings && embeddings.length > 0) {
