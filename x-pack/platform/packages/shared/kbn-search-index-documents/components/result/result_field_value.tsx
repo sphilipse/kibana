@@ -28,7 +28,9 @@ interface ResultFieldValueProps {
 }
 
 function truncateVectors(embeddings: string[] | string[][]): string {
-  const embeds = Array.isArray(embeddings[0]) ? truncateVectors(embeddings[0]) : embeddings.slice(0, 5).concat(['...']).join(', ');
+  const embeds = Array.isArray(embeddings[0])
+    ? truncateVectors(embeddings[0])
+    : embeddings.slice(0, 5).concat(['...']).join(', ');
   return `[${embeds}]`;
 }
 
